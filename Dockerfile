@@ -14,7 +14,7 @@ USER appuser
 FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
 WORKDIR /src
 COPY *.sln .
-COPY DraplusApiTest/*.csproj DraplusApiTest
+COPY DraplusApiTest/*.csproj DraplusApiTest/
 COPY DraplusApi/*.csproj DraplusApi/
 RUN dotnet restore
 COPY . .
