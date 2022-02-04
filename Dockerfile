@@ -29,7 +29,7 @@ RUN dotnet test
 #publish
 FROM build AS publish
 WORKDIR /src/DraplusApi
-RUN dotnet publish -c Release -o /app/publish --runtime linux-x64 /p:UseAppHost=false
+RUN dotnet publish -c Release -o /app/publish --runtime linux-x64 /p:UseAppHost=true
 
 FROM base AS final
 WORKDIR /app
