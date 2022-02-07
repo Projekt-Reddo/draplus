@@ -1,6 +1,8 @@
 using DraplusApi.Data;
+using DraplusApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using Npgsql;
@@ -10,7 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-// Db config
+#region PostgrestDb config
+
 string userId = Environment.GetEnvironmentVariable(DbConfig.UserId) ?? builder.Configuration[DbConfig.UserId];
 string password = Environment.GetEnvironmentVariable(DbConfig.Password) ?? builder.Configuration[DbConfig.Password];
 
@@ -20,6 +23,20 @@ dbBuilder.Username = userId;
 dbBuilder.Password = password;
 
 builder.Services.AddDbContext<DataContext>(opt => opt.UseNpgsql(dbBuilder.ConnectionString));
+
+#endregion
+
+#region MongoDB config
+
+builder.Services.Configure<MongoDbSetting>(builder.Configuration.GetSection("MongoDbSetting"));
+builder.Services.AddSingleton<MongoDbSetting>(sp => sp.GetRequiredService<IOptions<MongoDbSetting>>().Value);
+builder.Services.AddSingleton<IMongoContext, MongoContext>();
+
+// MongoDB Services
+builder.Services.AddScoped<IChatRoomRepo, ChatRoomRepo>();
+builder.Services.AddScoped<IUserRepo, UserRepo>();
+
+#endregion
 
 // Auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
