@@ -5,4 +5,11 @@ public static class Constant
         public const string UserId = "UserId";
         public const string Password = "Password";
     }
+
+    public static class ShapeDataType
+    {
+        public const string LinePath = "LinePath";
+        public const string ErasedLinePath = "ErasedLinePath";
+        public const string Text = "Text";
+    }
 }
