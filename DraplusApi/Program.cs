@@ -33,7 +33,9 @@ builder.Services.AddSingleton<MongoDbSetting>(sp => sp.GetRequiredService<IOptio
 builder.Services.AddSingleton<IMongoContext, MongoContext>();
 
 // MongoDB Services
+builder.Services.AddScoped<IBoardRepo, BoardRepo>();
 builder.Services.AddScoped<IChatRoomRepo, ChatRoomRepo>();
+builder.Services.AddScoped<IShapeRepo, ShapeRepo>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 #endregion
