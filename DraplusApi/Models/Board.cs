@@ -2,16 +2,18 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace DraplusApi.Models
 {
-    public class Board
+    [BsonIgnoreExtraElements]
+    public class Board : Entity
     {
-        [BsonId]
-        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string Id { get; set; } = "";
-        public DateTime LastEdit { get; set; } = DateTime.Now;
         public string Name { get; set; } = null!;
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string UserId { get; set; } = "";
+        [BsonIgnoreIfNull]
+        [BsonIgnoreIfDefault]
+        public string UserId { get; set; } = null!;
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string ChatRoomId { get; set; } = "";
+        [BsonIgnoreIfNull]
+        [BsonIgnoreIfDefault]
+        public string ChatRoomId { get; set; } = null!;
+        public ICollection<Shape> Shapes { get; set; } = null!;
     }
 }
