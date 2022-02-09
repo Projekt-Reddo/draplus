@@ -1,10 +1,11 @@
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace DraplusApi.Data
 {
     public interface IRepository<TEntity> : IDisposable where TEntity : class
     {
-        Task<IEnumerable<TEntity>> GetAll(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!);
+        Task<IEnumerable<TEntity>> GetAll(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? sort = null!, BsonDocument? lookup = null!);
         Task<TEntity> GetByCondition(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!);
         Task<TEntity> Add(TEntity entity);
         Task<bool> Update(string id, TEntity entity);
@@ -34,10 +35,22 @@ namespace DraplusApi.Data
             return rs.DeletedCount > 0 ? true : false;
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetAll(FilterDefinition<TEntity> filter = null!)
+        public virtual async Task<IEnumerable<TEntity>> GetAll(FilterDefinition<TEntity> filter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!)
         {
-            var entites = await _collection.Find(filter is null ? Builders<TEntity>.Filter.Empty : filter).ToListAsync();
-            return entites;
+            var query = _collection.Aggregate().Match(filter is null ? Builders<TEntity>.Filter.Empty : filter);
+
+            if (lookup is not null)
+            {
+                query = query.AppendStage<TEntity>(lookup);
+            }
+
+            if (sort is not null)
+            {
+                query = query.Sort(sort);
+            }
+
+            var entities = await query.ToListAsync();
+            return entities;
         }
 
         public virtual async Task<TEntity> GetByCondition(FilterDefinition<TEntity> filter = null!)

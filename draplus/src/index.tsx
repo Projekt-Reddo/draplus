@@ -4,10 +4,13 @@ import "./index.css";
 import App from "./App";
 import LoginButton from "./Login_Component";
 
+import { Provider } from "react-redux";
+import store from "./store/store";
+
 ReactDOM.render(
-    <React.StrictMode>
+    <Provider store={store}>
         {/* <App /> */}
         <LoginButton></LoginButton>
-    </React.StrictMode>,
+    </Provider>,
     document.getElementById("root")
 );
