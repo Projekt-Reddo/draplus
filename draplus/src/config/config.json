@@ -1,0 +1,9 @@
+{
+    "GOOGLE_CLIENT_ID": "570745840009-0p5eatjgj1ogbj2i97jivuq4i3vbt3gf.apps.googleusercontent.com",
+    "GOOGLE_AUTH_CALLBACK_URL": "http://localhost:5224/api/auth/google",
+    "compilerOptions": {
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true
+    }
+}
