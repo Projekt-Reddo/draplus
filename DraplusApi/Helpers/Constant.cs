@@ -12,4 +12,5 @@ public static class Constant
         public const string ErasedLinePath = "ErasedLinePath";
         public const string Text = "Text";
     }
+    public const string DefaultAvatarUrl = "https://i.ibb.co/kxHf8Yv/default-avatar.png";
 }
