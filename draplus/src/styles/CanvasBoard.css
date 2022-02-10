@@ -1,0 +1,11 @@
+.literally {
+    height: 100vh;
+}
+
+.literally .lc-drawing.with-gui {
+    left: 0px;
+}
+
+.lc-picker {
+    display: none;
+}
