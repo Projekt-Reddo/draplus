@@ -1,6 +1,4 @@
 export const NEW_SOCKET = "socket/new";
-<<<<<<< HEAD
-=======
 export const LOGIN = "login";
 
 export const login = (data: any) => {
@@ -25,4 +23,3 @@ export const login = (data: any) => {
     //     });
     // };
 };
->>>>>>> 537f4a7702f2759c1130634f9907b4486915f706
