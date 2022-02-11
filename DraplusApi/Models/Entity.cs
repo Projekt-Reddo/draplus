@@ -2,12 +2,12 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace DraplusApi.Models
 {
-    public class ChatRoom
+    public class Entity
     {
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string Id { get; set; } = "";
-        public string Name { get; set; } = null!;
-        public List<Message> Messages { get; set; } = null!;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime LastEdit { get; set; }
     }
 }
