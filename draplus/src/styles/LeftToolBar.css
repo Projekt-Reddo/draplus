@@ -1,0 +1,134 @@
+.leftToolBar {
+    color: white;
+    background-color: #3d3d3d;
+    border-radius: 0px 8px 8px 0px;
+    margin-top: calc((100vh - (100vh * 5 / 6)) / 2);
+}
+
+.icon {
+    height: 3rem;
+}
+
+.line {
+    height: 100%;
+    width: 3px;
+}
+
+.whiteLine {
+    height: 100%;
+    width: 3px;
+    background-color: white;
+}
+
+.brushOptionBoardHide {
+    display: none;
+}
+
+.brushOptionBoard {
+    color: white;
+    background-color: #3d3d3d;
+    margin-top: 5.5rem;
+    margin-left: 4.5rem;
+    border-radius: 8px;
+}
+
+.arrow-left {
+    margin-left: -2.3rem;
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-right: 15px solid #3d3d3d;
+}
+
+.verticalLine {
+    border-left: 1px solid rgba(243, 242, 243, 0.4);
+    height: 100%;
+}
+
+.eyeXL {
+    border: 2px solid white;
+    border-radius: 100%;
+    position: relative;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+.eyeXL::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0.7rem;
+    height: 0.7rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: black;
+    border-radius: 100%;
+}
+
+.eyeL {
+    border: 2px solid white;
+    border-radius: 100%;
+    position: relative;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+.eyeL::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0.5rem;
+    height: 0.5rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: black;
+    border-radius: 100%;
+}
+
+.eyeM {
+    border: 2px solid white;
+    border-radius: 100%;
+    position: relative;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+.eyeM::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0.35rem;
+    height: 0.35rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: black;
+    border-radius: 100%;
+}
+
+.eyeS {
+    border: 2px solid white;
+    border-radius: 100%;
+    position: relative;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+.eyeS::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0.25rem;
+    height: 0.25rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: black;
+    border-radius: 100%;
+}
+
+.dot {
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    border: 2px solid white;
+}
