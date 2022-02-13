@@ -20,7 +20,6 @@ const LoginButton: React.FC<LoginButtonProps> = () => {
     const googleResponse = (
         response: GoogleLoginResponse | GoogleLoginResponseOffline
     ) => {
-        console.log(response);
         if (!(response as GoogleLoginResponse).tokenId) {
             console.error("Unable to get token from Google", response);
             return;
@@ -41,7 +40,6 @@ const LoginButton: React.FC<LoginButtonProps> = () => {
             mode: "cors",
             cache: "default",
         };
-        console.log(data.GOOGLE_AUTH_CALLBACK_URL);
         fetch(data.GOOGLE_AUTH_CALLBACK_URL, options)
             .then((r) => {
                 r.json().then((user) => {
@@ -53,6 +51,7 @@ const LoginButton: React.FC<LoginButtonProps> = () => {
                 console.error(e);
             });
     };
+    const styles = { borderRadius: 50 };
     return (
         <div className="content-center justify-center my-2">
             <GoogleLogin
@@ -60,6 +59,7 @@ const LoginButton: React.FC<LoginButtonProps> = () => {
                 buttonText="Google Login"
                 onSuccess={googleResponse}
                 onFailure={googleResponse}
+                style={styles}
             />
         </div>
     );
