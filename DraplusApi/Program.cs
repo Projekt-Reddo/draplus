@@ -9,7 +9,11 @@ using Newtonsoft.Json.Serialization;
 using Npgsql;
 using System.Text;
 using static Constant;
+<<<<<<< HEAD
 using DraplusApi.Helper;
+=======
+using DraplusApi.Helpers;
+>>>>>>> cc8e21b0c25c43545bb9560422542599fe6c132a
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -110,7 +114,11 @@ if (app.Environment.IsDevelopment())
 }
 
 // cors has to be on top of all
+<<<<<<< HEAD
 app.UseCors(opt=>opt.SetIsOriginAllowed(origin=>true)
+=======
+app.UseCors(opt => opt.SetIsOriginAllowed(origin => true)
+>>>>>>> cc8e21b0c25c43545bb9560422542599fe6c132a
 .AllowAnyHeader()
 .AllowAnyMethod()
 .AllowCredentials());
