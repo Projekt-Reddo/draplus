@@ -6,7 +6,7 @@ namespace DraplusApi.Dtos
     public class ResponseDto
     {
         public int Status { get; set; } = 500;
-        public string Message { get; set; }
+        public string Message { get; set; } = "Internal Server Error";
         public object Errors { get; set; } = new object();
         private IDictionary<int, string> statusMessage = new Dictionary<int, string>(){
             {200, "Request has succceeded"},
