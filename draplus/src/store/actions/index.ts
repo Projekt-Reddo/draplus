@@ -23,3 +23,8 @@ export const login = (data: any) => {
     //     });
     // };
 };
+
+export const INITLC = "lc/init";
+export const initLC = (data: any) => {
+    return { type: INITLC, payload: data };
+};
