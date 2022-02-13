@@ -8,4 +8,6 @@ public class AuthDto
     public string Avatar { get; set; } = null!;
     public string Issuer { get; set; } = null!;
     public string AccessToken {get; set;} = null!;
+    public string BoardId { get; set; } = null!;
+    public string ChatRoomId { get; set; } = null!;
 }

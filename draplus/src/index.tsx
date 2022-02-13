@@ -10,8 +10,7 @@ import Login from "pages/Login";
 
 ReactDOM.render(
     <Provider store={store}>
-        {/* <App /> */}
-        <Login />
+        <App />
     </Provider>,
     document.getElementById("root")
 );
