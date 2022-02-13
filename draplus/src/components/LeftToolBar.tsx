@@ -7,17 +7,21 @@ import "styles/LeftToolBar.css";
 import Icon from "components/Icon";
 
 interface LeftToolBarProps {
+    handleSelectTool: (toolName: string) => void;
+    handleSelectStrokeWidth: (strokeWidth: Number) => void;
+    handleSelectColor: (colorCode: string) => void;
     handleUndo: () => void;
     handleRedo: () => void;
-    handleSelectColor: (colorCode: string) => void;
 }
 
 const doNothing = () => {};
 
 const LeftToolBar: React.FC<LeftToolBarProps> = ({
+    handleSelectTool,
+    handleSelectStrokeWidth,
+    handleSelectColor,
     handleUndo,
     handleRedo,
-    handleSelectColor,
 }) => {
     const [showBrushOption, setShowBrushOption] = useState(false);
     const [isSelect, setIsSelect] = useState(1);
@@ -28,12 +32,21 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({
     useOutsideAlerter(wrapperRef, setShowBrushOption);
 
     const toolbars = [
-        // { iconName: "pen", toolbarFunc: doNothing },
-        { id: 2, iconName: "eraser", toolbarFunc: doNothing },
-        { id: 3, iconName: "font", toolbarFunc: doNothing },
-        { id: 4, iconName: "sticky-note", toolbarFunc: doNothing },
-        { id: 5, iconName: "undo", toolbarFunc: handleUndo },
-        { id: 6, iconName: "redo", toolbarFunc: handleRedo },
+        {
+            id: 2,
+            iconName: "eraser",
+            toolbarFunc: doNothing,
+            toolName: "Eraser",
+        },
+        { id: 3, iconName: "font", toolbarFunc: doNothing, toolName: "Text" },
+        {
+            id: 4,
+            iconName: "sticky-note",
+            toolbarFunc: doNothing,
+            toolName: "",
+        },
+        { id: 5, iconName: "undo", toolbarFunc: handleUndo, toolName: "" },
+        { id: 6, iconName: "redo", toolbarFunc: handleRedo, toolName: "" },
     ];
 
     const colors = [
@@ -51,6 +64,14 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({
         "#fff",
     ];
 
+    const strokes = [
+        { width: 9, size: "eyeXL" },
+        { width: 5, size: "eyeL" },
+        { width: 3, size: "eyeM" },
+        { width: 2, size: "eyeS" },
+    ];
+
+    // Handle select Tool
     const handleSelect = (codeButton: number) => {
         setIsSelect(codeButton);
     };
@@ -62,7 +83,10 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({
                 <div
                     className="icon flex"
                     style={{ color: colorSelect }}
-                    onClick={() => handleSelect(1)}
+                    onClick={() => {
+                        handleSelect(1);
+                        handleSelectTool("Pencil");
+                    }}
                     onDoubleClick={() => {
                         setShowBrushOption(!showBrushOption);
                     }}
@@ -78,9 +102,15 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({
                     <div
                         key={toolbar.id}
                         className="icon flex"
+                        style={
+                            toolbar.iconName === "font"
+                                ? { color: colorSelect }
+                                : {}
+                        }
                         onClick={() => {
                             toolbar.toolbarFunc();
                             handleSelect(toolbar.id);
+                            handleSelectTool(toolbar.toolName);
                         }}
                     >
                         <div
@@ -112,10 +142,15 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({
                 </div>
                 {/* Stroke Options */}
                 <div className="grid grid-cols-1 content-center gap-4">
-                    <div className="eyeXL" />
-                    <div className="eyeL" />
-                    <div className="eyeM" />
-                    <div className="eyeS" />
+                    {strokes.map((stroke) => (
+                        <div
+                            key={stroke.width}
+                            className={stroke.size}
+                            onClick={() =>
+                                handleSelectStrokeWidth(stroke.width)
+                            }
+                        />
+                    ))}
                 </div>
                 <div className="py-4 mx-4">
                     <div className="verticalLine" />
@@ -124,6 +159,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({
                 <div className="grid grid-cols-3 content-center gap-4">
                     {colors.map((color) => (
                         <div
+                            key={color}
                             style={{ backgroundColor: color }}
                             className="dot"
                             onClick={() => {
