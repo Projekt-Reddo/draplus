@@ -126,6 +126,8 @@ app.UseAuthorization();
 
 app.MapHub<ChatHub>("/chat");
 
+app.MapHub<BoardHub>("/board");
+
 app.MapControllers();
 
 app.Run();
