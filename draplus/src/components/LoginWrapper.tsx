@@ -8,7 +8,7 @@ const LoginWrapper: React.FC<any> = () => {
             style={{ backgroundColor: "var(--element-bg)" }}
         >
             <div></div>
-            <div className="mx-2 my-2 content-center text-center text-xl text-white font-bold">
+            <div className="mx-2 my-2 content-center text-center text-3xl text-white font-bold">
                 <p>Login To Draplus</p>
             </div>
             <LoginButton></LoginButton>
