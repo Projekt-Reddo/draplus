@@ -4,6 +4,8 @@ export const LOGIN = "login";
 export const login = (data: any) => {
     var accessToken = data.accessToken;
     localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("boardId", data.boardId);
+    localStorage.setItem("chatroomId", data.chatRoomId);
     // filter object
     // const notAllowed = ["accessToken", "id"];
     // Object.keys(data)
