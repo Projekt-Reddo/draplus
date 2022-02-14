@@ -9,7 +9,9 @@ using Newtonsoft.Json.Serialization;
 using Npgsql;
 using System.Text;
 using static Constant;
-using DraplusApi.Helpers;
+using DraplusApi.Helper;
+using DraplusApi.Hubs;
+using DraplusApi.Dtos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +39,7 @@ builder.Services.AddSingleton<IMongoContext, MongoContext>();
 
 // alows CORS
 builder.Services.AddCors();
+builder.Services.AddSignalR();
 
 // MongoDB Services
 builder.Services.AddScoped<IBoardRepo, BoardRepo>();
@@ -44,6 +47,8 @@ builder.Services.AddScoped<IChatRoomRepo, ChatRoomRepo>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 #endregion
+
+builder.Services.AddSingleton<IDictionary<string, UserConnection>>(opt => new Dictionary<string, UserConnection>());
 
 // Authentication
 ConfigurationManager configuration = builder.Configuration;
@@ -118,6 +123,8 @@ app.UseCors(opt => opt.SetIsOriginAllowed(origin => true)
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.MapHub<ChatHub>("/chat");
 
 app.MapControllers();
 

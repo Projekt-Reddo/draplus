@@ -78,7 +78,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({
 
     return (
         <div>
-            <div className="shadow-app leftToolBar absolute grid grid-cols-1 overflow-y-hidden content-center h-5/6 w-12 z-10">
+            <div className="app-shadow leftToolBar absolute grid grid-cols-1 overflow-y-hidden content-center h-5/6 w-12 z-10">
                 {/* Brush */}
                 <div
                     className="icon flex"
@@ -131,7 +131,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({
             <div
                 className={` ${
                     showBrushOption
-                        ? "shadow-app brushOptionBoard absolute justify-center flex h-44 w-52 z-10"
+                        ? "app-shadow brushOptionBoard absolute justify-center flex h-44 w-52 z-10"
                         : "brushOptionBoardHide"
                 }`}
                 ref={wrapperRef}
