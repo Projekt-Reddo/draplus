@@ -6,13 +6,15 @@ import { Route, Routes } from "react-router-dom";
 import Login from "pages/Login";
 import Board from "pages/Board";
 import BoardList from "pages/BoardList";
+import ErrorPage from "pages/ErrorPage";
 
 const BaseRoutes: React.FC = () => {
     return (
         <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/board" element={<Board />} />
+            <Route path="/:boardId" element={<Board />} />
             <Route path="/list/board" element={<BoardList />} />
+            <Route path="*" element={<ErrorPage />} />
         </Routes>
     );
 };

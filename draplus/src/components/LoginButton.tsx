@@ -8,12 +8,15 @@ import {
 import { useDispatch } from "react-redux";
 import { login } from "store/actions/index";
 
+import { useNavigate } from "react-router-dom";
+
 interface LoginButtonProps {}
 interface IAuthResponse {
     token: string;
 }
 
 const LoginButton: React.FC<LoginButtonProps> = () => {
+    let navigate = useNavigate();
     // For dispatch redux
     const dispatch = useDispatch();
 
@@ -45,6 +48,7 @@ const LoginButton: React.FC<LoginButtonProps> = () => {
                 r.json().then((user) => {
                     const token = user.accessToken;
                     dispatch(login(user));
+                    navigate(`/${user.boardId}`);
                 });
             })
             .catch((e) => {

@@ -9,7 +9,7 @@ using Newtonsoft.Json.Serialization;
 using Npgsql;
 using System.Text;
 using static Constant;
-using DraplusApi.Helper;
+using DraplusApi.Helpers;
 using DraplusApi.Hubs;
 using DraplusApi.Dtos;
 
@@ -125,6 +125,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapHub<ChatHub>("/chat");
+
+app.MapHub<BoardHub>("/board");
 
 app.MapControllers();
 

@@ -4,18 +4,28 @@ import { useState } from "react";
 import LC from "literallycanvas";
 import "literallycanvas/lib/css/literallycanvas.css";
 import "styles/CanvasBoard.css";
+import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
 
 // Components
 import LeftToolBar from "components/LeftToolBar";
 
+import { DRAW_SHAPE } from "store/actions";
+
 interface CanvasBoardProps {}
 
 const CanvasBoard: React.FC<CanvasBoardProps> = () => {
+    const dispatch = useDispatch();
+    const globalShapes = useSelector((state: RootStateOrAny) => state.shape);
+
     const [initLC, setInitLC] = useState<typeof LC>();
 
     const handleDrawingChange = (lc: any) => {
-        // const annotation = lc.getSnapshot(["shapes"]);
-        // console.log(annotation);
+        const lcShapeContainer = lc.getSnapshot(["shapes"]);
+        dispatch({
+            type: DRAW_SHAPE,
+            payload:
+                lcShapeContainer.shapes[lcShapeContainer.shapes.length - 1],
+        });
     };
 
     const handleSelectStrokeWidth = (strokeWidth: Number) => {
@@ -45,6 +55,8 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         setInitLC(lc);
         lc.on("drawingChange", () => handleDrawingChange(lc));
     };
+
+    console.log(globalShapes);
 
     return (
         <div>
