@@ -3,6 +3,7 @@
     background-color: #3d3d3d;
     border-radius: 0px 8px 8px 0px;
     margin-top: calc((100vh - (100vh * 5 / 6)) / 2);
+    gap: 5%;
 }
 
 .icon {
@@ -27,18 +28,9 @@
 .brushOptionBoard {
     color: white;
     background-color: #3d3d3d;
-    margin-top: 5.5rem;
-    margin-left: 4.5rem;
+    margin-top: calc((100vh - (100vh * 4.5 / 6)) / 2);
+    margin-left: 4rem;
     border-radius: 8px;
-}
-
-.arrow-left {
-    margin-left: -2.3rem;
-    width: 0;
-    height: 0;
-    border-top: 15px solid transparent;
-    border-bottom: 15px solid transparent;
-    border-right: 15px solid #3d3d3d;
 }
 
 .verticalLine {
