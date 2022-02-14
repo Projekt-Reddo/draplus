@@ -11,36 +11,49 @@ import LeftToolBar from "components/LeftToolBar";
 interface CanvasBoardProps {}
 
 const CanvasBoard: React.FC<CanvasBoardProps> = () => {
-    const [init, setInit] = useState<typeof LC>();
+    const [initLC, setInitLC] = useState<typeof LC>();
 
     const handleDrawingChange = (lc: any) => {
         // const annotation = lc.getSnapshot(["shapes"]);
         // console.log(annotation);
     };
 
+    const handleSelectStrokeWidth = (strokeWidth: Number) => {
+        initLC.tool.strokeWidth = strokeWidth;
+    };
+
     const handleSelectColor = (colorCode: string) => {
-        init.setColor("primary", colorCode);
+        initLC.setColor("primary", colorCode);
+    };
+
+    const handleSelectTool = (toolName: string) => {
+        initLC.setTool(new LC.tools[toolName](initLC));
+        if (toolName === "Eraser") {
+            handleSelectStrokeWidth(30);
+        }
     };
 
     const handleUndo = () => {
-        init.undo();
+        initLC.undo();
     };
 
     const handleRedo = () => {
-        init.redo();
+        initLC.redo();
     };
 
     const handleInit = (lc: any) => {
-        setInit(lc);
+        setInitLC(lc);
         lc.on("drawingChange", () => handleDrawingChange(lc));
     };
 
     return (
         <div>
             <LeftToolBar
+                handleSelectTool={handleSelectTool}
+                handleSelectStrokeWidth={handleSelectStrokeWidth}
+                handleSelectColor={handleSelectColor}
                 handleUndo={handleUndo}
                 handleRedo={handleRedo}
-                handleSelectColor={handleSelectColor}
             />
             <LC.LiterallyCanvasReactComponent
                 onInit={handleInit}

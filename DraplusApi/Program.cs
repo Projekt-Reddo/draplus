@@ -115,7 +115,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // cors has to be on top of all
-app.UseCors(opt=>opt.SetIsOriginAllowed(origin=>true)
+app.UseCors(opt => opt.SetIsOriginAllowed(origin => true)
 .AllowAnyHeader()
 .AllowAnyMethod()
 .AllowCredentials());
