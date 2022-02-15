@@ -58,7 +58,7 @@ namespace DraplusApi.Controllers
                 userToReturn.AccessToken = token;
                 userToReturn.BoardId = boardFromRepo.Id;
                 userToReturn.ChatRoomId = boardFromRepo.ChatRoomId;
-
+                
                 return Ok(
                     userToReturn
                 );

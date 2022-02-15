@@ -1,65 +1,45 @@
 import * as React from "react";
-import { default as data } from "../config/config.json";
+import { default as data_env } from "../config/config.json";
 import {
     GoogleLogin,
     GoogleLoginResponse,
     GoogleLoginResponseOffline,
 } from "react-google-login";
-import { useDispatch } from "react-redux";
-import { login } from "store/actions/index";
+
 import "styles/GoogleLoginButton.css";
 
-import { useNavigate } from "react-router-dom";
-
-interface LoginButtonProps {}
+interface LoginButtonProps {
+    googleResponse: () => void;
+}
 interface IAuthResponse {
     token: string;
 }
+type ResponseUser = {
+    user: JSON;
+};
+type queryType = {
+    manual: boolean;
+};
+const LoginButton: React.FC<LoginButtonProps> = ({ googleResponse }) => {
+    // function fetchData(options: Object) {
+    //     console.log(options);
+    //     fetch(data_env.GOOGLE_AUTH_CALLBACK_URL, options)
+    //         .then((r) => {
+    //             r.json().then((user) => {
+    //                 dispatch(login(user));
+    //                 navigate(`/${user.boardId}`);
+    //             });
+    //         })
+    //         .catch((e) => {
+    //             console.error(e);
+    //         });
+    // }
 
-const LoginButton: React.FC<LoginButtonProps> = () => {
-    let navigate = useNavigate();
-    // For dispatch redux
-    const dispatch = useDispatch();
-
-    const googleResponse = (
-        response: GoogleLoginResponse | GoogleLoginResponseOffline
-    ) => {
-        if (!(response as GoogleLoginResponse).tokenId) {
-            console.error("Unable to get token from Google", response);
-            return;
-        }
-        const tokenBlob = new Blob(
-            [
-                JSON.stringify(
-                    { tokenId: (response as GoogleLoginResponse).tokenId },
-                    null,
-                    2
-                ),
-            ],
-            { type: "application/json" }
-        );
-        const options: Object = {
-            method: "POST",
-            body: tokenBlob,
-            mode: "cors",
-            cache: "default",
-        };
-        fetch(data.GOOGLE_AUTH_CALLBACK_URL, options)
-            .then((r) => {
-                r.json().then((user) => {
-                    dispatch(login(user));
-                    navigate(`/${user.boardId}`);
-                });
-            })
-            .catch((e) => {
-                console.error(e);
-            });
-    };
     const styles = { borderRadius: 50, width: "100%" };
     return (
         <div className="content-center justify-center my-2">
             <GoogleLogin
-                clientId={data.GOOGLE_CLIENT_ID}
+                clientId={data_env.GOOGLE_CLIENT_ID}
                 buttonText="Google Login"
                 render={(renderProps) => (
                     <button onClick={renderProps.onClick} style={styles}>
@@ -71,7 +51,7 @@ const LoginButton: React.FC<LoginButtonProps> = () => {
                                 />
                             </div>
                             <p className="btn-text border-rounded text-xl">
-                                <b>Sign in with google</b>
+                                Sign in with google
                             </p>
                         </div>
                     </button>

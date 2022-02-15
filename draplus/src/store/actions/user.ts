@@ -1,4 +1,4 @@
-import { LOGIN } from ".";
+import { LOGIN, LOGOUT } from ".";
 
 export const login = (data: any) => {
     var accessToken = data.accessToken;
@@ -17,7 +17,7 @@ export const logout = () => {
     localStorage.removeItem("user");
 
     return {
-        type: LOGIN,
+        type: LOGOUT,
         payload: {},
     };
 };
