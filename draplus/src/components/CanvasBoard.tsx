@@ -15,7 +15,8 @@ interface CanvasBoardProps {}
 
 const CanvasBoard: React.FC<CanvasBoardProps> = () => {
     const dispatch = useDispatch();
-    const globalShapes = useSelector((state: RootStateOrAny) => state.shape);
+    const user = useSelector((state: RootStateOrAny) => state.user);
+    const shapeResponse = useSelector((state: RootStateOrAny) => state.shape);
 
     const [initLC, setInitLC] = useState<typeof LC>();
 
@@ -23,8 +24,11 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         const lcShapeContainer = lc.getSnapshot(["shapes"]);
         dispatch({
             type: DRAW_SHAPE,
-            payload:
-                lcShapeContainer.shapes[lcShapeContainer.shapes.length - 1],
+            payload: {
+                userId: user.id,
+                lastShape:
+                    lcShapeContainer.shapes[lcShapeContainer.shapes.length - 1],
+            },
         });
     };
 
@@ -56,10 +60,17 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         lc.on("drawingChange", () => handleDrawingChange(lc));
     };
 
-    console.log(globalShapes);
+    React.useEffect(() => {
+        if (initLC) {
+            // console.log(shapes);
+            // console.log({ shapes: [shapeResponse.shape] });
+            initLC.loadSnapshot({ shapes: [shapeResponse.shape] });
+        }
+    }, [shapeResponse]);
 
     return (
         <div>
+            {/* Left Toolbar */}
             <LeftToolBar
                 handleSelectTool={handleSelectTool}
                 handleSelectStrokeWidth={handleSelectStrokeWidth}
@@ -67,6 +78,7 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
                 handleUndo={handleUndo}
                 handleRedo={handleRedo}
             />
+            {/* Canvas Board */}
             <LC.LiterallyCanvasReactComponent
                 onInit={handleInit}
                 primaryColor="#fff"
@@ -79,83 +91,102 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
 
 export default CanvasBoard;
 
-// const data = {
-//     shapes: [
-//         // Line Path
-//         {
-//             className: "LinePath",
-//             data: {
-//                 order: 3,
-//                 pointColor: "hsla(0, 0%, 0%, 1)",
-//                 pointCoordinatePairs: [[199, 149.25]],
-//                 pointSize: 5,
-//                 smooth: true,
-//                 smoothedPointCoordinatePairs: [
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                 ],
-//                 tailSize: 3,
-//             },
-//             id: "277dc281-c10a-9b13-c7ef-47c501c471a9",
-//         },
+const shapes = {
+    shapes: [
+        {
+            className: "Text",
+            data: {
+                color: "hsla(0, 0%, 0%, 1)",
+                font: "50px",
+                forcedHeight: 0,
+                forcedWidth: 243,
+                text: "dbdbd9",
+                v: 1,
+                x: 113,
+                y: 89.25,
+            },
+            id: "924e9beb-58ff-aa02-b1f0-8ccee58eb112",
+        },
+    ],
+};
 
-//         // Erased Line Path
-//         {
-//             className: "ErasedLinePath",
-//             data: {
-//                 order: 3,
-//                 pointColor: "#000",
-//                 pointCoordinatePairs: [[199, 149.25]],
-//                 pointSize: 5,
-//                 smooth: true,
-//                 smoothedPointCoordinatePairs: [
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                 ],
-//                 tailSize: 3,
-//             },
-//             id: "52c41a32-427e-07ec-e63b-d48888d5af73",
-//         },
-//         // Text
-//         {
-//             className: "Text",
-//             data: {
-//                 color: "hsla(0, 0%, 0%, 1)",
-//                 font: "18px",
-//                 forcedHeight: 0,
-//                 forcedWidth: 243,
-//                 text: "dbdbd9",
-//                 v: 1,
-//                 x: 113,
-//                 y: 89.25,
-//             },
-//             id: "924e9beb-58ff-aa02-b1f0-8ccee58eb112",
-//         },
-//     ],
-// };
+const data = {
+    shapes: [
+        // Line Path
+        {
+            className: "LinePath",
+            data: {
+                order: 3,
+                pointColor: "hsla(0, 0%, 0%, 1)",
+                pointCoordinatePairs: [[199, 149.25]],
+                pointSize: 5,
+                smooth: true,
+                smoothedPointCoordinatePairs: [
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                ],
+                tailSize: 3,
+            },
+            id: "277dc281-c10a-9b13-c7ef-47c501c471a9",
+        },
+
+        // Erased Line Path
+        {
+            className: "ErasedLinePath",
+            data: {
+                order: 3,
+                pointColor: "#000",
+                pointCoordinatePairs: [[199, 149.25]],
+                pointSize: 5,
+                smooth: true,
+                smoothedPointCoordinatePairs: [
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                    [199, 149.25],
+                ],
+                tailSize: 3,
+            },
+            id: "52c41a32-427e-07ec-e63b-d48888d5af73",
+        },
+        // Text
+        {
+            className: "Text",
+            data: {
+                color: "hsla(0, 0%, 0%, 1)",
+                font: "18px",
+                forcedHeight: 0,
+                forcedWidth: 243,
+                text: "dbdbd9",
+                v: 1,
+                x: 113,
+                y: 89.25,
+            },
+            id: "924e9beb-58ff-aa02-b1f0-8ccee58eb112",
+        },
+    ],
+};

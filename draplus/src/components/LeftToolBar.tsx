@@ -110,7 +110,9 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({
                         onClick={() => {
                             toolbar.toolbarFunc();
                             handleSelect(toolbar.id);
-                            handleSelectTool(toolbar.toolName);
+                            if (toolbar.toolName !== "") {
+                                handleSelectTool(toolbar.toolName);
+                            }
                         }}
                     >
                         <div
