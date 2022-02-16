@@ -20,7 +20,12 @@ const BaseRoutes: React.FC = () => {
     useEffect(() => {
         var rs = init();
         if (rs) {
+<<<<<<< HEAD
             const user = JSON.parse(localStorage.getItem("user") || "");
+=======
+            const userStored = localStorage.getItem("user");
+            const user = JSON.parse(userStored || "{}");
+>>>>>>> c54afd7ba6bed98a6d85a863109f027e14f1f39c
             const accessToken = localStorage.getItem("accessToken");
             dispatch(login({ ...user, accessToken: accessToken }));
             navigate(`/${user.boardId}`);
