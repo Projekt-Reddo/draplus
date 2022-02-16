@@ -60,6 +60,7 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         lc.on("drawingChange", () => handleDrawingChange(lc));
     };
 
+<<<<<<< HEAD
     React.useEffect(() => {
         if (initLC) {
             // console.log(shapes);
@@ -67,6 +68,9 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
             initLC.loadSnapshot({ shapes: [shapeResponse.shape] });
         }
     }, [shapeResponse]);
+=======
+    console.log(globalShapes);
+>>>>>>> c54afd7ba6bed98a6d85a863109f027e14f1f39c
 
     return (
         <div>
