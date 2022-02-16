@@ -1,16 +1,18 @@
+import { LOGIN, LOGOUT } from "store/actions";
+
 const user = {
-    user: "",
+    user: null,
     isAuthenticated: false,
 };
 
 const userReducer = (state = user, action: ActionType) => {
     switch (action.type) {
-        case "LOGIN":
-            state = { ...state, user: action.payload, isAuthenticated: true };
-            break;
-        case "LOGOUT":
-            state = { ...state, user: "", isAuthenticated: false };
-            break;
+        case LOGIN:
+            return { user: action.payload, isAuthenticated: true };
+
+        case LOGOUT:
+            return { user: null, isAuthenticated: false };
+
         default:
             return state;
     }

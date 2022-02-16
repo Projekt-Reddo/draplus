@@ -18,14 +18,19 @@ export const signalRMiddleware = (storeAPI: any) => {
             connection.board = await createSignalRConnection(`${API}/board`);
             connection.chat = await createSignalRConnection(`${API}/chat`);
 
+            await connection.board.invoke("JoinRoom", {
+                board: "62099e84045bcbc6c47bc749",
+            });
+
             connection.chat.on(
                 "ReceiveMessage",
-                (user: string, message: string) => {
+                (user: any, message: string, timestamp: Date) => {
                     storeAPI.dispatch({
                         type: RECEIVE_MESSAGE,
                         payload: {
                             user,
                             message,
+                            timestamp,
                         },
                     });
                 }
@@ -46,7 +51,11 @@ export const signalRMiddleware = (storeAPI: any) => {
         }
 
         if (action.type === SEND_MESSAGE) {
-            connection.chat.invoke("SendMessage", action.payload);
+            connection.chat.invoke(
+                "SendMessage",
+                action.payload.user,
+                action.payload.message
+            );
         }
 
         if (action.type === DRAW_SHAPE) {
@@ -65,10 +74,5 @@ async function createSignalRConnection(url: string) {
 
     await newConnection.start();
 
-    if (url === `${API}/board`) {
-        await newConnection.invoke("JoinRoom", {
-            board: "62099e84045bcbc6c47bc749",
-        });
-    }
     return newConnection;
 }
