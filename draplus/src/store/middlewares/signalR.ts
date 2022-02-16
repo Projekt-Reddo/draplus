@@ -24,12 +24,13 @@ export const signalRMiddleware = (storeAPI: any) => {
 
             connection.chat.on(
                 "ReceiveMessage",
-                (user: string, message: string) => {
+                (user: any, message: string, timestamp: Date) => {
                     storeAPI.dispatch({
                         type: RECEIVE_MESSAGE,
                         payload: {
                             user,
                             message,
+                            timestamp,
                         },
                     });
                 }
@@ -50,7 +51,11 @@ export const signalRMiddleware = (storeAPI: any) => {
         }
 
         if (action.type === SEND_MESSAGE) {
-            connection.chat.invoke("SendMessage", action.payload);
+            connection.chat.invoke(
+                "SendMessage",
+                action.payload.user,
+                action.payload.message
+            );
         }
 
         if (action.type === DRAW_SHAPE) {

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.SignalR;
 using DraplusApi.Dtos;
+using DraplusApi.Models;
 
 namespace DraplusApi.Hubs;
 
@@ -13,8 +14,13 @@ public class ChatHub : Hub {
         _connections = connections;
     }
 
-    public async Task SendMessage(string user, string message)
+    public async Task SendMessage(User user, string message)
     {
-        await Clients.All.SendAsync("ReceiveMessage", user, message);
+        // if (_connections.TryGetValue(Context.ConnectionId, out UserConnection userConnection)) {
+        //     await Clients.Group(userConnection.Board).SendAsync("ReceiveMessage", user, message);
+
+        // }
+
+        await Clients.All.SendAsync("ReceiveMessage", user, message, DateTime.Now);
     }
 }
