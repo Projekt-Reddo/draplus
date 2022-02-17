@@ -13,10 +13,12 @@ import { init } from "utils/loginHandlers";
 import { login, logout } from "store/actions/index";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Loading from "components/Loading";
 
 const BaseRoutes: React.FC = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = React.useState(true);
     useEffect(() => {
         var rs = init();
         if (rs) {
@@ -28,7 +30,12 @@ const BaseRoutes: React.FC = () => {
         } else {
             navigate("/");
         }
+        setIsLoading(false);
     }, []);
+
+    if (isLoading) {
+        return <Loading />;
+    }
 
     return (
         <Routes>
