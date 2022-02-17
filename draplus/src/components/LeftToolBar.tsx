@@ -1,36 +1,69 @@
 // Libs
 import * as React from "react";
-import { useState, useRef, useEffect } from "react";
-import "styles/LeftToolBar.css";
+import { RootStateOrAny, useSelector } from "react-redux";
+import LC from "literallycanvas";
 
 // Components
 import Icon from "components/Icon";
 
-interface LeftToolBarProps {
-    handleSelectTool: (toolName: string) => void;
-    handleSelectStrokeWidth: (strokeWidth: Number) => void;
-    handleSelectColor: (colorCode: string) => void;
-    handleUndo: () => void;
-    handleRedo: () => void;
-}
+//Style
+import "styles/LeftToolBar.css";
+
+interface LeftToolBarProps {}
 
 const doNothing = () => {};
 
-const LeftToolBar: React.FC<LeftToolBarProps> = ({
-    handleSelectTool,
-    handleSelectStrokeWidth,
-    handleSelectColor,
-    handleUndo,
-    handleRedo,
-}) => {
-    const [showBrushOption, setShowBrushOption] = useState(false);
-    const [isSelect, setIsSelect] = useState(1);
-    const [colorSelect, setColorSelect] = useState("#fff");
+const LeftToolBar: React.FC<LeftToolBarProps> = () => {
+    // Global State
+    const initLC = useSelector((state: RootStateOrAny) => state.initLC);
+
+    // Handle State
+    const [showBrushOption, setShowBrushOption] = React.useState(false);
+    const [isSelect, setIsSelect] = React.useState(1);
+    const [colorSelect, setColorSelect] = React.useState("#fff");
 
     // State click outside
-    const wrapperRef = useRef(null);
+    const wrapperRef = React.useRef(null);
     useOutsideAlerter(wrapperRef, setShowBrushOption);
 
+    // Funtions Handle Draw Canvas
+    // Select Tool
+    const handleSelectTool = (toolName: string) => {
+        initLC.setTool(new LC.tools[toolName](initLC));
+        if (toolName === "Eraser") {
+            handleSelectToolStrokeWidth(30);
+        }
+    };
+
+    // Select stroke width for Brush
+    const handleSelectToolStrokeWidth = (strokeWidth: Number) => {
+        initLC.tool.strokeWidth = strokeWidth;
+    };
+
+    // Select color for Brush and Text tool
+    const handleSelectToolColor = (colorCode: string) => {
+        initLC.setColor("primary", colorCode);
+    };
+
+    // Undo canvas
+    const handleUndo = () => {
+        initLC.undo();
+    };
+
+    // Redo canvas
+    const handleRedo = () => {
+        initLC.redo();
+    };
+
+    // Handle active Button was selected
+    const handleActiveButtonSelect = (buttonCode: number) => {
+        if (buttonCode === 5 || buttonCode == 6) {
+            return;
+        }
+        setIsSelect(buttonCode);
+    };
+
+    // Const Variable
     const toolbars = [
         {
             id: 2,
@@ -71,20 +104,16 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({
         { width: 2, size: "eyeS" },
     ];
 
-    // Handle select Tool
-    const handleSelect = (codeButton: number) => {
-        setIsSelect(codeButton);
-    };
-
     return (
         <div>
             <div className="app-shadow leftToolBar absolute grid grid-cols-1 overflow-y-hidden content-center h-5/6 w-12 z-10">
+                {/* Tools */}
                 {/* Brush */}
                 <div
                     className="icon flex"
                     style={{ color: colorSelect }}
                     onClick={() => {
-                        handleSelect(1);
+                        handleActiveButtonSelect(1);
                         handleSelectTool("Pencil");
                     }}
                     onDoubleClick={() => {
@@ -98,6 +127,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({
                         <Icon icon="pen" style={{ fontSize: "1.5rem" }} />
                     </div>
                 </div>
+                {/* Eraser, Text, Note, Undo Redo */}
                 {toolbars.map((toolbar) => (
                     <div
                         key={toolbar.id}
@@ -109,7 +139,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({
                         }
                         onClick={() => {
                             toolbar.toolbarFunc();
-                            handleSelect(toolbar.id);
+                            handleActiveButtonSelect(toolbar.id);
                             if (toolbar.toolName !== "") {
                                 handleSelectTool(toolbar.toolName);
                             }
@@ -145,11 +175,12 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({
                             key={stroke.width}
                             className={stroke.size}
                             onClick={() =>
-                                handleSelectStrokeWidth(stroke.width)
+                                handleSelectToolStrokeWidth(stroke.width)
                             }
                         />
                     ))}
                 </div>
+                {/* Vertiacal White Line */}
                 <div className="py-4 mx-4">
                     <div className="verticalLine" />
                 </div>
@@ -161,7 +192,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({
                             style={{ backgroundColor: color }}
                             className="dot"
                             onClick={() => {
-                                handleSelectColor(color);
+                                handleSelectToolColor(color);
                                 setColorSelect(color);
                             }}
                         />
@@ -176,7 +207,7 @@ export default LeftToolBar;
 
 // Handle click outside
 export function useOutsideAlerter(ref: any, setShowBrushOption: any) {
-    useEffect(() => {
+    React.useEffect(() => {
         /**
          * Set listData to null
          */

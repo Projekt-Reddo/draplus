@@ -36,13 +36,10 @@ export const signalRMiddleware = (storeAPI: any) => {
                 }
             );
 
-            connection.board.on("ReceiveShapes", (user: string, shape: any) => {
+            connection.board.on("ReceiveShape", (user: any, shape: any) => {
                 storeAPI.dispatch({
                     type: RECEIVE_SHAPE,
-                    payload: {
-                        user,
-                        shape,
-                    },
+                    payload: shape,
                 });
             });
 
@@ -59,13 +56,9 @@ export const signalRMiddleware = (storeAPI: any) => {
         }
 
         if (action.type === DRAW_SHAPE) {
-            connection.board.invoke("DrawShape", action.payload);
-        }
-
-        if (action.type === DRAW_SHAPE) {
             connection.board.invoke(
                 "DrawShape",
-                action.payload.userId,
+                action.payload.user,
                 action.payload.lastShape
             );
         }
@@ -82,10 +75,5 @@ async function createSignalRConnection(url: string) {
 
     await newConnection.start();
 
-    if (url === `${API}/board`) {
-        await newConnection.invoke("JoinRoom", {
-            board: "62099e84045bcbc6c47bc749",
-        });
-    }
     return newConnection;
 }
