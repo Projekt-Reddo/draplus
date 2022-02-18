@@ -36,13 +36,10 @@ export const signalRMiddleware = (storeAPI: any) => {
                 }
             );
 
-            connection.board.on("ReceiveShapes", (user: string, shape: any) => {
+            connection.board.on("ReceiveShape", (user: any, shape: any) => {
                 storeAPI.dispatch({
                     type: RECEIVE_SHAPE,
-                    payload: {
-                        user,
-                        shape,
-                    },
+                    payload: shape,
                 });
             });
 
@@ -59,7 +56,11 @@ export const signalRMiddleware = (storeAPI: any) => {
         }
 
         if (action.type === DRAW_SHAPE) {
-            connection.board.invoke("DrawShape", action.payload);
+            connection.board.invoke(
+                "DrawShape",
+                action.payload.user,
+                action.payload.lastShape
+            );
         }
 
         return next(action);

@@ -1,72 +1,67 @@
 // Libs
 import * as React from "react";
-import { useState } from "react";
-import LC from "literallycanvas";
-import "literallycanvas/lib/css/literallycanvas.css";
-import "styles/CanvasBoard.css";
 import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
+import LC from "literallycanvas";
 
 // Components
 import LeftToolBar from "components/LeftToolBar";
 
-import { DRAW_SHAPE } from "store/actions";
+// Store
+import { DRAW_SHAPE, INITLC } from "store/actions";
+
+// Style
+import "literallycanvas/lib/css/literallycanvas.css";
+import "styles/CanvasBoard.css";
 
 interface CanvasBoardProps {}
 
 const CanvasBoard: React.FC<CanvasBoardProps> = () => {
+    // Redux state
     const dispatch = useDispatch();
-    const globalShapes = useSelector((state: RootStateOrAny) => state.shape);
+    const user = useSelector((state: any) => state.user);
+    const shape = useSelector((state: RootStateOrAny) => state.shape);
 
-    const [initLC, setInitLC] = useState<typeof LC>();
+    console.log(user);
+    // Handle State
+    const [localInitLC, setLocalInitLC] = React.useState<typeof LC>();
+    const [myShape, setMyShape] = React.useState<object[]>([]);
 
-    const handleDrawingChange = (lc: any) => {
+    // Get Change of Canvas
+    // Send user's shape to other user
+    // Set user's shape to myShape state
+    const handleDrawingChange = (lc: any, shape: any) => {
         const lcShapeContainer = lc.getSnapshot(["shapes"]);
+        setMyShape(lcShapeContainer.shapes);
         dispatch({
             type: DRAW_SHAPE,
-            payload:
-                lcShapeContainer.shapes[lcShapeContainer.shapes.length - 1],
+            payload: {
+                user: user.user,
+                lastShape:
+                    lcShapeContainer.shapes[lcShapeContainer.shapes.length - 1],
+            },
         });
     };
 
-    const handleSelectStrokeWidth = (strokeWidth: Number) => {
-        initLC.tool.strokeWidth = strokeWidth;
-    };
-
-    const handleSelectColor = (colorCode: string) => {
-        initLC.setColor("primary", colorCode);
-    };
-
-    const handleSelectTool = (toolName: string) => {
-        initLC.setTool(new LC.tools[toolName](initLC));
-        if (toolName === "Eraser") {
-            handleSelectStrokeWidth(30);
-        }
-    };
-
-    const handleUndo = () => {
-        initLC.undo();
-    };
-
-    const handleRedo = () => {
-        initLC.redo();
-    };
-
+    // Create Init of Literally Canvas
     const handleInit = (lc: any) => {
-        setInitLC(lc);
-        lc.on("drawingChange", () => handleDrawingChange(lc));
+        setLocalInitLC(lc);
+        dispatch({ type: INITLC, payload: lc });
+        lc.on("shapeSave", (shape: any) => handleDrawingChange(lc, shape));
     };
 
-    console.log(globalShapes);
+    React.useEffect(() => {
+        if (localInitLC && shape !== []) {
+            localInitLC.loadSnapshot({
+                shapes: shape.concat(myShape),
+            });
+        }
+    }, [shape]);
 
     return (
         <div>
-            <LeftToolBar
-                handleSelectTool={handleSelectTool}
-                handleSelectStrokeWidth={handleSelectStrokeWidth}
-                handleSelectColor={handleSelectColor}
-                handleUndo={handleUndo}
-                handleRedo={handleRedo}
-            />
+            {/* Left Toolbar */}
+            <LeftToolBar />
+            {/* Canvas Board */}
             <LC.LiterallyCanvasReactComponent
                 onInit={handleInit}
                 primaryColor="#fff"
@@ -78,6 +73,40 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
 };
 
 export default CanvasBoard;
+
+// const shapes = {
+//     shapes: [
+//         {
+//             className: "LinePath",
+//             data: {
+//                 order: 3,
+//                 pointColor: "hsla(0, 0%, 0%, 1)",
+//                 pointCoordinatePairs: [[199, 149.25]],
+//                 pointSize: 5,
+//                 smooth: true,
+//                 smoothedPointCoordinatePairs: [
+//                     [199, 149.25],
+//                     [199, 149.25],
+//                     [199, 149.25],
+//                     [199, 149.25],
+//                     [199, 149.25],
+//                     [199, 149.25],
+//                     [199, 149.25],
+//                     [199, 149.25],
+//                     [199, 149.25],
+//                     [199, 149.25],
+//                     [199, 149.25],
+//                     [199, 149.25],
+//                     [199, 149.25],
+//                     [199, 149.25],
+//                     [199, 149.25],
+//                 ],
+//                 tailSize: 3,
+//             },
+//             id: "277dc281-c10a-9b13-c7ef-47c501c471a9",
+//         },
+//     ],
+// };
 
 // const data = {
 //     shapes: [
