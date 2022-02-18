@@ -19,7 +19,7 @@ export const signalRMiddleware = (storeAPI: any) => {
             connection.chat = await createSignalRConnection(`${API}/chat`);
 
             await connection.board.invoke("JoinRoom", {
-                board: "62099e84045bcbc6c47bc749",
+                board: action.payload.boardId,
             });
 
             connection.chat.on(
