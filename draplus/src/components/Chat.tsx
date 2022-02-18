@@ -25,7 +25,7 @@ interface ChatButtonProps {
 const ChatButton: React.FC<ChatButtonProps> = ({ onClick }) => {
     return (
         <div
-            className="rounded-full fixed flex items-center justify-center chat-btn"
+            className="rounded-full fixed right-10 bottom-7 flex items-center justify-center chat-btn"
             onClick={onClick}
         >
             <Icon icon="comment" fontSize="1.25rem" />
