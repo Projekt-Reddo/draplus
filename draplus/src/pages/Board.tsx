@@ -5,6 +5,7 @@ import "styles/Board.css";
 // Components
 import CanvasBoard from "components/CanvasBoard";
 import Chat from "components/Chat";
+import Setting from "components/Setting";
 
 interface BoardProps {}
 
@@ -13,6 +14,7 @@ const Board: React.FC<BoardProps> = () => {
         <>
             <CanvasBoard />
             <Chat />
+            <Setting />
         </>
     );
 };
