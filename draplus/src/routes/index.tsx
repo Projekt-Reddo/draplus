@@ -40,8 +40,8 @@ const BaseRoutes: React.FC = () => {
     return (
         <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/:boardId" element={<Board />} />
             <Route path="/list/board" element={<BoardList />} />
+            <Route path="/:boardId" element={<Board />} />
             <Route path="*" element={<ErrorPage />} />
         </Routes>
     );
