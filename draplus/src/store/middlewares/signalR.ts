@@ -22,6 +22,10 @@ export const signalRMiddleware = (storeAPI: any) => {
                 board: action.payload.boardId,
             });
 
+            await connection.chat.invoke("JoinRoom", {
+                board: "62099e84045bcbc6c47bc749",
+            });
+
             connection.chat.on(
                 "ReceiveMessage",
                 (user: any, message: string, timestamp: Date) => {

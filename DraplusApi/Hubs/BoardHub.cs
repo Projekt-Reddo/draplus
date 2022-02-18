@@ -25,7 +25,7 @@ public class BoardHub : Hub
 
     public async Task DrawShape(User user, ShapeCreateDto shape)
     {
-        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection userConnection))
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
             await Clients.OthersInGroup(userConnection.Board).SendAsync("ReceiveShape", user, shape);
         }

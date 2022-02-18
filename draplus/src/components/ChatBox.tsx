@@ -129,8 +129,11 @@ const ChatBoxInput: React.FC<ChatBoxInputProps> = ({ handleSubmit }) => {
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        handleSubmit(message);
-        setMessage("");
+
+        if (message.trim()) {
+            handleSubmit(message);
+            setMessage("");
+        }
     };
 
     return (
@@ -140,7 +143,7 @@ const ChatBoxInput: React.FC<ChatBoxInputProps> = ({ handleSubmit }) => {
         >
             <input
                 className="chat-box__input"
-                placeholder="Start typing___"
+                placeholder="Start typing......"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
             />
