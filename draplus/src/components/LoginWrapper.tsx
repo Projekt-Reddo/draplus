@@ -30,7 +30,11 @@ const LoginWrapper: React.FC<any> = ({
     return (
         <div
             className="h-1/2 w-1/4 flex flex-col items-center justify-between border-rounded app-shadow"
-            style={{ backgroundColor: "var(--element-bg)" }}
+            style={{
+                backgroundColor: "var(--element-bg)",
+                minWidth: "350px",
+                maxWidth: "500px",
+            }}
         >
             <div className="h-auto mx-2 content-center text-center">
                 <FontAwesomeIcon
