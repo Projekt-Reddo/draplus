@@ -48,11 +48,14 @@ const LoginButton: React.FC<LoginButtonProps> = ({ googleResponse }) => {
                                 <img
                                     className="google-icon"
                                     src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+                                    alt="google logo"
                                 />
                             </div>
-                            <p className="btn-text border-rounded text-xl">
-                                Sign in with google
-                            </p>
+                            <div className="w-full h-full">
+                                <p className="btn-text border-rounded mr-6 mt-2">
+                                    Sign in with google
+                                </p>
+                            </div>
                         </div>
                     </button>
                 )}

@@ -29,12 +29,18 @@ const LoginWrapper: React.FC<any> = ({
     }
     return (
         <div
-            className="h-2/4 w-1/4 flex flex-col items-center justify-between border-rounded app-shadow"
+            className="h-1/2 w-1/4 flex flex-col items-center justify-between border-rounded app-shadow"
             style={{ backgroundColor: "var(--element-bg)" }}
         >
-            <FontAwesomeIcon className="mx-2 my-2" icon={faCoffee} size="6x" />
-            <div className="mx-2 my-1 content-center text-center text-3xl text-white font-bold">
-                <p>Login To Draplus</p>
+            <div className="h-auto mx-2 content-center text-center">
+                <FontAwesomeIcon
+                    className="mx-2 mt-6 mb-3 text-white"
+                    icon={faCoffee}
+                    size="2x"
+                />
+                <p className="text-2xl text-white font-bold">
+                    Login To Draplus
+                </p>
             </div>
             {mutation.isLoading ? (
                 <Loading></Loading>
