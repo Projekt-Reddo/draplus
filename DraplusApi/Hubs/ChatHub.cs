@@ -14,6 +14,13 @@ public class ChatHub : Hub {
         _connections = connections;
     }
 
+    public async Task JoinRoom(UserConnection userConnection)
+    {
+        await Groups.AddToGroupAsync(Context.ConnectionId, userConnection.Board);
+
+        _connections[Context.ConnectionId] = userConnection;
+    }
+
     public async Task SendMessage(User user, string message)
     {
         // if (_connections.TryGetValue(Context.ConnectionId, out UserConnection userConnection)) {
