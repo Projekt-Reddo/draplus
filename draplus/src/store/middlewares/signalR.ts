@@ -57,8 +57,6 @@ export const signalRMiddleware = (storeAPI: any) => {
         }
 
         if (action.type === DRAW_SHAPE) {
-            console.log(action.payload);
-
             connection.board.invoke("DrawShape", action.payload);
         }
 

@@ -37,16 +37,16 @@ public class BoardHub : Hub
         {
             await Clients.OthersInGroup(userConnection.Board).SendAsync("ReceiveShape", shape);
 
+            var jsonData = Convert.ToString(shape.Data);
+
             try
             {
-                var jsonData = Convert.ToString(shape.Data);
-                LinePathData data = JsonConvert.DeserializeObject<LinePathData>(jsonData);
+                var data = JsonConvert.DeserializeObject<LinePathData>(jsonData);
                 shape.Data = data;
             }
             catch (Exception e)
             {
-                var jsonData = Convert.ToString(shape.Data);
-                LinePathData data = JsonConvert.DeserializeObject<TextData>(jsonData);
+                var data = JsonConvert.DeserializeObject<TextData>(jsonData);
                 shape.Data = data;
             }
 
