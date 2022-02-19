@@ -111,7 +111,7 @@ const BoardCardOptions: React.FC<BoardCardOptionsProps> = () => {
                                     {({ active }) => (
                                         <div
                                             className={`text-xl cursor-pointer
-                  ${active ? "text-gray-700" : "text-gray-900"}
+                  ${active ? "text-gray-900" : "text-gray-600"}
                    block px-4 py-3`}
                                             onClick={
                                                 option.onClick
