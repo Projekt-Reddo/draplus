@@ -2,10 +2,12 @@ import * as React from "react";
 import BoardCard from "components/BoardCard";
 import Setting from "components/Setting";
 import Icon from "components/Icon";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { API } from "utils/constant";
 import Loading from "components/Loading";
 import { useSelector } from "react-redux";
+import Notification from "components/Notification";
+import { useNotification } from "utils/useNotification";
 
 interface BoardListProps {}
 
@@ -19,18 +21,28 @@ interface Board {
 }
 
 const BoardList: React.FC<BoardListProps> = () => {
+    // Get user information from store
     const userFromStore = useSelector((state: any) => state.user);
 
-    console.log(userFromStore);
+    // Get boards from api
+    const { isLoading, isError, data, error, refetch } = useQuery(
+        "boards",
+        async () => {
+            var rs = await fetch(`${API}/api/board/${userFromStore.user.id}`);
+            return rs.json();
+        },
+        {
+            enabled: false,
+        }
+    );
 
-    const { isLoading, isError, data, error } = useQuery("boards", async () => {
-        var rs = await fetch(`${API}/api/board/${userFromStore.user.id}`);
-        return rs.json();
-    });
+    React.useEffect(() => {
+        refetch();
+    }, []);
 
     return (
         <div className="max-w-full min-h-screen bg-[color:var(--bg)]">
-            {isLoading ? (
+            {isLoading || !data ? (
                 <div className="w-full h-screen flex justify-center items-center">
                     <Loading />
                 </div>
@@ -41,7 +53,7 @@ const BoardList: React.FC<BoardListProps> = () => {
             ) : (
                 <div className="grid grid-flow-row sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8 pt-24 pb-8 px-20">
                     {/* Create new board */}
-                    <CreateBoard />
+                    <CreateBoard refetch={refetch} />
 
                     {/* User boards */}
                     {data.map((board: Board) => (
@@ -65,18 +77,86 @@ const BoardList: React.FC<BoardListProps> = () => {
 export default BoardList;
 
 interface CreateBoardProps {
-    onClick?: () => void;
+    refetch: () => void;
 }
 
-const CreateBoard: React.FC<CreateBoardProps> = ({ onClick }) => {
+const CreateBoard: React.FC<CreateBoardProps> = ({ refetch }) => {
+    // Get user from store
+    const userFromStore = useSelector((state: any) => state.user);
+
+    // Notification and Message
+    const { toggle, setToggle, notifyMessage, setNotifyMessage } =
+        useNotification();
+
+    // Create new board
+    const createBoardMutation = useMutation(async (newBoard: object) => {
+        var rs = await fetch(`${API}/api/board`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newBoard),
+        });
+
+        return rs.json();
+    });
+
+    // Show notification when created
+    React.useEffect(() => {
+        if (createBoardMutation.isSuccess) {
+            if (createBoardMutation.data.status === 200) {
+                setNotifyMessage({
+                    icon: "circle-check",
+                    iconColor: "text-emerald-400",
+                    title: "Create board successfully",
+                });
+
+                // refresh data
+                refetch();
+            } else {
+                setNotifyMessage({
+                    icon: "circle-exclamation",
+                    iconColor: "text-red-400",
+                    title: "Create board failed",
+                });
+            }
+
+            setToggle(true);
+        }
+
+        if (createBoardMutation.isError) {
+            setNotifyMessage({
+                icon: "circle-exclamation",
+                iconColor: "text-red-400",
+                title: "There is an error with server",
+            });
+
+            setToggle(true);
+        }
+    }, [createBoardMutation.isSuccess, createBoardMutation.isError]);
+
     return (
-        <div
-            className="max-w-sm h-96 shadow-lg border border-gray-300 rounded-2xl flex justify-center items-center"
-            onClick={onClick ? onClick : () => {}}
-        >
-            <div className="rounded-full h-[3rem] w-[3rem] bg-[color:var(--element-bg)] flex justify-center items-center">
-                <Icon icon="plus" className=" text-white bold" size="xl" />
+        <>
+            <div
+                className="max-w-sm h-96 shadow-lg border border-gray-300 rounded-2xl flex justify-center items-center"
+                onClick={() => {
+                    createBoardMutation.mutate({
+                        userId: userFromStore.user.id,
+                    });
+                }}
+            >
+                <div className="rounded-full h-[3rem] w-[3rem] bg-[color:var(--element-bg)] flex justify-center items-center">
+                    <Icon icon="plus" className=" text-white bold" size="xl" />
+                </div>
             </div>
-        </div>
+
+            <Notification
+                icon={notifyMessage.icon}
+                iconColor={notifyMessage.iconColor}
+                title={notifyMessage.title}
+                toggle={toggle}
+                setToggle={setToggle}
+            />
+        </>
     );
 };
