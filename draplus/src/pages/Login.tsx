@@ -60,7 +60,7 @@ const Login: React.FC<LoginProps> = () => {
                 }
                 r.json().then((user: any) => {
                     dispatch(login(user));
-                    navigate(`/${user.boardId}`);
+                    navigate(`/board`);
                 });
             },
             onError: (e: any) => {

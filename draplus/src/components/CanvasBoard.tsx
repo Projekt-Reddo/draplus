@@ -21,7 +21,6 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
     const user = useSelector((state: any) => state.user);
     const shape = useSelector((state: RootStateOrAny) => state.shape);
 
-    console.log(user);
     // Handle State
     const [localInitLC, setLocalInitLC] = React.useState<typeof LC>();
     const [myShape, setMyShape] = React.useState<object[]>([]);

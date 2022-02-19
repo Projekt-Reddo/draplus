@@ -21,7 +21,12 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
     };
 
     return (
-        <div className="rounded fixed chat-box__container">
+        <div
+            className="rounded fixed right-10 chat-box__container"
+            style={{
+                bottom: "5.6rem",
+            }}
+        >
             <div className="w-full h-full relative">
                 <ChatBoxBody user={user.user} />
                 <ChatBoxInput handleSubmit={handleSubmit} />
