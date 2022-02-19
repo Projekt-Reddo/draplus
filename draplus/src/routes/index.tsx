@@ -10,7 +10,7 @@ import ErrorPage from "pages/ErrorPage";
 
 import { useEffect } from "react";
 import { init } from "utils/loginHandlers";
-import { login, logout } from "store/actions/index";
+import { login } from "store/actions/index";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Loading from "components/Loading";

@@ -7,18 +7,13 @@ import Modal from "components/Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCoffee } from "@fortawesome/free-solid-svg-icons";
 
-import {
-    GoogleLoginResponse,
-    GoogleLoginResponseOffline,
-} from "react-google-login";
-
 interface LoginWrapperProps {
-    googleResponse: GoogleLoginResponse | GoogleLoginResponseOffline;
+    googleResponse: any;
     mutation: any;
     isShowing: boolean;
     toggle: () => void;
 }
-const LoginWrapper: React.FC<any> = ({
+const LoginWrapper: React.FC<LoginWrapperProps> = ({
     googleResponse,
     mutation,
     isShowing,
