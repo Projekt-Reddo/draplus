@@ -26,7 +26,6 @@ const BaseRoutes: React.FC = () => {
             const user = JSON.parse(userStored || "{}");
             const accessToken = localStorage.getItem("accessToken");
             dispatch(login({ ...user, accessToken: accessToken }));
-            navigate(`/board`);
         } else {
             navigate("/");
         }

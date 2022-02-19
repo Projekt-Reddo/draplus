@@ -2,7 +2,7 @@ import * as React from "react";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import "styles/Setting.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Icon from "components/Icon";
 import { useLocation } from "react-router-dom";
 import Notification from "components/Notification";
@@ -42,6 +42,8 @@ const Setting: React.FC<SettingProps> = () => {
     // Getting current path from url
     const location = useLocation();
 
+    const navigate = useNavigate();
+
     // State manage Notification component
     const [toggle, setToggle] = React.useState(false);
 
@@ -69,9 +71,8 @@ const Setting: React.FC<SettingProps> = () => {
                                 <div className="py-1" key={index}>
                                     <Menu.Item>
                                         {({ active }) => (
-                                            <Link
-                                                to={`${item.path}`}
-                                                className={`setting-item 
+                                            <div
+                                                className={`setting-item cursor-pointer
                     ${active ? "text-slate-400" : "text-slate-100"}
                      block px-4 py-2`}
                                                 onClick={
@@ -91,7 +92,12 @@ const Setting: React.FC<SettingProps> = () => {
                                                               // Show notification
                                                               setToggle(true);
                                                           }
-                                                        : () => {}
+                                                        : (e) => {
+                                                              e.preventDefault();
+                                                              navigate(
+                                                                  item.path
+                                                              );
+                                                          }
                                                 }
                                             >
                                                 <Icon
@@ -100,7 +106,7 @@ const Setting: React.FC<SettingProps> = () => {
                                                     size="lg"
                                                 />
                                                 {item.name}
-                                            </Link>
+                                            </div>
                                         )}
                                     </Menu.Item>
                                 </div>

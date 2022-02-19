@@ -18,6 +18,7 @@
         "@types/react": "^17.0.39",
         "@types/react-dom": "^17.0.11",
         "@types/react-dom-factories": "^1.0.2",
+        "axios": "^0.26.0",
         "chart.js": "^3.7.0",
         "create-react-class": "^15.7.0",
         "jwt-decode": "^3.1.2",

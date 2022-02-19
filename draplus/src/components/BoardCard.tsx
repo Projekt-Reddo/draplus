@@ -88,10 +88,6 @@ const BoardCardOptions: React.FC<BoardCardOptionsProps> = () => {
             icon: "share-square",
             label: "Export",
         },
-        {
-            icon: "flag",
-            label: "Report",
-        },
     ];
 
     // State manage Notification component
