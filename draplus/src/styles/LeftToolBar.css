@@ -3,7 +3,6 @@
     background-color: #3d3d3d;
     border-radius: 0px 8px 8px 0px;
     margin-top: calc((100vh - (100vh * 5 / 6)) / 2);
-    gap: 5%;
 }
 
 .icon {
