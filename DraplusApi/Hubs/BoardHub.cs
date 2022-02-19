@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using DraplusApi.Dtos;
+using DraplusApi.Models;
 
 namespace DraplusApi.Hubs;
 
@@ -22,11 +23,11 @@ public class BoardHub : Hub
 
     }
 
-    public async Task DrawShape(ShapeCreateDto shape)
+    public async Task DrawShape(User user, ShapeCreateDto shape)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
-            await Clients.Group(userConnection.Board).SendAsync("ReceiveShapes", userConnection.User, shape);
+            await Clients.OthersInGroup(userConnection.Board).SendAsync("ReceiveShape", user, shape);
         }
     }
 }
