@@ -14,7 +14,7 @@ var connection: {
 
 export const signalRMiddleware = (storeAPI: any) => {
     return (next: any) => async (action: any) => {
-        if (action.type === LOGIN) {
+        if (action.type === "") {
             connection.board = await createSignalRConnection(`${API}/board`);
             connection.chat = await createSignalRConnection(`${API}/chat`);
 
