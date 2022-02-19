@@ -8,6 +8,7 @@ export const SEND_MESSAGE = "sendMessage";
 export const RECEIVE_SHAPE = "receiveshape";
 export const DRAW_SHAPE = "drawshape";
 export const INITLC = "lc/init";
+export const JOIN_ROOM = "joinRoom";
 
 export { login };
 export { logout };
