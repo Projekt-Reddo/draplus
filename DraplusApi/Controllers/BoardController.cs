@@ -8,6 +8,7 @@ using DraplusApi.Dtos;
 using DraplusApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace DraplusApi.Controllers
 {
@@ -16,37 +17,61 @@ namespace DraplusApi.Controllers
     public class BoardController : ControllerBase
     {
         private readonly IBoardRepo _boardRepo;
+        private readonly IUserRepo _userRepo;
+        private readonly IChatRoomRepo _chatroomRepo;
         private readonly IMapper _mapper;
 
-        public BoardController(IBoardRepo boardRepo, IMapper mapper)
+        public BoardController(IBoardRepo boardRepo, IUserRepo userRepo, IChatRoomRepo chatRoomRepo, IMapper mapper)
         {
             _boardRepo = boardRepo;
+            _userRepo = userRepo;
+            _chatroomRepo = chatRoomRepo;
             _mapper = mapper;
         }
 
         [HttpPost]
         public async Task<ActionResult<BoardReadDto>> AddBoard([FromBody] BoardCreateDto boardCreateDto)
         {
-            if (boardCreateDto == null)
+            // Validate input userId
+            if (boardCreateDto.UserId == null)
             {
-                return BadRequest();
+                return BadRequest(new ResponseDto(4004, "UserId is required"));
             }
 
-            var boardModel = _mapper.Map<Board>(boardCreateDto);
+            var filter = Builders<User>.Filter.Eq("Id", boardCreateDto.UserId);
+            var user = await _userRepo.GetByCondition(filter);
 
-            var createdBoard = await _boardRepo.Add(boardModel);
+            if (user == null)
+            {
+                return BadRequest(new ResponseDto(400, "User not found"));
+            }
 
-            return Ok(createdBoard);
+            // Create new chat room & board
+            var insertedChatRoom = await _chatroomRepo.Add(new ChatRoom()
+            {
+                Name = $"{user.Name} {DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}",
+            });
+
+            var createdBoard = await _boardRepo.Add(new Board
+            {
+                Name = $"{user.Name} {DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}",
+                UserId = boardCreateDto.UserId,
+                ChatRoomId = insertedChatRoom.Id != null ? insertedChatRoom.Id : "",
+            });
+
+            return Ok(new ResponseDto(201, "Board created"));
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<BoardReadDto>>> GetAllBoards()
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<IEnumerable<BoardForListDto>>> GetUserBoard(string userId)
         {
-            var boards = await _boardRepo.GetAll();
+            var filter = Builders<Board>.Filter.Eq("UserId", userId);
 
-            var boardReadDto = _mapper.Map<IEnumerable<BoardReadDto>>(boards);
+            var boardsFromRepo = await _boardRepo.GetAll(filter: filter);
 
-            return Ok(boardReadDto);
+            var boardForListDto = _mapper.Map<IEnumerable<BoardForListDto>>(boardsFromRepo);
+
+            return Ok(boardForListDto);
         }
     }
 }

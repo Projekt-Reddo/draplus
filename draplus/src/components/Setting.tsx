@@ -24,7 +24,7 @@ const SettingItems: SettingItem[] = [
     {
         icon: "layer-group",
         name: "My boards",
-        path: "/list/board",
+        path: "/board",
     },
     {
         icon: "question-circle",
@@ -63,7 +63,7 @@ const Setting: React.FC<SettingProps> = () => {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                 >
-                    <Menu.Items className="origin-top-right absolute right-10 top-20 mt-2 w-52 px-2 rounded-md shadow-lg setting-item divide-y divide-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className="origin-top-right fixed right-10 top-20 mt-2 w-52 px-2 rounded-md shadow-lg setting-item divide-y divide-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none">
                         {SettingItems.map(
                             (item: SettingItem, index: number) => (
                                 <div className="py-1" key={index}>
