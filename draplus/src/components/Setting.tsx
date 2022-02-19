@@ -24,7 +24,7 @@ const SettingItems: SettingItem[] = [
     {
         icon: "layer-group",
         name: "My boards",
-        path: "/list/board",
+        path: "/board",
     },
     {
         icon: "question-circle",

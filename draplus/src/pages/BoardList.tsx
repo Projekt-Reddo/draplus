@@ -1,80 +1,82 @@
 import * as React from "react";
 import BoardCard from "components/BoardCard";
 import Setting from "components/Setting";
+import Icon from "components/Icon";
+import { useQuery } from "react-query";
+import { API } from "utils/constant";
+import Loading from "components/Loading";
+import { useSelector } from "react-redux";
 
 interface BoardListProps {}
 
 interface Board {
-    id: number;
-    title?: string;
+    id: string;
+    name?: string;
     createdAt?: string;
-    updatedAt?: string;
+    lastEdit?: string;
     img?: string;
+    chatRoomId?: string;
 }
 
-const Boards: Board[] = [
-    {
-        id: 1,
-        title: "Mountain",
-        createdAt: "2020-01-01",
-        updatedAt: "2020-01-01",
-        img: "https://i.ibb.co/fpN5pbB/97c5c6c625ecd2b28bfd.jpg",
-    },
-    {
-        id: 2,
-        title: "Test",
-        createdAt: "2020-01-01",
-        updatedAt: "2020-01-01",
-        img: "https://i.ibb.co/Cn0G3W7/60084041-p0-master1200.jpg",
-    },
-    {
-        id: 3,
-        title: "Your board",
-        createdAt: "2020-01-01",
-        updatedAt: "2020-01-01",
-        img: "https://i.ibb.co/J5jrcnp/Untitled-000000.png",
-    },
-    {
-        id: 4,
-        title: "Mountain",
-        createdAt: "0001-01-01T00:00:00.000+00:00",
-        updatedAt: "2020-01-01",
-        img: "https://i.ibb.co/t2368Xb/20210514-102151.jpg",
-    },
-    {
-        id: 5,
-        title: "Mountain",
-        createdAt: "2022-02-15T00:18:08.319+00:00",
-        updatedAt: "0001-01-01T00:00:00.000+00:00",
-        // img: "https://i.ibb.co/p2kmwvL/N11-2-1920-x-1080.jpg",
-    },
-    {
-        id: 6,
-        // title: "Mountain",
-        createdAt: "2022-02-16T00:18:08.319+00:00",
-        updatedAt: "0001-01-01T00:00:00.000+00:00",
-        img: "https://i.ibb.co/NKPR6vt/93832168-p0.png",
-    },
-];
-
 const BoardList: React.FC<BoardListProps> = () => {
+    const userFromStore = useSelector((state: any) => state.user);
+
+    console.log(userFromStore);
+
+    const { isLoading, isError, data, error } = useQuery("boards", async () => {
+        var rs = await fetch(`${API}/api/board/${userFromStore.user.id}`);
+        return rs.json();
+    });
+
     return (
         <div className="max-w-full min-h-screen bg-[color:var(--bg)]">
-            <div className="grid grid-flow-row sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8 pt-24 pb-8 px-20">
-                {Boards.map((board) => (
-                    <BoardCard
-                        key={board.id}
-                        id={board.id}
-                        title={board.title}
-                        createdAt={board.createdAt}
-                        updatedAt={board.updatedAt}
-                        img={board.img}
-                    />
-                ))}
-            </div>
+            {isLoading ? (
+                <div className="w-full h-screen flex justify-center items-center">
+                    <Loading />
+                </div>
+            ) : isError ? (
+                <div className="w-full h-screen flex justify-center items-center">
+                    <div>error</div>
+                </div>
+            ) : (
+                <div className="grid grid-flow-row sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8 pt-24 pb-8 px-20">
+                    {/* Create new board */}
+                    <CreateBoard />
+
+                    {/* User boards */}
+                    {data.map((board: Board) => (
+                        <BoardCard
+                            key={board.id}
+                            id={board.id}
+                            name={board.name}
+                            createdAt={board.createdAt}
+                            lastEdit={board.lastEdit}
+                            img={board.img}
+                        />
+                    ))}
+                </div>
+            )}
+
             <Setting />
         </div>
     );
 };
 
 export default BoardList;
+
+interface CreateBoardProps {
+    onClick?: () => void;
+}
+
+const CreateBoard: React.FC<CreateBoardProps> = ({ onClick }) => {
+    return (
+        <div
+            className="max-w-sm h-96 shadow-lg border border-gray-300 rounded-2xl flex justify-center items-center"
+            onClick={onClick ? onClick : () => {}}
+        >
+            <div className="rounded-full h-[3rem] w-[3rem] bg-[color:var(--element-bg)] flex justify-center items-center">
+                <Icon icon="plus" className=" text-white bold" size="xl" />
+            </div>
+        </div>
+    );
+};

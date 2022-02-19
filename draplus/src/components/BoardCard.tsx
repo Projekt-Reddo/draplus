@@ -4,44 +4,55 @@ import moment from "moment";
 import { DefaultDay } from "utils/constant";
 import { Menu, Transition } from "@headlessui/react";
 import Notification from "./Notification";
+import { useNavigate } from "react-router-dom";
 
 interface BoardCardProps {
-    id: number;
-    title?: string;
+    id: string;
+    name?: string;
     createdAt?: string;
-    updatedAt?: string;
+    lastEdit?: string;
     img?: string;
 }
 
 const BoardCard: React.FC<BoardCardProps> = ({
     id,
-    title,
+    name,
     createdAt,
-    updatedAt,
+    lastEdit,
     img,
 }) => {
+    const nagivate = useNavigate();
+
+    const goToBoard = () => {
+        nagivate(`/board/${id}`);
+    };
+
     return (
         <>
             <div className="max-w-sm h-96 relative overflow-hidden shadow-lg border border-gray-300 rounded-2xl">
                 {img ? (
                     <img
-                        className="w-full h-[73%] object-cover"
+                        className="w-full h-[73%] object-cover cursor-pointer"
                         src={img}
                         alt="Board"
+                        onClick={goToBoard}
                     />
                 ) : (
-                    <div className="w-full h-[73%] bg-[color:var(--bg)]" />
+                    <div
+                        className="w-full h-[73%] bg-[color:var(--bg)] cursor-pointer"
+                        onClick={goToBoard}
+                    />
                 )}
 
                 <div className="w-full h-[27%] px-6 py-4 bg-white flex flex- align-middle">
                     <div className="flex flex-col justify-center w-4/5">
-                        <div className="font-bold text-xl mb-2">
-                            {title ? title : "Last edited"}
+                        <div className="font-bold text-xl mb-2 overflow-hidden">
+                            {name ? name : "Last edited"}
                         </div>
                         <p className="text-gray-500 text-base">
                             <Icon icon="clock" className="mr-2" />
                             {moment(
-                                updatedAt === DefaultDay ? createdAt : updatedAt
+                                lastEdit === DefaultDay ? createdAt : lastEdit
                             ).format("DD MMMM YYYY")}
                         </p>
                     </div>

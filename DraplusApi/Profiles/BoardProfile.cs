@@ -10,6 +10,9 @@ namespace DraplusApi.Profiles
         {
             CreateMap<Board, BoardReadDto>();
             CreateMap<BoardCreateDto, Board>();
+
+            // For list of boards
+            CreateMap<Board, BoardForListDto>();
         }
     }
 }
