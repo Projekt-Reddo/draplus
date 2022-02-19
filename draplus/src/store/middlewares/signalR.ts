@@ -1,6 +1,7 @@
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import {
     LOGIN,
+    JOIN_ROOM,
     RECEIVE_MESSAGE,
     SEND_MESSAGE,
     RECEIVE_SHAPE,
@@ -14,12 +15,12 @@ var connection: {
 
 export const signalRMiddleware = (storeAPI: any) => {
     return (next: any) => async (action: any) => {
-        if (action.type === "") {
+        if (action.type === JOIN_ROOM) {
             connection.board = await createSignalRConnection(`${API}/board`);
             connection.chat = await createSignalRConnection(`${API}/chat`);
 
             await connection.board.invoke("JoinRoom", {
-                board: action.payload.boardId,
+                board: action.payload,
             });
 
             connection.chat.on(
@@ -36,7 +37,7 @@ export const signalRMiddleware = (storeAPI: any) => {
                 }
             );
 
-            connection.board.on("ReceiveShape", (user: any, shape: any) => {
+            connection.board.on("ReceiveShape", (shape: any) => {
                 storeAPI.dispatch({
                     type: RECEIVE_SHAPE,
                     payload: shape,
@@ -56,11 +57,9 @@ export const signalRMiddleware = (storeAPI: any) => {
         }
 
         if (action.type === DRAW_SHAPE) {
-            connection.board.invoke(
-                "DrawShape",
-                action.payload.user,
-                action.payload.lastShape
-            );
+            console.log(action.payload);
+
+            connection.board.invoke("DrawShape", action.payload);
         }
 
         return next(action);
