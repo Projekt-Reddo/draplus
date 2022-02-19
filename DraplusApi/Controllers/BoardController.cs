@@ -18,14 +18,12 @@ namespace DraplusApi.Controllers
     {
         private readonly IBoardRepo _boardRepo;
         private readonly IUserRepo _userRepo;
-        private readonly IChatRoomRepo _chatroomRepo;
         private readonly IMapper _mapper;
 
-        public BoardController(IBoardRepo boardRepo, IUserRepo userRepo, IChatRoomRepo chatRoomRepo, IMapper mapper)
+        public BoardController(IBoardRepo boardRepo, IUserRepo userRepo, IMapper mapper)
         {
             _boardRepo = boardRepo;
             _userRepo = userRepo;
-            _chatroomRepo = chatRoomRepo;
             _mapper = mapper;
         }
 
@@ -47,19 +45,12 @@ namespace DraplusApi.Controllers
             }
 
             // Create new chat room & board
-            var insertedChatRoom = await _chatroomRepo.Add(new ChatRoom()
-            {
-                Name = $"{user.Name} {DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}",
-            });
-
             var createdBoard = await _boardRepo.Add(new Board
             {
-                Name = $"{user.Name} {DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}",
                 UserId = boardCreateDto.UserId,
-                ChatRoomId = insertedChatRoom.Id != null ? insertedChatRoom.Id : "",
             });
 
-            return Ok(new ResponseDto(201, "Board created"));
+            return Ok(new ResponseDto(200, "Board created"));
         }
 
         [HttpGet("{userId}")]
