@@ -106,7 +106,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
 
     return (
         <div>
-            <div className="app-shadow leftToolBar absolute grid grid-cols-1 overflow-y-hidden content-center h-5/6 w-12 z-10">
+            <div className="app-shadow leftToolBar absolute grid grid-cols-1 gap-3 overflow-y-hidden content-center h-5/6 w-14 z-10">
                 {/* Tools */}
                 {/* Brush */}
                 <div

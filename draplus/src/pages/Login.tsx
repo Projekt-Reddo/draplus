@@ -11,13 +11,13 @@ import {
     GoogleLoginResponse,
     GoogleLoginResponseOffline,
 } from "react-google-login";
-import useModal from "utils/useModal";
+// import useModal from "utils/useModal";
 
 interface LoginProps {}
 
 const Login: React.FC<LoginProps> = () => {
     // for modal
-    const { isShowing, toggle } = useModal();
+    // const { isShowing, toggle } = useModal();
 
     let navigate = useNavigate();
     // For dispatch redux
@@ -55,12 +55,12 @@ const Login: React.FC<LoginProps> = () => {
             onSuccess: (r: any) => {
                 if (!r.ok) {
                     console.error(r);
-                    toggle();
+                    // toggle();
                     return;
                 }
                 r.json().then((user: any) => {
                     dispatch(login(user));
-                    navigate(`/${user.boardId}`);
+                    navigate(`/board`);
                 });
             },
             onError: (e: any) => {
@@ -77,8 +77,8 @@ const Login: React.FC<LoginProps> = () => {
             <LoginWrapper
                 googleResponse={googleResponse}
                 mutation={mutation}
-                isShowing={isShowing}
-                toggle={toggle}
+                isShowing={false}
+                toggle={() => {}}
             />
         </div>
     );

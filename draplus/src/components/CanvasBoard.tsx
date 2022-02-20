@@ -1,6 +1,7 @@
 // Libs
 import * as React from "react";
 import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import LC from "literallycanvas";
 
 // Components
@@ -16,12 +17,14 @@ import "styles/CanvasBoard.css";
 interface CanvasBoardProps {}
 
 const CanvasBoard: React.FC<CanvasBoardProps> = () => {
+    // Param State
+    const params: any = useParams();
+
     // Redux state
     const dispatch = useDispatch();
     const user = useSelector((state: any) => state.user);
     const shape = useSelector((state: RootStateOrAny) => state.shape);
 
-    console.log(user);
     // Handle State
     const [localInitLC, setLocalInitLC] = React.useState<typeof LC>();
     const [myShape, setMyShape] = React.useState<object[]>([]);
@@ -34,11 +37,8 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         setMyShape(lcShapeContainer.shapes);
         dispatch({
             type: DRAW_SHAPE,
-            payload: {
-                user: user.user,
-                lastShape:
-                    lcShapeContainer.shapes[lcShapeContainer.shapes.length - 1],
-            },
+            payload:
+                lcShapeContainer.shapes[lcShapeContainer.shapes.length - 1],
         });
     };
 
@@ -49,6 +49,7 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         lc.on("shapeSave", (shape: any) => handleDrawingChange(lc, shape));
     };
 
+    // Load Shape of the other User
     React.useEffect(() => {
         if (localInitLC && shape !== []) {
             localInitLC.loadSnapshot({

@@ -26,7 +26,6 @@ const BaseRoutes: React.FC = () => {
             const user = JSON.parse(userStored || "{}");
             const accessToken = localStorage.getItem("accessToken");
             dispatch(login({ ...user, accessToken: accessToken }));
-            navigate(`/${user.boardId}`);
         } else {
             navigate("/");
         }
@@ -40,8 +39,8 @@ const BaseRoutes: React.FC = () => {
     return (
         <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/list/board" element={<BoardList />} />
-            <Route path="/:boardId" element={<Board />} />
+            <Route path="/board/:boardId" element={<Board />} />
+            <Route path="/board" element={<BoardList />} />
             <Route path="*" element={<ErrorPage />} />
         </Routes>
     );

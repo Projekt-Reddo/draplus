@@ -2,7 +2,7 @@ import * as React from "react";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import "styles/Setting.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Icon from "components/Icon";
 import { useLocation } from "react-router-dom";
 import Notification from "components/Notification";
@@ -24,7 +24,7 @@ const SettingItems: SettingItem[] = [
     {
         icon: "layer-group",
         name: "My boards",
-        path: "/list/board",
+        path: "/board",
     },
     {
         icon: "question-circle",
@@ -41,6 +41,8 @@ const SettingItems: SettingItem[] = [
 const Setting: React.FC<SettingProps> = () => {
     // Getting current path from url
     const location = useLocation();
+
+    const navigate = useNavigate();
 
     // State manage Notification component
     const [toggle, setToggle] = React.useState(false);
@@ -63,15 +65,14 @@ const Setting: React.FC<SettingProps> = () => {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                 >
-                    <Menu.Items className="origin-top-right absolute right-10 top-20 mt-2 w-52 px-2 rounded-md shadow-lg setting-item divide-y divide-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className="origin-top-right fixed right-10 top-20 mt-2 w-52 px-2 rounded-md shadow-lg setting-item divide-y divide-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none">
                         {SettingItems.map(
                             (item: SettingItem, index: number) => (
                                 <div className="py-1" key={index}>
                                     <Menu.Item>
                                         {({ active }) => (
-                                            <Link
-                                                to={`${item.path}`}
-                                                className={`setting-item 
+                                            <div
+                                                className={`setting-item cursor-pointer
                     ${active ? "text-slate-400" : "text-slate-100"}
                      block px-4 py-2`}
                                                 onClick={
@@ -91,7 +92,12 @@ const Setting: React.FC<SettingProps> = () => {
                                                               // Show notification
                                                               setToggle(true);
                                                           }
-                                                        : () => {}
+                                                        : (e) => {
+                                                              e.preventDefault();
+                                                              navigate(
+                                                                  item.path
+                                                              );
+                                                          }
                                                 }
                                             >
                                                 <Icon
@@ -100,7 +106,7 @@ const Setting: React.FC<SettingProps> = () => {
                                                     size="lg"
                                                 />
                                                 {item.name}
-                                            </Link>
+                                            </div>
                                         )}
                                     </Menu.Item>
                                 </div>
