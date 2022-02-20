@@ -4,7 +4,8 @@ using DraplusApi.Models;
 
 namespace DraplusApi.Hubs;
 
-public class ChatHub : Hub {
+public class ChatHub : Hub
+{
     private readonly string _botUser;
     private readonly IDictionary<string, UserConnection> _connections;
 
@@ -19,6 +20,16 @@ public class ChatHub : Hub {
         await Groups.AddToGroupAsync(Context.ConnectionId, userConnection.Board);
 
         _connections[Context.ConnectionId] = userConnection;
+    }
+
+    public override Task OnDisconnectedAsync(Exception? exception)
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            _connections.Remove(Context.ConnectionId);
+        }
+
+        return base.OnConnectedAsync();
     }
 
     public async Task SendMessage(User user, string message)
