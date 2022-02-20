@@ -12,20 +12,30 @@ import { useEffect } from "react";
 import { init } from "utils/loginHandlers";
 import { login } from "store/actions/index";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Loading from "components/Loading";
 
 const BaseRoutes: React.FC = () => {
     const dispatch = useDispatch();
+    // for navigate
+    const [tempLocation, setTempLocation] = React.useState<string>("/");
+    const location = useLocation();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = React.useState(true);
     useEffect(() => {
         var rs = init();
+        if (!location.pathname.endsWith("/") || location.pathname === "") {
+            setTempLocation(location.pathname);
+            console.log(tempLocation);
+        }
         if (rs) {
             const userStored = localStorage.getItem("user");
             const user = JSON.parse(userStored || "{}");
             const accessToken = localStorage.getItem("accessToken");
             dispatch(login({ ...user, accessToken: accessToken }));
+            if (tempLocation !== "/") {
+                navigate(tempLocation);
+            }
         } else {
             navigate("/");
         }

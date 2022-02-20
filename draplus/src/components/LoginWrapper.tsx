@@ -2,7 +2,7 @@ import React from "react";
 import LoginButton from "./LoginButton";
 
 import Loading from "components/Loading";
-import Modal from "components/Modal";
+import Notification from "components/Notification";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCoffee } from "@fortawesome/free-solid-svg-icons";
@@ -19,9 +19,18 @@ const LoginWrapper: React.FC<LoginWrapperProps> = ({
     isShowing,
     toggle,
 }) => {
-    if (isShowing) {
-        return <Modal toggle={toggle}></Modal>;
-    }
+    // if (isShowing) {
+    //     // return <Modal toggle={toggle}></Modal>;
+    //     return (
+    //         <Notification
+    //             icon="circle-check"
+    //             title="Login failed"
+    //             // message="Now you can share this link"
+    //             toggle={isShowing}
+    //             setToggle={toggle}
+    //         />
+    //     );
+    // }
     return (
         <div
             className="h-1/2 w-1/4 flex flex-col items-center justify-between border-rounded app-shadow"
@@ -43,6 +52,15 @@ const LoginWrapper: React.FC<LoginWrapperProps> = ({
             </div>
             {mutation.isLoading ? (
                 <Loading></Loading>
+            ) : isShowing ? (
+                <Notification
+                    icon="circle-exclamation"
+                    iconColor="text-red-400"
+                    title="Login failed"
+                    // message="Now you can share this link"
+                    toggle={isShowing}
+                    setToggle={toggle}
+                />
             ) : (
                 <LoginButton googleResponse={googleResponse}></LoginButton>
             )}
