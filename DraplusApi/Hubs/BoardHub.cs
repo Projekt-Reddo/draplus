@@ -31,12 +31,6 @@ public class BoardHub : Hub
 
     }
 
-<<<<<<< HEAD
-    public async Task DrawShape(ShapeCreateDto shape)
-    {
-        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
-        {
-=======
     public override Task OnDisconnectedAsync(Exception? exception)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -51,32 +45,31 @@ public class BoardHub : Hub
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
->>>>>>> 8fafef6ef2a332e5f6add12eea4cd926c7c9ee35
             await Clients.OthersInGroup(userConnection.Board).SendAsync("ReceiveShape", shape);
 
-            var jsonData = Convert.ToString(shape.Data);
+            // var jsonData = Convert.ToString(shape.Data);
 
-            try
-            {
-                var data = JsonConvert.DeserializeObject<LinePathData>(jsonData);
-                shape.Data = data;
-            }
-            catch (Exception e)
-            {
-                var data = JsonConvert.DeserializeObject<TextData>(jsonData);
-                shape.Data = data;
-            }
+            // try
+            // {
+            //     var data = JsonConvert.DeserializeObject<LinePathData>(jsonData);
+            //     shape.Data = data;
+            // }
+            // catch (Exception e)
+            // {
+            //     var data = JsonConvert.DeserializeObject<TextData>(jsonData);
+            //     shape.Data = data;
+            // }
 
-            var boardFromRepo = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
-            var shapeToUpdate = _mapper.Map<Shape>(shape);
+            // var boardFromRepo = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
+            // var shapeToUpdate = _mapper.Map<Shape>(shape);
 
-            if (boardFromRepo.Shapes == null)
-            {
-                boardFromRepo.Shapes = new List<Shape>();
-            }
+            // if (boardFromRepo.Shapes == null)
+            // {
+            //     boardFromRepo.Shapes = new List<Shape>();
+            // }
 
-            boardFromRepo.Shapes.Add(shapeToUpdate);
-            var updateBoard = await _boardRepo.Update(userConnection.Board, boardFromRepo);
+            // boardFromRepo.Shapes.Add(shapeToUpdate);
+            // var updateBoard = await _boardRepo.Update(userConnection.Board, boardFromRepo);
         }
     }
 }

@@ -24,6 +24,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     const [showBrushOption, setShowBrushOption] = React.useState(false);
     const [isSelect, setIsSelect] = React.useState(1);
     const [colorSelect, setColorSelect] = React.useState("#fff");
+    const [strokeWidthSelect, setStrokeWidthSelect] = React.useState(5);
 
     // State click outside
     const wrapperRef = React.useRef(null);
@@ -33,13 +34,17 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     // Select Tool
     const handleSelectTool = (toolName: string) => {
         initLC.setTool(new LC.tools[toolName](initLC));
+        if (toolName === "Pencil") {
+            initLC.tool.strokeWidth = strokeWidthSelect;
+        }
         if (toolName === "Eraser") {
-            handleSelectToolStrokeWidth(30);
+            initLC.tool.strokeWidth = 30;
         }
     };
 
     // Select stroke width for Brush
-    const handleSelectToolStrokeWidth = (strokeWidth: Number) => {
+    const handleSelectToolStrokeWidth = (strokeWidth: number) => {
+        setStrokeWidthSelect(strokeWidth);
         initLC.tool.strokeWidth = strokeWidth;
     };
 
@@ -108,8 +113,8 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     ];
 
     return (
-        <div>
-            <div className="app-shadow leftToolBar absolute grid grid-cols-1 gap-5 overflow-y-hidden content-center h-5/6 w-14 z-10">
+        <>
+            <div className="app-shadow leftToolBar absolute grid grid-cols-1 gap-5 overflow-y-hidden content-center h-[33rem] w-14 z-10">
                 {/* Tools */}
                 {/* Brush */}
                 <div
@@ -214,7 +219,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                     ))}
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
