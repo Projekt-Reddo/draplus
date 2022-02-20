@@ -47,29 +47,29 @@ public class BoardHub : Hub
         {
             await Clients.OthersInGroup(userConnection.Board).SendAsync("ReceiveShape", shape);
 
-            // var jsonData = Convert.ToString(shape.Data);
+            var jsonData = Convert.ToString(shape.Data);
 
-            // try
-            // {
-            //     var data = JsonConvert.DeserializeObject<LinePathData>(jsonData);
-            //     shape.Data = data;
-            // }
-            // catch (Exception e)
-            // {
-            //     var data = JsonConvert.DeserializeObject<TextData>(jsonData);
-            //     shape.Data = data;
-            // }
+            try
+            {
+                var data = JsonConvert.DeserializeObject<LinePathData>(jsonData);
+                shape.Data = data;
+            }
+            catch (Exception e)
+            {
+                var data = JsonConvert.DeserializeObject<TextData>(jsonData);
+                shape.Data = data;
+            }
 
-            // var boardFromRepo = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
-            // var shapeToUpdate = _mapper.Map<Shape>(shape);
+            var boardFromRepo = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
+            var shapeToUpdate = _mapper.Map<Shape>(shape);
 
-            // if (boardFromRepo.Shapes == null)
-            // {
-            //     boardFromRepo.Shapes = new List<Shape>();
-            // }
+            if (boardFromRepo.Shapes == null)
+            {
+                boardFromRepo.Shapes = new List<Shape>();
+            }
 
-            // boardFromRepo.Shapes.Add(shapeToUpdate);
-            // var updateBoard = await _boardRepo.Update(userConnection.Board, boardFromRepo);
+            boardFromRepo.Shapes.Add(shapeToUpdate);
+            var updateBoard = await _boardRepo.Update(userConnection.Board, boardFromRepo);
         }
     }
 }
