@@ -2,7 +2,8 @@
     color: white;
     background-color: #3d3d3d;
     border-radius: 0px 8px 8px 0px;
-    margin-top: calc((100vh - (100vh * 5 / 6)) / 2);
+    top: 50%;
+    transform: translate(0, -50%);
 }
 
 .icon {
@@ -128,4 +129,12 @@
     border-radius: 50%;
     border: 2px solid white;
     cursor: pointer;
+}
+
+@media screen and (max-height: 500px) {
+    .leftToolBar {
+        max-height: 20rem;
+        overflow-y: scroll;
+        align-content: flex-start;
+    }
 }
