@@ -9,6 +9,7 @@ export const RECEIVE_SHAPE = "receiveshape";
 export const DRAW_SHAPE = "drawshape";
 export const INITLC = "lc/init";
 export const JOIN_ROOM = "joinRoom";
+export const LEAVE_ROOM = "leaveRoom";
 
 export { login };
 export { logout };
