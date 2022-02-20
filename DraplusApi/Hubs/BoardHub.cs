@@ -31,6 +31,16 @@ public class BoardHub : Hub
 
     }
 
+    public override Task OnDisconnectedAsync(Exception? exception)
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            _connections.Remove(Context.ConnectionId);
+        }
+
+        return base.OnConnectedAsync();
+    }
+
     public async Task DrawShape(ShapeCreateDto shape)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
