@@ -1,0 +1,131 @@
+.leftToolBar {
+    color: white;
+    background-color: #3d3d3d;
+    border-radius: 0px 8px 8px 0px;
+    margin-top: calc((100vh - (100vh * 5 / 6)) / 2);
+}
+
+.icon {
+    height: 3rem;
+    cursor: pointer;
+}
+
+.line {
+    height: 100%;
+    width: 3px;
+}
+
+.whiteLine {
+    height: 100%;
+    width: 3px;
+    background-color: white;
+}
+
+.brushOptionBoardHide {
+    display: none;
+}
+
+.brushOptionBoard {
+    color: white;
+    background-color: #3d3d3d;
+    margin-top: calc((100vh - (100vh * 4.5 / 6)) / 2);
+    margin-left: 4rem;
+    border-radius: 8px;
+}
+
+.verticalLine {
+    border-left: 1px solid rgba(243, 242, 243, 0.4);
+    height: 100%;
+}
+
+.eyeXL {
+    border: 2px solid white;
+    border-radius: 100%;
+    position: relative;
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+}
+.eyeXL::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0.7rem;
+    height: 0.7rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: black;
+    border-radius: 100%;
+}
+
+.eyeL {
+    border: 2px solid white;
+    border-radius: 100%;
+    position: relative;
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+}
+.eyeL::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0.5rem;
+    height: 0.5rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: black;
+    border-radius: 100%;
+}
+
+.eyeM {
+    border: 2px solid white;
+    border-radius: 100%;
+    position: relative;
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+}
+.eyeM::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0.35rem;
+    height: 0.35rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: black;
+    border-radius: 100%;
+}
+
+.eyeS {
+    border: 2px solid white;
+    border-radius: 100%;
+    position: relative;
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+}
+.eyeS::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0.25rem;
+    height: 0.25rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: black;
+    border-radius: 100%;
+}
+
+.dot {
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    border: 2px solid white;
+    cursor: pointer;
+}
