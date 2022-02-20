@@ -1,10 +1,14 @@
 import * as React from "react";
 import Icon from "components/Icon";
 import moment from "moment";
-import { DefaultDay } from "utils/constant";
+import { API, DefaultDay } from "utils/constant";
 import { Menu, Transition } from "@headlessui/react";
-import Notification from "./Notification";
+import Notification from "components/Notification";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "react-query";
+import { useNotification } from "utils/useNotification";
+import { useModal } from "utils/useModal";
+import Modal from "components/Modal";
 
 interface BoardCardProps {
     id: string;
@@ -12,6 +16,7 @@ interface BoardCardProps {
     createdAt?: string;
     lastEdit?: string;
     img?: string;
+    refetch?: () => void;
 }
 
 const BoardCard: React.FC<BoardCardProps> = ({
@@ -20,6 +25,7 @@ const BoardCard: React.FC<BoardCardProps> = ({
     createdAt,
     lastEdit,
     img,
+    refetch,
 }) => {
     const nagivate = useNavigate();
 
@@ -57,7 +63,7 @@ const BoardCard: React.FC<BoardCardProps> = ({
                         </p>
                     </div>
                     <div className="w-1/5">
-                        <BoardCardOptions />
+                        <BoardCardOptions id={id} refetch={refetch} />
                     </div>
                 </div>
             </div>
@@ -67,7 +73,10 @@ const BoardCard: React.FC<BoardCardProps> = ({
 
 export default BoardCard;
 
-interface BoardCardOptionsProps {}
+interface BoardCardOptionsProps {
+    id: string;
+    refetch?: () => void;
+}
 
 interface Option {
     icon: string;
@@ -75,27 +84,69 @@ interface Option {
     onClick?: () => void;
 }
 
-const BoardCardOptions: React.FC<BoardCardOptionsProps> = () => {
+const BoardCardOptions: React.FC<BoardCardOptionsProps> = ({ id, refetch }) => {
     const Options: Option[] = [
         {
             icon: "trash",
             label: "Delete",
             onClick: () => {
-                setToggle(true);
+                setOpen(true);
             },
         },
         {
             icon: "share-square",
             label: "Export",
         },
-        {
-            icon: "flag",
-            label: "Report",
-        },
     ];
 
+    // State manage Modal confirm
+    const { open, setOpen } = useModal();
+
     // State manage Notification component
-    const [toggle, setToggle] = React.useState(false);
+    const { toggle, setToggle, notifyMessage, setNotifyMessage } =
+        useNotification();
+
+    // Delete board
+    const deleteBoardMutation = useMutation(async () => {
+        var rs = await fetch(`${API}/api/board/${id}`, {
+            method: "DELETE",
+        });
+
+        return rs.json();
+    });
+
+    // Show notification when deleted
+    React.useEffect(() => {
+        if (deleteBoardMutation.isSuccess) {
+            if (deleteBoardMutation.data.status === 200) {
+                setNotifyMessage({
+                    icon: "circle-check",
+                    iconColor: "text-emerald-400",
+                    title: "Delete board successfully",
+                });
+
+                if (refetch) refetch();
+            } else {
+                setNotifyMessage({
+                    icon: "circle-exclamation",
+                    iconColor: "text-red-400",
+                    title: "Delete board failed",
+                });
+            }
+
+            setToggle(true);
+        }
+
+        if (deleteBoardMutation.isError) {
+            setNotifyMessage({
+                icon: "circle-exclamation",
+                iconColor: "text-red-400",
+                title: "There is an error with server",
+            });
+
+            setToggle(true);
+        }
+    }, [deleteBoardMutation.isSuccess, deleteBoardMutation.isError]);
 
     return (
         <>
@@ -145,9 +196,22 @@ const BoardCardOptions: React.FC<BoardCardOptionsProps> = () => {
                 </Transition>
             </Menu>
 
+            <Modal
+                type="error"
+                open={open}
+                setOpen={setOpen}
+                title="Delete board"
+                message="Are you sure you want to delete this board? Board data will be permanently removed. This action cannot be undone."
+                confirmTitle="Delete"
+                onConfirm={() => {
+                    deleteBoardMutation.mutate();
+                }}
+            />
+
             <Notification
-                icon="circle-check"
-                title="Delete board successfully"
+                icon={notifyMessage.icon}
+                iconColor={notifyMessage.iconColor}
+                title={notifyMessage.title}
                 toggle={toggle}
                 setToggle={setToggle}
             />

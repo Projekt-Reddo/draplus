@@ -18,19 +18,17 @@ namespace DraplusApi.Controllers
     {
         private readonly IBoardRepo _boardRepo;
         private readonly IUserRepo _userRepo;
-        private readonly IChatRoomRepo _chatroomRepo;
         private readonly IMapper _mapper;
 
-        public BoardController(IBoardRepo boardRepo, IUserRepo userRepo, IChatRoomRepo chatRoomRepo, IMapper mapper)
+        public BoardController(IBoardRepo boardRepo, IUserRepo userRepo, IMapper mapper)
         {
             _boardRepo = boardRepo;
             _userRepo = userRepo;
-            _chatroomRepo = chatRoomRepo;
             _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<ActionResult<BoardReadDto>> AddBoard([FromBody] BoardCreateDto boardCreateDto)
+        public async Task<ActionResult<ResponseDto>> AddBoard([FromBody] BoardCreateDto boardCreateDto)
         {
             // Validate input userId
             if (boardCreateDto.UserId == null)
@@ -47,19 +45,12 @@ namespace DraplusApi.Controllers
             }
 
             // Create new chat room & board
-            var insertedChatRoom = await _chatroomRepo.Add(new ChatRoom()
-            {
-                Name = $"{user.Name} {DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}",
-            });
-
             var createdBoard = await _boardRepo.Add(new Board
             {
-                Name = $"{user.Name} {DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}",
                 UserId = boardCreateDto.UserId,
-                ChatRoomId = insertedChatRoom.Id != null ? insertedChatRoom.Id : "",
             });
 
-            return Ok(new ResponseDto(201, "Board created"));
+            return Ok(new ResponseDto(200, "Board created"));
         }
 
         [HttpGet("{userId}")]
@@ -72,6 +63,19 @@ namespace DraplusApi.Controllers
             var boardForListDto = _mapper.Map<IEnumerable<BoardForListDto>>(boardsFromRepo);
 
             return Ok(boardForListDto);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ResponseDto>> DeleteBoard(string id)
+        {
+            var rs = await _boardRepo.Delete(id);
+
+            if (rs == false)
+            {
+                return BadRequest(new ResponseDto(400, "Board not found"));
+            }
+
+            return Ok(new ResponseDto(200, "Board deleted"));
         }
     }
 }

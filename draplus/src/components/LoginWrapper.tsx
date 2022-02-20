@@ -25,7 +25,8 @@ const LoginWrapper: React.FC<any> = ({
     toggle,
 }) => {
     if (isShowing) {
-        return <Modal toggle={toggle}></Modal>;
+        return <div>Error</div>;
+        // <Modal toggle={toggle}></Modal>;
     }
     return (
         <div

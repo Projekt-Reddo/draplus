@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 // Store
-import { JOIN_ROOM } from "store/actions";
+import { JOIN_ROOM, LEAVE_ROOM } from "store/actions";
 
 // Components
 import CanvasBoard from "components/CanvasBoard";
@@ -35,6 +35,13 @@ const Board: React.FC<BoardProps> = () => {
                 },
             });
         }
+
+        return () => {
+            dispatch({
+                type: LEAVE_ROOM,
+                payload: null,
+            });
+        };
     }, []);
 
     return (

@@ -31,10 +31,27 @@ public class BoardHub : Hub
 
     }
 
+<<<<<<< HEAD
     public async Task DrawShape(ShapeCreateDto shape)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
+=======
+    public override Task OnDisconnectedAsync(Exception? exception)
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            _connections.Remove(Context.ConnectionId);
+        }
+
+        return base.OnConnectedAsync();
+    }
+
+    public async Task DrawShape(ShapeCreateDto shape)
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+>>>>>>> 8fafef6ef2a332e5f6add12eea4cd926c7c9ee35
             await Clients.OthersInGroup(userConnection.Board).SendAsync("ReceiveShape", shape);
 
             var jsonData = Convert.ToString(shape.Data);

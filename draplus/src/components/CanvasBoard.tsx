@@ -17,6 +17,9 @@ import "styles/CanvasBoard.css";
 interface CanvasBoardProps {}
 
 const CanvasBoard: React.FC<CanvasBoardProps> = () => {
+    // Param State
+    const params: any = useParams();
+
     // Redux state
     const dispatch = useDispatch();
     const shape = useSelector((state: RootStateOrAny) => state.shape);

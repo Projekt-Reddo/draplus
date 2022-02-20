@@ -1,6 +1,7 @@
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import {
     JOIN_ROOM,
+    LEAVE_ROOM,
     RECEIVE_MESSAGE,
     SEND_MESSAGE,
     RECEIVE_SHAPE,
@@ -46,6 +47,15 @@ export const signalRMiddleware = (storeAPI: any) => {
 
             connection.chat.onclose(() => {});
             connection.board.onclose(() => {});
+        }
+
+        if (action.type === LEAVE_ROOM) {
+            try {
+                connection.board.stop();
+                connection.chat.stop();
+            } catch (e) {
+                console.log(e);
+            }
         }
 
         if (action.type === SEND_MESSAGE) {
