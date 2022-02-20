@@ -28,7 +28,7 @@ namespace DraplusApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BoardReadDto>> AddBoard([FromBody] BoardCreateDto boardCreateDto)
+        public async Task<ActionResult<ResponseDto>> AddBoard([FromBody] BoardCreateDto boardCreateDto)
         {
             // Validate input userId
             if (boardCreateDto.UserId == null)
@@ -63,6 +63,19 @@ namespace DraplusApi.Controllers
             var boardForListDto = _mapper.Map<IEnumerable<BoardForListDto>>(boardsFromRepo);
 
             return Ok(boardForListDto);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ResponseDto>> DeleteBoard(string id)
+        {
+            var rs = await _boardRepo.Delete(id);
+
+            if (rs == false)
+            {
+                return BadRequest(new ResponseDto(400, "Board not found"));
+            }
+
+            return Ok(new ResponseDto(200, "Board deleted"));
         }
     }
 }

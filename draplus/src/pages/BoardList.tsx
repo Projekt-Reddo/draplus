@@ -64,6 +64,7 @@ const BoardList: React.FC<BoardListProps> = () => {
                             createdAt={board.createdAt}
                             lastEdit={board.lastEdit}
                             img={board.img}
+                            refetch={refetch}
                         />
                     ))}
                 </div>
