@@ -11,14 +11,15 @@ import {
     GoogleLoginResponse,
     GoogleLoginResponseOffline,
 } from "react-google-login";
-// import useModal from "utils/useModal";
+import { useNotification } from "utils/useNotification";
 
 interface LoginProps {}
 
 const Login: React.FC<LoginProps> = () => {
     // for modal
     // const { isShowing, toggle } = useModal();
-
+    const { toggle, setToggle, notifyMessage, setNotifyMessage } =
+        useNotification();
     let navigate = useNavigate();
     // For dispatch redux
     const dispatch = useDispatch();
@@ -55,7 +56,7 @@ const Login: React.FC<LoginProps> = () => {
             onSuccess: (r: any) => {
                 if (!r.ok) {
                     console.error(r);
-                    // toggle();
+                    setToggle(!toggle);
                     return;
                 }
                 r.json().then((user: any) => {
@@ -77,8 +78,8 @@ const Login: React.FC<LoginProps> = () => {
             <LoginWrapper
                 googleResponse={googleResponse}
                 mutation={mutation}
-                isShowing={false}
-                toggle={() => {}}
+                toggle={toggle}
+                setToggle={() => setToggle(!toggle)}
             />
         </div>
     );

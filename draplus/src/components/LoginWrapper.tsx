@@ -10,16 +10,15 @@ import { faCoffee } from "@fortawesome/free-solid-svg-icons";
 interface LoginWrapperProps {
     googleResponse: any;
     mutation: any;
-    isShowing: boolean;
-    toggle: () => void;
+    toggle: boolean;
+    setToggle: (toggle: boolean) => void;
 }
 const LoginWrapper: React.FC<LoginWrapperProps> = ({
     googleResponse,
     mutation,
-    isShowing,
     toggle,
+    setToggle,
 }) => {
-<<<<<<< HEAD
     // if (isShowing) {
     //     // return <Modal toggle={toggle}></Modal>;
     //     return (
@@ -32,12 +31,6 @@ const LoginWrapper: React.FC<LoginWrapperProps> = ({
     //         />
     //     );
     // }
-=======
-    if (isShowing) {
-        return <div>Error</div>;
-        // <Modal toggle={toggle}></Modal>;
-    }
->>>>>>> b9f0d7343a6849ebf071e6eda26fac44c96920d2
     return (
         <div
             className="h-1/2 w-1/4 flex flex-col items-center justify-between border-rounded app-shadow"
@@ -59,14 +52,14 @@ const LoginWrapper: React.FC<LoginWrapperProps> = ({
             </div>
             {mutation.isLoading ? (
                 <Loading></Loading>
-            ) : isShowing ? (
+            ) : toggle ? (
                 <Notification
                     icon="circle-exclamation"
                     iconColor="text-red-400"
                     title="Login failed"
-                    // message="Now you can share this link"
-                    toggle={isShowing}
-                    setToggle={toggle}
+                    message="Please try again"
+                    toggle={toggle}
+                    setToggle={() => setToggle(!toggle)}
                 />
             ) : (
                 <LoginButton googleResponse={googleResponse}></LoginButton>
