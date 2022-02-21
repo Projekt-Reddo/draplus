@@ -27,13 +27,18 @@ namespace DraplusApi.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Add new board to database
+        /// </summary>
+        /// <param name="boardCreateDto">user info for creation of board</param>
+        /// <returns>200 / 400 / 404</returns>
         [HttpPost]
         public async Task<ActionResult<ResponseDto>> AddBoard([FromBody] BoardCreateDto boardCreateDto)
         {
             // Validate input userId
             if (boardCreateDto.UserId == null)
             {
-                return BadRequest(new ResponseDto(4004, "UserId is required"));
+                return BadRequest(new ResponseDto(400, "UserId is required"));
             }
 
             var filter = Builders<User>.Filter.Eq("Id", boardCreateDto.UserId);
@@ -41,7 +46,7 @@ namespace DraplusApi.Controllers
 
             if (user == null)
             {
-                return BadRequest(new ResponseDto(400, "User not found"));
+                return BadRequest(new ResponseDto(404, "User not found"));
             }
 
             // Create new chat room & board
@@ -53,8 +58,13 @@ namespace DraplusApi.Controllers
             return Ok(new ResponseDto(200, "Board created"));
         }
 
+        /// <summary>
+        /// Get all boards of user with userId
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>List of their board</returns>
         [HttpGet("{userId}")]
-        public async Task<ActionResult<IEnumerable<BoardForListDto>>> GetUserBoard(string userId)
+        public async Task<ActionResult<IEnumerable<BoardForListDto>>> GetUserBoards(string userId)
         {
             var filter = Builders<Board>.Filter.Eq("UserId", userId);
 
@@ -65,6 +75,11 @@ namespace DraplusApi.Controllers
             return Ok(boardForListDto);
         }
 
+        /// <summary>
+        /// Delete an board by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>200 / 404</returns>
         [HttpDelete("{id}")]
         public async Task<ActionResult<ResponseDto>> DeleteBoard(string id)
         {
@@ -72,7 +87,7 @@ namespace DraplusApi.Controllers
 
             if (rs == false)
             {
-                return BadRequest(new ResponseDto(400, "Board not found"));
+                return BadRequest(new ResponseDto(404, "Board not found"));
             }
 
             return Ok(new ResponseDto(200, "Board deleted"));
