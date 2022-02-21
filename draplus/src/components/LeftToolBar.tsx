@@ -13,6 +13,9 @@ interface LeftToolBarProps {}
 
 const doNothing = () => {};
 
+var watingClick: any = null;
+var lastClick = 0;
+
 const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     // Global State
     const initLC = useSelector((state: RootStateOrAny) => state.initLC);
@@ -21,6 +24,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     const [showBrushOption, setShowBrushOption] = React.useState(false);
     const [isSelect, setIsSelect] = React.useState(1);
     const [colorSelect, setColorSelect] = React.useState("#fff");
+    const [strokeWidthSelect, setStrokeWidthSelect] = React.useState(5);
 
     // State click outside
     const wrapperRef = React.useRef(null);
@@ -30,13 +34,17 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     // Select Tool
     const handleSelectTool = (toolName: string) => {
         initLC.setTool(new LC.tools[toolName](initLC));
+        if (toolName === "Pencil") {
+            initLC.tool.strokeWidth = strokeWidthSelect;
+        }
         if (toolName === "Eraser") {
-            handleSelectToolStrokeWidth(30);
+            initLC.tool.strokeWidth = 30;
         }
     };
 
     // Select stroke width for Brush
-    const handleSelectToolStrokeWidth = (strokeWidth: Number) => {
+    const handleSelectToolStrokeWidth = (strokeWidth: number) => {
+        setStrokeWidthSelect(strokeWidth);
         initLC.tool.strokeWidth = strokeWidth;
     };
 
@@ -105,19 +113,31 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     ];
 
     return (
-        <div>
-            <div className="app-shadow leftToolBar absolute grid grid-cols-1 gap-3 overflow-y-hidden content-center h-5/6 w-14 z-10">
+        <>
+            <div className="app-shadow leftToolBar absolute grid grid-cols-1 gap-5 overflow-y-hidden content-center h-[33rem] w-14 z-10">
                 {/* Tools */}
                 {/* Brush */}
                 <div
                     className="icon flex"
                     style={{ color: colorSelect }}
-                    onClick={() => {
-                        handleActiveButtonSelect(1);
-                        handleSelectTool("Pencil");
-                    }}
-                    onDoubleClick={() => {
-                        setShowBrushOption(!showBrushOption);
+                    onClick={(e) => {
+                        if (
+                            lastClick &&
+                            e.timeStamp - lastClick < 250 &&
+                            watingClick
+                        ) {
+                            lastClick = 0;
+                            clearTimeout(watingClick);
+                            setShowBrushOption(!showBrushOption);
+                            watingClick = null;
+                        } else {
+                            lastClick = e.timeStamp;
+                            watingClick = setTimeout(() => {
+                                watingClick = null;
+                                handleActiveButtonSelect(1);
+                                handleSelectTool("Pencil");
+                            }, 251);
+                        }
                     }}
                 >
                     <div
@@ -127,7 +147,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         <Icon icon="pen" style={{ fontSize: "1.5rem" }} />
                     </div>
                 </div>
-                {/* Eraser, Text, Note, Undo Redo */}
+                {/* Eraser, Text, Note, Undo, Redo */}
                 {toolbars.map((toolbar) => (
                     <div
                         key={toolbar.id}
@@ -199,7 +219,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                     ))}
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
