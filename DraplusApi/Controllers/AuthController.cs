@@ -38,26 +38,18 @@ namespace DraplusApi.Controllers
                 (var user, var isNew) = await _userRepo.Authenticate(payload);
                 if (isNew)
                 {
-                    var insertedChatRoom = await _chatroomRepo.Add(new ChatRoom()
-                    {
-                        Name = $"General {user.Name}",
-                    });
                     var insertedBoard = await _boardRepo.Add(new Board()
                     {
                         Name = $"Default {user.Name}",
                         UserId = user.Id,
-                        ChatRoomId = insertedChatRoom.Id
                     });
                 }
 
-                var boardFromRepo = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("UserId", user.Id));
                 var claims = _jwtGenerator.GenerateClaims(user);
                 var token = _jwtGenerator.GenerateJwtToken(claims);
 
                 var userToReturn = _mapper.Map<AuthDto>(user);
                 userToReturn.AccessToken = token;
-                userToReturn.BoardId = boardFromRepo.Id;
-                userToReturn.ChatRoomId = boardFromRepo.ChatRoomId;
                 
                 return Ok(
                     userToReturn
