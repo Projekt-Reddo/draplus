@@ -1,6 +1,6 @@
 import LoginWrapper from "components/LoginWrapper";
 import * as React from "react";
-import { default as data_env } from "../config/config.json";
+import { GOOGLE_AUTH_CALLBACK_URL } from "utils/constant";
 
 import { login } from "store/actions/index";
 import { useDispatch } from "react-redux";
@@ -26,7 +26,7 @@ const Login: React.FC<LoginProps> = () => {
 
     // For fetching data from server
     const mutation = useMutation((optionsFetch: Object) => {
-        return fetch(data_env.GOOGLE_AUTH_CALLBACK_URL, optionsFetch);
+        return fetch(GOOGLE_AUTH_CALLBACK_URL, optionsFetch);
     });
 
     const googleResponse = (
