@@ -4,9 +4,6 @@ import LoginButton from "./LoginButton";
 import Loading from "components/Loading";
 import Notification from "components/Notification";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCoffee } from "@fortawesome/free-solid-svg-icons";
-
 interface LoginWrapperProps {
     googleResponse: any;
     mutation: any;
@@ -19,18 +16,6 @@ const LoginWrapper: React.FC<LoginWrapperProps> = ({
     toggle,
     setToggle,
 }) => {
-    // if (isShowing) {
-    //     // return <Modal toggle={toggle}></Modal>;
-    //     return (
-    //         <Notification
-    //             icon="circle-check"
-    //             title="Login failed"
-    //             // message="Now you can share this link"
-    //             toggle={isShowing}
-    //             setToggle={toggle}
-    //         />
-    //     );
-    // }
     return (
         <div
             className="h-1/2 w-1/4 flex flex-col items-center justify-between border-rounded app-shadow"
@@ -40,11 +25,11 @@ const LoginWrapper: React.FC<LoginWrapperProps> = ({
                 maxWidth: "500px",
             }}
         >
-            <div className="h-auto mx-2 content-center text-center">
-                <FontAwesomeIcon
-                    className="mx-2 mt-6 mb-3 text-white"
-                    icon={faCoffee}
-                    size="2x"
+            <div className="h-auto mx-2 content-center text-center flex flex-col justify-between items-center">
+                <img
+                    src="/logo192.png"
+                    alt="logo"
+                    className="mx-2 mt-6 mb-2 w-10 h-10"
                 />
                 <p className="text-2xl text-white font-bold">
                     Login To Draplus
