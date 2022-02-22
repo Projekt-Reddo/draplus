@@ -54,7 +54,7 @@ public class BoardHub : Hub
                 var data = JsonConvert.DeserializeObject<LinePathData>(jsonData);
                 shape.Data = data;
             }
-            catch (Exception e)
+            catch
             {
                 var data = JsonConvert.DeserializeObject<TextData>(jsonData);
                 shape.Data = data;

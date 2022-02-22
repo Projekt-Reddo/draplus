@@ -2,6 +2,8 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace DraplusApi.Models
 {
+    // UNUSED CLASS
+
     public class ChatRoom
     {
         [BsonId]

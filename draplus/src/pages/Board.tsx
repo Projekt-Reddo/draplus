@@ -10,6 +10,7 @@ import { JOIN_ROOM, LEAVE_ROOM } from "store/actions";
 import CanvasBoard from "components/CanvasBoard";
 import Chat from "components/Chat";
 import Setting from "components/Setting";
+import Avatar from "components/Avatar";
 
 // Styles
 import "styles/Board.css";
@@ -49,6 +50,7 @@ const Board: React.FC<BoardProps> = () => {
             <CanvasBoard />
             <Chat />
             <Setting />
+            <Avatar />
         </>
     );
 };
