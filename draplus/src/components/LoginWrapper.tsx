@@ -2,36 +2,43 @@ import React from "react";
 import LoginButton from "./LoginButton";
 
 import Loading from "components/Loading";
-import Modal from "components/Modal";
+import Notification from "components/Notification";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCoffee } from "@fortawesome/free-solid-svg-icons";
 
-import {
-    GoogleLoginResponse,
-    GoogleLoginResponseOffline,
-} from "react-google-login";
-
 interface LoginWrapperProps {
-    googleResponse: GoogleLoginResponse | GoogleLoginResponseOffline;
+    googleResponse: any;
     mutation: any;
-    isShowing: boolean;
-    toggle: () => void;
+    toggle: boolean;
+    setToggle: (toggle: boolean) => void;
 }
-const LoginWrapper: React.FC<any> = ({
+const LoginWrapper: React.FC<LoginWrapperProps> = ({
     googleResponse,
     mutation,
-    isShowing,
     toggle,
+    setToggle,
 }) => {
-    if (isShowing) {
-        return <div>Error</div>;
-        // <Modal toggle={toggle}></Modal>;
-    }
+    // if (isShowing) {
+    //     // return <Modal toggle={toggle}></Modal>;
+    //     return (
+    //         <Notification
+    //             icon="circle-check"
+    //             title="Login failed"
+    //             // message="Now you can share this link"
+    //             toggle={isShowing}
+    //             setToggle={toggle}
+    //         />
+    //     );
+    // }
     return (
         <div
             className="h-1/2 w-1/4 flex flex-col items-center justify-between border-rounded app-shadow"
-            style={{ backgroundColor: "var(--element-bg)" }}
+            style={{
+                backgroundColor: "var(--element-bg)",
+                minWidth: "350px",
+                maxWidth: "500px",
+            }}
         >
             <div className="h-auto mx-2 content-center text-center">
                 <FontAwesomeIcon
@@ -45,6 +52,15 @@ const LoginWrapper: React.FC<any> = ({
             </div>
             {mutation.isLoading ? (
                 <Loading></Loading>
+            ) : toggle ? (
+                <Notification
+                    icon="circle-exclamation"
+                    iconColor="text-red-400"
+                    title="Login failed"
+                    message="Please try again"
+                    toggle={toggle}
+                    setToggle={() => setToggle(!toggle)}
+                />
             ) : (
                 <LoginButton googleResponse={googleResponse}></LoginButton>
             )}

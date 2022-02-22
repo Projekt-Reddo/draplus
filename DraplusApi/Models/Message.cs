@@ -3,6 +3,8 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace DraplusApi.Models
 {
+    // UNUSED CLASS
+
     public class Message
     {
         [BsonId]
