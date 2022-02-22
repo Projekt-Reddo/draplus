@@ -1,5 +1,5 @@
 import * as React from "react";
-import { default as data_env } from "../config/config.json";
+import { GOOGLE_CLIENT_ID } from "utils/constant";
 import { GoogleLogin } from "react-google-login";
 
 import "styles/GoogleLoginButton.css";
@@ -18,10 +18,11 @@ interface LoginButtonProps {
 // };
 const LoginButton: React.FC<LoginButtonProps> = ({ googleResponse }) => {
     const styles = { borderRadius: 50, width: "100%" };
+
     return (
         <div className="content-center justify-center my-2">
             <GoogleLogin
-                clientId={data_env.GOOGLE_CLIENT_ID}
+                clientId={GOOGLE_CLIENT_ID}
                 buttonText="Google Login"
                 render={(renderProps) => (
                     <button onClick={renderProps.onClick} style={styles}>

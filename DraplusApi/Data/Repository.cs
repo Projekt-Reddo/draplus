@@ -82,6 +82,7 @@ namespace DraplusApi.Data
         public virtual async Task<TEntity> GetByCondition(FilterDefinition<TEntity> filter = null!)
         {
             RegisterMissingClass();
+
             var entity = await _collection.Find(filter is null ? Builders<TEntity>.Filter.Empty : filter).FirstOrDefaultAsync();
             return entity;
         }

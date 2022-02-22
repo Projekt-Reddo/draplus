@@ -50,7 +50,7 @@ namespace DraplusApi.Controllers
 
                 var userToReturn = _mapper.Map<AuthDto>(user);
                 userToReturn.AccessToken = token;
-                
+
                 return Ok(
                     userToReturn
                 );
