@@ -1,14 +1,14 @@
 // Libs
 import * as React from "react";
 import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 import LC from "literallycanvas";
 
 // Components
 import LeftToolBar from "components/LeftToolBar";
+import Cursor from "components/Cursor";
 
 // Store
-import { DRAW_SHAPE, INITLC } from "store/actions";
+import { DRAW_SHAPE, INITLC, SEND_MOUSE } from "store/actions";
 
 // Style
 import "literallycanvas/lib/css/literallycanvas.css";
@@ -16,13 +16,13 @@ import "styles/CanvasBoard.css";
 
 interface CanvasBoardProps {}
 
-const CanvasBoard: React.FC<CanvasBoardProps> = () => {
-    // Param State
-    const params: any = useParams();
+var timer: any;
 
+const CanvasBoard: React.FC<CanvasBoardProps> = () => {
     // Redux state
     const dispatch = useDispatch();
     const shape = useSelector((state: RootStateOrAny) => state.shape);
+    const user = useSelector((state: any) => state.user);
 
     // Handle State
     const [localInitLC, setLocalInitLC] = React.useState<typeof LC>();
@@ -57,8 +57,34 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         }
     }, [shape]);
 
+    const getMousePosition = (e: any) => {
+        dispatch({
+            type: SEND_MOUSE,
+            payload: {
+                user: user.user.name,
+                x: e.pageX,
+                y: e.pageY,
+                isMove: true,
+            },
+        });
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            dispatch({
+                type: SEND_MOUSE,
+                payload: {
+                    user: user.user.name,
+                    x: e.pageX,
+                    y: e.pageY,
+                    isMove: false,
+                },
+            });
+        }, 300);
+    };
+
     return (
-        <div>
+        <div onMouseMove={getMousePosition}>
+            {/* Cursor */}
+            <Cursor />
             {/* Left Toolbar */}
             <LeftToolBar />
             {/* Canvas Board */}

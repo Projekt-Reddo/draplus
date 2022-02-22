@@ -6,6 +6,9 @@ import {
     SEND_MESSAGE,
     RECEIVE_SHAPE,
     DRAW_SHAPE,
+    SEND_MOUSE,
+    RECEIVE_MOUSE,
+    ONLINE_USERS,
 } from "store/actions";
 import { API } from "utils/constant";
 
@@ -45,6 +48,35 @@ export const signalRMiddleware = (storeAPI: any) => {
                 });
             });
 
+            connection.board.on(
+                "ReceiveMouse",
+                (
+                    userId: string,
+                    userName: string,
+                    x: number,
+                    y: number,
+                    isMove: boolean
+                ) => {
+                    storeAPI.dispatch({
+                        type: RECEIVE_MOUSE,
+                        payload: {
+                            userId,
+                            userName,
+                            x,
+                            y,
+                            isMove,
+                        },
+                    });
+                }
+            );
+
+            // connection.board.on("OnlineUsers", (users: any) => {
+            //     storeAPI.dispatch({
+            //         type: ONLINE_USERS,
+            //         payload: users,
+            //     });
+            // });
+
             connection.chat.onclose(() => {});
             connection.board.onclose(() => {});
         }
@@ -68,6 +100,16 @@ export const signalRMiddleware = (storeAPI: any) => {
 
         if (action.type === DRAW_SHAPE) {
             connection.board.invoke("DrawShape", action.payload);
+        }
+
+        if (action.type === SEND_MOUSE) {
+            connection.board.invoke(
+                "SendMouse",
+                action.payload.user,
+                action.payload.x,
+                action.payload.y,
+                action.payload.isMove
+            );
         }
 
         return next(action);
