@@ -43,7 +43,11 @@ const BaseRoutes: React.FC = () => {
     }, []);
 
     if (isLoading) {
-        return <Loading />;
+        return (
+            <div className="h-screen w-screen bg-[color:var(--bg)] flex items-center justify-center">
+                <Loading />
+            </div>
+        );
     }
 
     return (
