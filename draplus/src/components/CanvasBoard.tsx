@@ -77,9 +77,6 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
             });
         }, 300);
     };
-    React.useEffect(() => {
-        console.log(fetch(`https://localhost:7287/api/Board/620290017830b77933d595b8`).then(res=> res.json))
-    }, [])
 
     
 
