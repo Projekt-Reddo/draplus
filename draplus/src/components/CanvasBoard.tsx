@@ -7,11 +7,14 @@ import "styles/CanvasBoard.css";
 
 // Components
 import LeftToolBar from "components/LeftToolBar";
+import { debug } from "console";
 
 interface CanvasBoardProps {}
 
 const CanvasBoard: React.FC<CanvasBoardProps> = () => {
     const [initLC, setInitLC] = useState<typeof LC>();
+
+    const [data,setData] = useState();
 
     const handleDrawingChange = (lc: any) => {
         // const annotation = lc.getSnapshot(["shapes"]);
@@ -45,6 +48,11 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         setInitLC(lc);
         lc.on("drawingChange", () => handleDrawingChange(lc));
     };
+    React.useEffect(() => {
+        console.log(fetch(`https://localhost:7287/api/Board/620290017830b77933d595b8`).then(res=> res.json))
+    }, [])
+
+    
 
     return (
         <div>
@@ -57,6 +65,7 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
             />
             <LC.LiterallyCanvasReactComponent
                 onInit={handleInit}
+                snapshot={data}
                 primaryColor="#fff"
                 backgroundColor="#232222"
                 toolbarPosition="hidden"
@@ -66,6 +75,7 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
 };
 
 export default CanvasBoard;
+
 
 // const data = {
 //     shapes: [
@@ -101,35 +111,35 @@ export default CanvasBoard;
 //         },
 
 //         // Erased Line Path
-//         {
-//             className: "ErasedLinePath",
-//             data: {
-//                 order: 3,
-//                 pointColor: "#000",
-//                 pointCoordinatePairs: [[199, 149.25]],
-//                 pointSize: 5,
-//                 smooth: true,
-//                 smoothedPointCoordinatePairs: [
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                     [199, 149.25],
-//                 ],
-//                 tailSize: 3,
-//             },
-//             id: "52c41a32-427e-07ec-e63b-d48888d5af73",
-//         },
+//         // {
+//         //     className: "ErasedLinePath",
+//         //     data: {
+//         //         order: 3,
+//         //         pointColor: "#000",
+//         //         pointCoordinatePairs: [[199, 149.25]],
+//         //         pointSize: 5,
+//         //         smooth: true,
+//         //         smoothedPointCoordinatePairs: [
+//         //             [199, 149.25],
+//         //             [199, 149.25],
+//         //             [199, 149.25],
+//         //             [199, 149.25],
+//         //             [199, 149.25],
+//         //             [199, 149.25],
+//         //             [199, 149.25],
+//         //             [199, 149.25],
+//         //             [199, 149.25],
+//         //             [199, 149.25],
+//         //             [199, 149.25],
+//         //             [199, 149.25],
+//         //             [199, 149.25],
+//         //             [199, 149.25],
+//         //             [199, 149.25],
+//         //         ],
+//         //         tailSize: 3,
+//         //     },
+//         //     id: "52c41a32-427e-07ec-e63b-d48888d5af73",
+//         // },
 //         // Text
 //         {
 //             className: "Text",

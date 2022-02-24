@@ -8,6 +8,7 @@ using DraplusApi.Dtos;
 using DraplusApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace DraplusApi.Controllers
 {
@@ -48,5 +49,15 @@ namespace DraplusApi.Controllers
 
             return Ok(boardReadDto);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<BoardReadDto>> GetBoard(string id)
+        {
+            
+            var board = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id",id));
+            var boardread = _mapper.Map<BoardReadDto>(board);
+            return Ok(boardread);
+        }
+        
     }
 }
