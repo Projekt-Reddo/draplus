@@ -7,7 +7,14 @@ public class UserView
 
 public class UserConnection
 {
-    public string User { get; set; } = null!;
+    public UserInfoInUserConnection User { get; set; }
     public string Board { get; set; } = null!;
-    public string Chat { get; set; } = null!;
 }
+
+public class UserInfoInUserConnection
+{
+    public string Id { get; set; } = null!;
+    public string Name { get; set; } = null!;
+    public string Avatar { get; set; } = null!;
+}
+
