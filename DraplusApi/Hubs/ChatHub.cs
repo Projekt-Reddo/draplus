@@ -34,11 +34,10 @@ public class ChatHub : Hub
 
     public async Task SendMessage(User user, string message)
     {
-        // if (_connections.TryGetValue(Context.ConnectionId, out UserConnection userConnection)) {
-        //     await Clients.Group(userConnection.Board).SendAsync("ReceiveMessage", user, message);
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            await Clients.Group(userConnection.Board).SendAsync("ReceiveMessage", user, message, DateTime.Now);
 
-        // }
-
-        await Clients.All.SendAsync("ReceiveMessage", user, message, DateTime.Now);
+        }
     }
 }
