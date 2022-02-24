@@ -27,6 +27,7 @@ interface AvatarItems {
 const Avatar: React.FC<AvatarProps> = () => {
     // Getting user from redux
     const user = useSelector((state: any) => state.user.user);
+    const onlineUsers = useSelector((state: any) => state.onlineUsers);
 
     // Getting current path from url
     const navigate = useNavigate();
@@ -63,16 +64,48 @@ const Avatar: React.FC<AvatarProps> = () => {
             },
         },
     };
-    console.log(user);
 
     return (
         <>
             <Menu as="div">
                 <div>
+                    <div className="flex -space-x-3 fixed origin-top-right right-[132px] top-7 overflow-hidden drop-shadow-md">
+                        {onlineUsers.length > 4 ? (
+                            <div
+                                style={{
+                                    backgroundColor: "#3d3d3d",
+                                    color: "white",
+                                }}
+                                className="inline-block rounded-full h-12 w-12 border-2 "
+                            >
+                                <div className="text-center pt-2">
+                                    +{onlineUsers.length - 4}
+                                </div>
+                            </div>
+                        ) : (
+                            ""
+                        )}
+                        {onlineUsers
+                            .filter(
+                                (userOnline: any) => userOnline.id !== user.id
+                            )
+                            .slice(0, 3)
+                            .map((userOnline: any) => (
+                                <div
+                                    key={userOnline.id}
+                                    style={{
+                                        backgroundImage: `url(${userOnline.avatar})`,
+                                        backgroundSize: "cover",
+                                    }}
+                                    className="inline-block rounded-full h-12 w-12 border-2"
+                                />
+                            ))}
+                    </div>
                     <Menu.Button className="rounded-full fixed origin-top-right right-24 top-7 setting-btn drop-shadow-md">
+                        {/* <Icon icon="gear" fontSize="1.25rem" /> */}
                         <div className="avatar">
                             <img
-                                className="inline-block rounded-full ring-2 ring-white"
+                                className="inline-block rounded-full border-2"
                                 src={user.avatar}
                                 alt="user avatar"
                             />

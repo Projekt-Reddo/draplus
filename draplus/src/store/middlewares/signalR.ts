@@ -27,6 +27,11 @@ export const signalRMiddleware = (storeAPI: any) => {
                 board: action.payload.board,
             });
 
+            await connection.chat.invoke("JoinRoom", {
+                user: action.payload.user,
+                board: action.payload.board,
+            });
+
             connection.chat.on(
                 "ReceiveMessage",
                 (user: any, message: string, timestamp: Date) => {
@@ -70,12 +75,12 @@ export const signalRMiddleware = (storeAPI: any) => {
                 }
             );
 
-            // connection.board.on("OnlineUsers", (users: any) => {
-            //     storeAPI.dispatch({
-            //         type: ONLINE_USERS,
-            //         payload: users,
-            //     });
-            // });
+            connection.board.on("OnlineUsers", (users: object[]) => {
+                storeAPI.dispatch({
+                    type: ONLINE_USERS,
+                    payload: users,
+                });
+            });
 
             connection.chat.onclose(() => {});
             connection.board.onclose(() => {});
@@ -105,7 +110,6 @@ export const signalRMiddleware = (storeAPI: any) => {
         if (action.type === SEND_MOUSE) {
             connection.board.invoke(
                 "SendMouse",
-                action.payload.user,
                 action.payload.x,
                 action.payload.y,
                 action.payload.isMove

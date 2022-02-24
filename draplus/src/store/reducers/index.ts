@@ -4,7 +4,7 @@ import lcReducer from "./lc";
 import shapeReducer from "./shape";
 import chatReducer from "./chat";
 import mouseReducer from "./mouse";
-import onlineUsers from "./onlineUsers";
+import onlineUsersReducer from "./onlineUsers";
 
 const rootReducer = combineReducers({
     user: userReducer,
@@ -12,7 +12,7 @@ const rootReducer = combineReducers({
     shape: shapeReducer,
     chat: chatReducer,
     mouse: mouseReducer,
-    onlineUsers: onlineUsers,
+    onlineUsers: onlineUsersReducer,
 });
 
 export default rootReducer;
