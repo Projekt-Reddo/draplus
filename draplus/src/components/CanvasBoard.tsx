@@ -22,7 +22,6 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
     // Redux state
     const dispatch = useDispatch();
     const shape = useSelector((state: RootStateOrAny) => state.shape);
-    const user = useSelector((state: any) => state.user);
 
     // Handle State
     const [localInitLC, setLocalInitLC] = React.useState<typeof LC>();
@@ -61,7 +60,6 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         dispatch({
             type: SEND_MOUSE,
             payload: {
-                user: user.user.name,
                 x: e.pageX,
                 y: e.pageY,
                 isMove: true,
@@ -72,7 +70,6 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
             dispatch({
                 type: SEND_MOUSE,
                 payload: {
-                    user: user.user.name,
                     x: e.pageX,
                     y: e.pageY,
                     isMove: false,

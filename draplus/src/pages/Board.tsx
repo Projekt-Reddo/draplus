@@ -27,11 +27,11 @@ const Board: React.FC<BoardProps> = () => {
 
     // Join Board
     React.useEffect(() => {
-        if (params.boardId && user) {
+        if (params.boardId && user.user) {
             dispatch({
                 type: JOIN_ROOM,
                 payload: {
-                    user: user.user.id,
+                    user: user.user,
                     board: params.boardId,
                 },
             });
