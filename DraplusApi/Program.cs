@@ -9,7 +9,9 @@ using Newtonsoft.Json.Serialization;
 using Npgsql;
 using System.Text;
 using static Constant;
-using DraplusApi.Helper;
+using DraplusApi.Helpers;
+using DraplusApi.Hubs;
+using DraplusApi.Dtos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,35 +37,36 @@ builder.Services.Configure<MongoDbSetting>(builder.Configuration.GetSection("Mon
 builder.Services.AddSingleton<MongoDbSetting>(sp => sp.GetRequiredService<IOptions<MongoDbSetting>>().Value);
 builder.Services.AddSingleton<IMongoContext, MongoContext>();
 
-// alows CORS
-builder.Services.AddCors();
+#endregion
 
-// MongoDB Services
+// Project Services
 builder.Services.AddScoped<IBoardRepo, BoardRepo>();
 builder.Services.AddScoped<IChatRoomRepo, ChatRoomRepo>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 
-#endregion
+// alows CORS
+builder.Services.AddCors();
+builder.Services.AddSignalR();
+
+builder.Services.AddSingleton<IDictionary<string, UserConnection>>(opt => new Dictionary<string, UserConnection>());
 
 // Authentication
 ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        // options.Authority = "https://securetoken.google.com/draplus-api";
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters()
         {
-            ValidateIssuer = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSecret"])),
+            ValidateLifetime = true,
+            ValidateIssuer = false,
+            ValidateAudience = false,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = "https://securetoken.google.com/draplus-api",
-            ValidateAudience = true,
-            ValidAudience = "draplus-api",
-            ValidateLifetime = true
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSecret"]))
         };
     });
+
 builder.Services.AddSingleton<IJwtGenerator>(new JwtGenerator(configuration["JwtSecret"]));
 
 // Auto mapper
@@ -74,6 +77,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(opt =>
     // Config for camelCase properties name return in json
     opt.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
@@ -110,14 +114,20 @@ if (app.Environment.IsDevelopment())
 }
 
 // cors has to be on top of all
-app.UseCors(opt=>opt.SetIsOriginAllowed(origin=>true)
+app.UseCors(opt => opt.SetIsOriginAllowed(origin => true)
 .AllowAnyHeader()
 .AllowAnyMethod()
 .AllowCredentials());
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
+
+// SignalR board maping
+app.MapHub<ChatHub>("/chat");
+app.MapHub<BoardHub>("/board");
 
 app.MapControllers();
 

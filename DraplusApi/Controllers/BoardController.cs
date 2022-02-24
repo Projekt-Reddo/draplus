@@ -17,37 +17,80 @@ namespace DraplusApi.Controllers
     public class BoardController : ControllerBase
     {
         private readonly IBoardRepo _boardRepo;
+        private readonly IUserRepo _userRepo;
         private readonly IMapper _mapper;
 
-        public BoardController(IBoardRepo boardRepo, IMapper mapper)
+        public BoardController(IBoardRepo boardRepo, IUserRepo userRepo, IMapper mapper)
         {
             _boardRepo = boardRepo;
+            _userRepo = userRepo;
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Add new board to database
+        /// </summary>
+        /// <param name="boardCreateDto">user info for creation of board</param>
+        /// <returns>200 / 400 / 404</returns>
         [HttpPost]
-        public async Task<ActionResult<BoardReadDto>> AddBoard([FromBody] BoardCreateDto boardCreateDto)
+        public async Task<ActionResult<ResponseDto>> AddBoard([FromBody] BoardCreateDto boardCreateDto)
         {
-            if (boardCreateDto == null)
+            // Validate input userId
+            if (boardCreateDto.UserId == null)
             {
-                return BadRequest();
+                return BadRequest(new ResponseDto(400, "UserId is required"));
             }
 
-            var boardModel = _mapper.Map<Board>(boardCreateDto);
+            var filter = Builders<User>.Filter.Eq("Id", boardCreateDto.UserId);
+            var user = await _userRepo.GetByCondition(filter);
 
-            var createdBoard = await _boardRepo.Add(boardModel);
+            if (user == null)
+            {
+                return BadRequest(new ResponseDto(404, "User not found"));
+            }
 
-            return Ok(createdBoard);
+            // Create new chat room & board
+            var createdBoard = await _boardRepo.Add(new Board
+            {
+                UserId = boardCreateDto.UserId,
+            });
+
+            return Ok(new ResponseDto(200, "Board created"));
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<BoardReadDto>>> GetAllBoards()
+        /// <summary>
+        /// Get all boards of user with userId
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>List of their board</returns>
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<IEnumerable<BoardForListDto>>> GetUserBoards(string userId)
         {
-            var boards = await _boardRepo.GetAll();
+            var filter = Builders<Board>.Filter.Eq("UserId", userId);
 
-            var boardReadDto = _mapper.Map<IEnumerable<BoardReadDto>>(boards);
+            var boardsFromRepo = await _boardRepo.GetAll(filter: filter);
 
-            return Ok(boardReadDto);
+            var boardForListDto = _mapper.Map<IEnumerable<BoardForListDto>>(boardsFromRepo);
+
+            return Ok(boardForListDto);
+        }
+
+        /// <summary>
+        /// Delete an board by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>200 / 404</returns>
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ResponseDto>> DeleteBoard(string id)
+        {
+            var rs = await _boardRepo.Delete(id);
+
+            if (rs == false)
+            {
+                return BadRequest(new ResponseDto(404, "Board not found"));
+            }
+
+            return Ok(new ResponseDto(200, "Board deleted"));
         }
 
         [HttpGet("{id}")]
