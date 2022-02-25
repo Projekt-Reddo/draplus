@@ -7,7 +7,7 @@ public class UserView
 
 public class UserConnection
 {
-    public UserInfoInUserConnection User { get; set; }
+    public UserInfoInUserConnection User { get; set; } = null!;
     public string Board { get; set; } = null!;
 }
 

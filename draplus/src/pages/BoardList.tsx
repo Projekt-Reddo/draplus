@@ -8,6 +8,7 @@ import Loading from "components/Loading";
 import { useSelector } from "react-redux";
 import Notification from "components/Notification";
 import { useNotification } from "utils/useNotification";
+import Avatar from "components/Avatar";
 
 interface BoardListProps {}
 
@@ -71,6 +72,7 @@ const BoardList: React.FC<BoardListProps> = () => {
             )}
 
             <Setting />
+            <Avatar />
         </div>
     );
 };
