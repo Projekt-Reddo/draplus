@@ -22,6 +22,7 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
     // Redux state
     const dispatch = useDispatch();
     const shape = useSelector((state: RootStateOrAny) => state.shape);
+    const onlineUsers = useSelector((state: any) => state.onlineUsers);
 
     // Handle State
     const [localInitLC, setLocalInitLC] = React.useState<typeof LC>();
@@ -57,25 +58,27 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
     }, [shape]);
 
     const getMousePosition = (e: any) => {
-        dispatch({
-            type: SEND_MOUSE,
-            payload: {
-                x: e.pageX,
-                y: e.pageY,
-                isMove: true,
-            },
-        });
-        clearTimeout(timer);
-        timer = setTimeout(() => {
+        if (onlineUsers.length > 1) {
             dispatch({
                 type: SEND_MOUSE,
                 payload: {
                     x: e.pageX,
                     y: e.pageY,
-                    isMove: false,
+                    isMove: true,
                 },
             });
-        }, 300);
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                dispatch({
+                    type: SEND_MOUSE,
+                    payload: {
+                        x: e.pageX,
+                        y: e.pageY,
+                        isMove: false,
+                    },
+                });
+            }, 500);
+        }
     };
 
     
