@@ -9,6 +9,7 @@ import {
     SEND_MOUSE,
     RECEIVE_MOUSE,
     ONLINE_USERS,
+    GET_ONLINE_USERS,
 } from "store/actions";
 import { API } from "utils/constant";
 
@@ -27,10 +28,10 @@ export const signalRMiddleware = (storeAPI: any) => {
                 board: action.payload.board,
             });
 
-            await connection.chat.invoke("JoinRoom", {
-                user: action.payload.user,
-                board: action.payload.board,
-            });
+            // await connection.chat.invoke("JoinRoom", {
+            //     user: action.payload.user,
+            //     board: action.payload.board,
+            // });
 
             connection.chat.on(
                 "ReceiveMessage",
@@ -107,13 +108,17 @@ export const signalRMiddleware = (storeAPI: any) => {
             connection.board.invoke("DrawShape", action.payload);
         }
 
-        if (action.type === SEND_MOUSE) {
+        if (action.type === SEND_MOUSE && connection.board) {
             connection.board.invoke(
                 "SendMouse",
                 action.payload.x,
                 action.payload.y,
                 action.payload.isMove
             );
+        }
+
+        if (action.type === GET_ONLINE_USERS && connection.board) {
+            connection.board.invoke("SendOnlineUsers", action.payload);
         }
 
         return next(action);

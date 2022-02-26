@@ -46,8 +46,9 @@ builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 // alows CORS
 builder.Services.AddCors();
-builder.Services.AddSignalR();
 
+// Config for SignalR
+builder.Services.AddSignalR();
 builder.Services.AddSingleton<IDictionary<string, UserConnection>>(opt => new Dictionary<string, UserConnection>());
 
 // Authentication
@@ -63,6 +64,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = false,
             ValidateAudience = false,
             ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.Zero,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSecret"]))
         };
     });
@@ -114,7 +116,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // cors has to be on top of all
-app.UseCors(opt => opt.SetIsOriginAllowed(origin => true)
+app.UseCors(opt => opt.WithOrigins(builder.Configuration.GetSection("FrontendUrl").Get<string[]>())
 .AllowAnyHeader()
 .AllowAnyMethod()
 .AllowCredentials());

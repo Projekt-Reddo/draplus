@@ -10,7 +10,7 @@ import { logout } from "store/actions";
 interface AvatarProps {}
 
 interface AvatarItem {
-    icon: string;
+    icon?: string;
     name: string;
     className: string;
     style: object;
@@ -37,26 +37,24 @@ const Avatar: React.FC<AvatarProps> = () => {
 
     const AvatarItems: AvatarItems = {
         username: {
-            icon: "",
             name: user.name,
             isClickable: false,
             style: {},
-            className: "",
+            className: "text-lg tracking-wide",
             onClick: () => {},
         },
         email: {
-            icon: "",
             name: user.email,
             style: {},
-            className: "text-xs",
+            className: "font-semibold text-xs",
             isClickable: false,
             onClick: () => {},
         },
         logout: {
-            icon: "fa-sign-out",
+            icon: "right-from-bracket",
             name: "Logout",
             style: { color: "#33CDFF" },
-            className: "",
+            className: "font-semibold",
             isClickable: true,
             onClick: () => {
                 dispatch(logout());
@@ -69,7 +67,7 @@ const Avatar: React.FC<AvatarProps> = () => {
         <>
             <Menu as="div">
                 <div>
-                    <div className="flex -space-x-3 fixed origin-top-right right-[132px] top-7 overflow-hidden drop-shadow-md">
+                    <div className="flex -space-x-3 fixed origin-top-right right-[144px] top-7 overflow-hidden drop-shadow-md">
                         {onlineUsers.length > 4 ? (
                             <div
                                 style={{
@@ -78,7 +76,7 @@ const Avatar: React.FC<AvatarProps> = () => {
                                 }}
                                 className="inline-block rounded-full h-12 w-12 border-2 "
                             >
-                                <div className="text-center pt-2">
+                                <div className="text-center pt-2 pr-2">
                                     +{onlineUsers.length - 4}
                                 </div>
                             </div>
@@ -101,8 +99,7 @@ const Avatar: React.FC<AvatarProps> = () => {
                                 />
                             ))}
                     </div>
-                    <Menu.Button className="rounded-full fixed origin-top-right right-24 top-7 setting-btn drop-shadow-md">
-                        {/* <Icon icon="gear" fontSize="1.25rem" /> */}
+                    <Menu.Button className="rounded-full fixed origin-top-right right-[6.75rem] top-7 setting-btn drop-shadow-md">
                         <div className="avatar">
                             <img
                                 className="inline-block rounded-full border-2"
@@ -129,60 +126,35 @@ const Avatar: React.FC<AvatarProps> = () => {
                     >
                         <div className="py-1">
                             <Menu.Item>
-                                {({ active }) => (
-                                    <div
-                                        className={`cursor-pointer overflow-hidden whitespace-nowrap text-ellipsis
-                    ${active ? "text-slate-400" : "text-slate-100"}
-                    px-2 pt-1 text-right 
-                    `}
+                                <div
+                                    className={`cursor-pointer overflow-hidden whitespace-nowrap text-ellipsis text-slate-100 px-2 pt-1 text-right`}
+                                >
+                                    <p
+                                        className={`w-100 inline ${AvatarItems.username.className}`}
+                                        style={AvatarItems.username.style}
                                     >
-                                        <Icon
-                                            className="mr-4"
-                                            icon={AvatarItems.username.icon}
-                                            color="#33CDFF"
-                                            size="lg"
-                                        />
-                                        <p
-                                            className={`w-100 inline ${AvatarItems.username.className}"}`}
-                                            style={AvatarItems.username.style}
-                                        >
-                                            {AvatarItems.username.name}
-                                        </p>
-                                    </div>
-                                )}
+                                        {AvatarItems.username.name}
+                                    </p>
+                                </div>
                             </Menu.Item>
                             <Menu.Item>
-                                {({ active }) => (
-                                    <div
-                                        className={`cursor-pointer overflow-hidden whitespace-nowrap text-ellipsis
-                    ${active ? "text-slate-400" : "text-slate-100"}
-                    px-2 pb-1 text-right 
-                    `}
+                                <div
+                                    className={`cursor-pointer overflow-hidden whitespace-nowrap text-ellipsis text-slate-100 px-2 pb-1 text-right`}
+                                >
+                                    <p
+                                        className={`w-100 inline ${AvatarItems.email.className}`}
+                                        style={AvatarItems.email.style}
                                     >
-                                        <Icon
-                                            className="mr-4"
-                                            icon={AvatarItems.email.icon}
-                                            color="#33CDFF"
-                                            size="lg"
-                                        />
-                                        <p
-                                            className={`w-100 inline ${AvatarItems.email.className} "}`}
-                                            style={AvatarItems.email.style}
-                                        >
-                                            {AvatarItems.email.name}
-                                        </p>
-                                    </div>
-                                )}
+                                        {AvatarItems.email.name}
+                                    </p>
+                                </div>
                             </Menu.Item>
                         </div>
                         <div className="py-1">
                             <Menu.Item>
                                 {({ active }) => (
                                     <div
-                                        className={`cursor-pointer overflow-hidden whitespace-nowrap text-ellipsis
-                    ${active ? "text-slate-400" : "text-slate-100"}
-                    px-2 py-2 text-right 
-                    `}
+                                        className={`cursor-pointer overflow-hidden whitespace-nowrap text-ellipsis px-2 py-2 text-right`}
                                         onClick={AvatarItems.logout.onClick}
                                     >
                                         <Icon
@@ -193,7 +165,7 @@ const Avatar: React.FC<AvatarProps> = () => {
                                         />
                                         <p
                                             className={`w-100 inline 
-                                                ${AvatarItems.logout.className}"}`}
+                                                ${AvatarItems.logout.className}`}
                                             style={AvatarItems.logout.style}
                                         >
                                             {AvatarItems.logout.name}

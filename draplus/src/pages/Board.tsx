@@ -4,7 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 // Store
-import { JOIN_ROOM, LEAVE_ROOM } from "store/actions";
+import {
+    JOIN_ROOM,
+    LEAVE_ROOM,
+    GET_ONLINE_USERS,
+    ONLINE_USERS,
+} from "store/actions";
 
 // Components
 import CanvasBoard from "components/CanvasBoard";
@@ -24,9 +29,10 @@ const Board: React.FC<BoardProps> = () => {
 
     // Global State
     const user = useSelector((state: any) => state.user);
+    const board = useSelector((state: any) => state.board);
 
-    // Join Board
     React.useEffect(() => {
+        // Join Board
         if (params.boardId && user.user) {
             dispatch({
                 type: JOIN_ROOM,
@@ -37,13 +43,28 @@ const Board: React.FC<BoardProps> = () => {
             });
         }
 
+        // User Leave Room
         return () => {
             dispatch({
                 type: LEAVE_ROOM,
                 payload: null,
             });
+            dispatch({
+                type: ONLINE_USERS,
+                payload: [],
+            });
         };
     }, []);
+
+    // Get List User Online
+    React.useEffect(() => {
+        if (board) {
+            dispatch({
+                type: GET_ONLINE_USERS,
+                payload: board,
+            });
+        }
+    }, [board]);
 
     return (
         <>

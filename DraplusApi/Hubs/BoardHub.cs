@@ -6,6 +6,7 @@ using DraplusApi.Data;
 using MongoDB.Driver;
 using AutoMapper;
 using Newtonsoft.Json;
+using static Constant;
 
 namespace DraplusApi.Hubs;
 
@@ -31,7 +32,6 @@ public class BoardHub : Hub
 
         _connections[Context.ConnectionId] = userConnection;
 
-        await SendOnlineUsers(userConnection.Board);
     }
 
     public override Task OnDisconnectedAsync(Exception? exception)
@@ -39,11 +39,13 @@ public class BoardHub : Hub
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
             _connections.Remove(Context.ConnectionId);
+
+            Groups.RemoveFromGroupAsync(Context.ConnectionId, userConnection.Board);
         }
 
         if (userConnection != null)
         {
-            SendOnlineUsers(userConnection.Board);
+            OnlineUsers(userConnection.Board);
         }
         return base.OnConnectedAsync();
     }
@@ -52,31 +54,31 @@ public class BoardHub : Hub
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
-            await Clients.OthersInGroup(userConnection.Board).SendAsync("ReceiveShape", shape);
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveShape, shape);
 
-            var jsonData = Convert.ToString(shape.Data);
+            // var jsonData = Convert.ToString(shape.Data);
 
-            try
-            {
-                var data = JsonConvert.DeserializeObject<LinePathData>(jsonData);
-                shape.Data = data;
-            }
-            catch
-            {
-                var data = JsonConvert.DeserializeObject<TextData>(jsonData);
-                shape.Data = data;
-            }
+            // try
+            // {
+            //     var data = JsonConvert.DeserializeObject<LinePathData>(jsonData);
+            //     shape.Data = data;
+            // }
+            // catch
+            // {
+            //     var data = JsonConvert.DeserializeObject<TextData>(jsonData);
+            //     shape.Data = data;
+            // }
 
-            var boardFromRepo = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
-            var shapeToUpdate = _mapper.Map<Shape>(shape);
+            // var boardFromRepo = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
+            // var shapeToUpdate = _mapper.Map<Shape>(shape);
 
-            if (boardFromRepo.Shapes == null)
-            {
-                boardFromRepo.Shapes = new List<Shape>();
-            }
+            // if (boardFromRepo.Shapes == null)
+            // {
+            //     boardFromRepo.Shapes = new List<Shape>();
+            // }
 
-            boardFromRepo.Shapes.Add(shapeToUpdate);
-            var updateBoard = await _boardRepo.Update(userConnection.Board, boardFromRepo);
+            // boardFromRepo.Shapes.Add(shapeToUpdate);
+            // var updateBoard = await _boardRepo.Update(userConnection.Board, boardFromRepo);
         }
     }
 
@@ -84,14 +86,18 @@ public class BoardHub : Hub
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
-            await Clients.OthersInGroup(userConnection.Board).SendAsync("ReceiveMouse", userConnection.User.Id, userConnection.User.Name, x, y, isMove);
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveMouse, userConnection.User.Id, userConnection.User.Name, x, y, isMove);
         }
     }
 
-    public Task SendOnlineUsers(string boardId)
+    public async Task SendOnlineUsers(string boardId)
+    {
+        await OnlineUsers(boardId);
+    }
+
+    public Task OnlineUsers(string boardId)
     {
         var users = _connections.Values.Where(user => user.Board == boardId).Select(user => user.User);
-
-        return Clients.Group(boardId).SendAsync("OnlineUsers", users);
+        return Clients.Group(boardId).SendAsync(HubReturnMethod.OnlineUsers, users);
     }
 }

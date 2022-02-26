@@ -13,4 +13,12 @@ public static class Constant
         public const string Text = "Text";
     }
     public const string DefaultAvatarUrl = "https://i.ibb.co/kxHf8Yv/default-avatar.png";
+
+    public static class HubReturnMethod
+    {
+        public const string ReceiveShape = "ReceiveShape";
+        public const string ReceiveMouse = "ReceiveMouse";
+        public const string OnlineUsers = "OnlineUsers";
+        public const string ReceiveMessage = "ReceiveMessage";
+    }
 }
