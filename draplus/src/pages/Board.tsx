@@ -24,6 +24,7 @@ const Board: React.FC<BoardProps> = () => {
 
     // Global State
     const user = useSelector((state: any) => state.user);
+    const board = useSelector((state: any) => state.board);
 
     // Join Board
     React.useEffect(() => {
@@ -44,6 +45,8 @@ const Board: React.FC<BoardProps> = () => {
             });
         };
     }, []);
+
+    React.useEffect(() => {}, [board]);
 
     return (
         <>
