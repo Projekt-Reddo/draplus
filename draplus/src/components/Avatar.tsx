@@ -67,7 +67,7 @@ const Avatar: React.FC<AvatarProps> = () => {
         <>
             <Menu as="div">
                 <div>
-                    <div className="flex -space-x-3 fixed origin-top-right right-[132px] top-7 overflow-hidden drop-shadow-md">
+                    <div className="flex -space-x-3 fixed origin-top-right right-[144px] top-7 overflow-hidden drop-shadow-md">
                         {onlineUsers.length > 4 ? (
                             <div
                                 style={{
@@ -76,7 +76,7 @@ const Avatar: React.FC<AvatarProps> = () => {
                                 }}
                                 className="inline-block rounded-full h-12 w-12 border-2 "
                             >
-                                <div className="text-center pt-2">
+                                <div className="text-center pt-2 pr-2">
                                     +{onlineUsers.length - 4}
                                 </div>
                             </div>

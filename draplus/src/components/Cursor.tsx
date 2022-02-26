@@ -24,7 +24,7 @@ const Cursor: React.FC<CursorProps> = () => {
                         ></div>
                         {/* Username */}
                         <div
-                            className="cursor-outline text-center text-xs text-white"
+                            className="cursor-outline text-center text-xs text-white p-1"
                             style={{
                                 left: mouse.x + 9,
                                 top: mouse.y + 9,

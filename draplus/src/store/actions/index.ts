@@ -13,6 +13,7 @@ export const INITLC = "lc/init";
 export const JOIN_ROOM = "joinRoom";
 export const LEAVE_ROOM = "leaveRoom";
 export const ONLINE_USERS = "onlineUsers";
+export const GET_ONLINE_USERS = "getOnlineUsers";
 
 export { login };
 export { logout };
