@@ -107,7 +107,7 @@ export const signalRMiddleware = (storeAPI: any) => {
             connection.board.invoke("DrawShape", action.payload);
         }
 
-        if (action.type === SEND_MOUSE) {
+        if (action.type === SEND_MOUSE && connection.board) {
             connection.board.invoke(
                 "SendMouse",
                 action.payload.x,
