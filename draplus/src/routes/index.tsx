@@ -26,7 +26,6 @@ const BaseRoutes: React.FC = () => {
         var rs = init();
         if (!location.pathname.endsWith("/") || location.pathname === "") {
             setTempLocation(location.pathname);
-            console.log(tempLocation);
         }
         if (rs) {
             const userStored = localStorage.getItem("user");

@@ -6,6 +6,7 @@ using DraplusApi.Data;
 using MongoDB.Driver;
 using AutoMapper;
 using Newtonsoft.Json;
+using static Constant;
 
 namespace DraplusApi.Hubs;
 
@@ -39,6 +40,8 @@ public class BoardHub : Hub
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
             _connections.Remove(Context.ConnectionId);
+
+            Groups.RemoveFromGroupAsync(Context.ConnectionId, userConnection.Board);
         }
 
         if (userConnection != null)
@@ -52,7 +55,7 @@ public class BoardHub : Hub
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
-            await Clients.OthersInGroup(userConnection.Board).SendAsync("ReceiveShape", shape);
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveShape, shape);
 
             var jsonData = Convert.ToString(shape.Data);
 
@@ -84,7 +87,7 @@ public class BoardHub : Hub
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
-            await Clients.OthersInGroup(userConnection.Board).SendAsync("ReceiveMouse", userConnection.User.Id, userConnection.User.Name, x, y, isMove);
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveMouse, userConnection.User.Id, userConnection.User.Name, x, y, isMove);
         }
     }
 
@@ -92,6 +95,6 @@ public class BoardHub : Hub
     {
         var users = _connections.Values.Where(user => user.Board == boardId).Select(user => user.User);
 
-        return Clients.Group(boardId).SendAsync("OnlineUsers", users);
+        return Clients.Group(boardId).SendAsync(HubReturnMethod.OnlineUsers, users);
     }
 }
