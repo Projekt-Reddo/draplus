@@ -13,13 +13,10 @@ export const INITLC = "lc/init";
 export const JOIN_ROOM = "joinRoom";
 export const LEAVE_ROOM = "leaveRoom";
 export const ONLINE_USERS = "onlineUsers";
-<<<<<<< Updated upstream
 export const GET_ONLINE_USERS = "getOnlineUsers";
-=======
 export const ADD_NOTE = "note/add";
 export const UPDATE_NOTE = "note/update";
 export const DELETE_NOTE = "note/delete";
->>>>>>> Stashed changes
 
 export { login };
 export { logout };

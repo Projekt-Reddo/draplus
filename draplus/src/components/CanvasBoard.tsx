@@ -23,11 +23,8 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
     // Redux state
     const dispatch = useDispatch();
     const shape = useSelector((state: RootStateOrAny) => state.shape);
-<<<<<<< Updated upstream
     const onlineUsers = useSelector((state: any) => state.onlineUsers);
-=======
     const tool = useSelector((state: RootStateOrAny) => state.tool);
->>>>>>> Stashed changes
 
     // Handle State
     const [localInitLC, setLocalInitLC] = React.useState<typeof LC>();
