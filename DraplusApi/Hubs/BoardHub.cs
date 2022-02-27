@@ -100,4 +100,28 @@ public class BoardHub : Hub
         var users = _connections.Values.Where(user => user.Board == boardId).Select(user => user.User);
         return Clients.Group(boardId).SendAsync(HubReturnMethod.OnlineUsers, users);
     }
+
+    public async Task NewNote(NoteDto note)
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveNewNote, note);
+        }
+    }
+
+    public async Task UpdateNote(NoteUpdateDto note)
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveUpdateNote, note);
+        }
+    }
+
+    public async Task DeleteNote(string noteId)
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveDeleteNote, noteId);
+        }
+    }
 }

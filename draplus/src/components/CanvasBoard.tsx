@@ -57,6 +57,7 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
                 x: e.clientX,
                 y: e.clientY,
                 text: "",
+                id: `${Date.now()} ${Math.random()}`,
             },
         });
     };

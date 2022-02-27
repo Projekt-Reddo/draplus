@@ -10,6 +10,12 @@ import {
     RECEIVE_MOUSE,
     ONLINE_USERS,
     GET_ONLINE_USERS,
+    ADD_NOTE,
+    UPDATE_NOTE,
+    RECEIVE_UPDATE_NOTE,
+    RECEIVE_NEW_NOTE,
+    DELETE_NOTE,
+    RECEIVE_REMOVE_NOTE,
 } from "store/actions";
 import { API } from "utils/constant";
 
@@ -83,6 +89,27 @@ export const signalRMiddleware = (storeAPI: any) => {
                 });
             });
 
+            connection.board.on("ReceiveNewNote", (note: Note) => {
+                storeAPI.dispatch({
+                    type: RECEIVE_NEW_NOTE,
+                    payload: note,
+                });
+            });
+
+            connection.board.on("ReceiveUpdateNote", (note: Note) => {
+                storeAPI.dispatch({
+                    type: RECEIVE_UPDATE_NOTE,
+                    payload: note,
+                });
+            });
+
+            connection.board.on("ReceiveDeleteNote", (noteId: string) => {
+                storeAPI.dispatch({
+                    type: RECEIVE_REMOVE_NOTE,
+                    payload: noteId,
+                });
+            });
+
             connection.chat.onclose(() => {});
             connection.board.onclose(() => {});
         }
@@ -119,6 +146,18 @@ export const signalRMiddleware = (storeAPI: any) => {
 
         if (action.type === GET_ONLINE_USERS && connection.board) {
             connection.board.invoke("SendOnlineUsers", action.payload);
+        }
+
+        if (action.type === ADD_NOTE) {
+            connection.board.invoke("NewNote", action.payload);
+        }
+
+        if (action.type === UPDATE_NOTE) {
+            connection.board.invoke("UpdateNote", action.payload);
+        }
+
+        if (action.type === DELETE_NOTE) {
+            connection.board.invoke("DeleteNote", action.payload);
         }
 
         return next(action);
