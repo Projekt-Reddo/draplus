@@ -25,6 +25,7 @@
         "literallycanvas": "^0.5.2",
         "moment": "^2.29.1",
         "react": "^17.0.2",
+        "react-contenteditable": "^3.3.6",
         "react-dom": "^17.0.2",
         "react-dom-factories": "^1.0.2",
         "react-google-login": "^5.2.2",

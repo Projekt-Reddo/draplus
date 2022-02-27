@@ -10,6 +10,12 @@ import {
     RECEIVE_MOUSE,
     ONLINE_USERS,
     GET_ONLINE_USERS,
+    ADD_NOTE,
+    UPDATE_NOTE,
+    RECEIVE_UPDATE_NOTE,
+    RECEIVE_NEW_NOTE,
+    DELETE_NOTE,
+    RECEIVE_REMOVE_NOTE,
     CLEAR_ALL,
     RECEIVE_CLEAR,
 } from "store/actions";
@@ -55,11 +61,11 @@ export const signalRMiddleware = (storeAPI: any) => {
                     payload: shape,
                 });
             });
-            
+
             connection.board.on("ClearAll", (clear: any) => {
                 const state = storeAPI.getState();
                 state.initLC.clear();
-            })
+            });
 
             connection.board.on(
                 "ReceiveMouse",
@@ -87,6 +93,27 @@ export const signalRMiddleware = (storeAPI: any) => {
                 storeAPI.dispatch({
                     type: ONLINE_USERS,
                     payload: users,
+                });
+            });
+
+            connection.board.on("ReceiveNewNote", (note: Note) => {
+                storeAPI.dispatch({
+                    type: RECEIVE_NEW_NOTE,
+                    payload: note,
+                });
+            });
+
+            connection.board.on("ReceiveUpdateNote", (note: Note) => {
+                storeAPI.dispatch({
+                    type: RECEIVE_UPDATE_NOTE,
+                    payload: note,
+                });
+            });
+
+            connection.board.on("ReceiveDeleteNote", (noteId: string) => {
+                storeAPI.dispatch({
+                    type: RECEIVE_REMOVE_NOTE,
+                    payload: noteId,
                 });
             });
 
@@ -131,6 +158,17 @@ export const signalRMiddleware = (storeAPI: any) => {
             connection.board.invoke("SendOnlineUsers", action.payload);
         }
 
+        if (action.type === ADD_NOTE) {
+            connection.board.invoke("NewNote", action.payload);
+        }
+
+        if (action.type === UPDATE_NOTE) {
+            connection.board.invoke("UpdateNote", action.payload);
+        }
+
+        if (action.type === DELETE_NOTE) {
+            connection.board.invoke("DeleteNote", action.payload);
+        }
 
         return next(action);
     };

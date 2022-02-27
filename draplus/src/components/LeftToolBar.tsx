@@ -8,9 +8,10 @@ import Icon from "components/Icon";
 
 //Style
 import "styles/LeftToolBar.css";
+import { OtherTool, Pencil } from "utils/constant";
 
 //Store
-import {CLEAR_ALL,DRAW_SHAPE} from "store/actions";
+import { CLEAR_ALL, DRAW_SHAPE } from "store/actions";
 
 interface LeftToolBarProps {}
 
@@ -22,6 +23,7 @@ var lastClick = 0;
 const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     // Global State
     const initLC = useSelector((state: RootStateOrAny) => state.initLC);
+    const dispatch = useDispatch();
     const clear = useSelector((state: RootStateOrAny) => state.clear);
 
     // Handle State
@@ -36,15 +38,17 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     useOutsideAlerter(wrapperRef, setShowBrushOption);
 
     const wrapperRef2 = React.useRef(null);
-    useOutsideAlerter2(wrapperRef2,setClearrAllOption);
-
-    const dispatch = useDispatch();
-
+    useOutsideAlerter2(wrapperRef2, setClearrAllOption);
 
     // Funtions Handle Draw Canvas
     // Select Tool
     const handleSelectTool = (toolName: string) => {
         initLC.setTool(new LC.tools[toolName](initLC));
+
+        dispatch({
+            type: toolName,
+        });
+
         if (toolName === "Pencil") {
             initLC.tool.strokeWidth = strokeWidthSelect;
         }
@@ -79,14 +83,13 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
         initLC.clear();
         const lcShapeContainer = lc.getSnapshot(["shapes"]);
         dispatch({
-            type: CLEAR_ALL
+            type: CLEAR_ALL,
         });
     };
 
-
-    React.useEffect(() =>{
+    React.useEffect(() => {
         //handleClear(initLC);
-    }, [clear])
+    }, [clear]);
 
     // Handle active Button was selected
     const handleActiveButtonSelect = (buttonCode: number) => {
@@ -95,7 +98,6 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
         }
         setIsSelect(buttonCode);
     };
-    
 
     // Const Variable
     const toolbars = [
@@ -110,7 +112,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
             id: 4,
             iconName: "sticky-note",
             toolbarFunc: doNothing,
-            toolName: "",
+            toolName: OtherTool,
         },
         { id: 5, iconName: "undo", toolbarFunc: handleUndo, toolName: "" },
         { id: 6, iconName: "redo", toolbarFunc: handleRedo, toolName: "" },
@@ -161,7 +163,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                             watingClick = setTimeout(() => {
                                 watingClick = null;
                                 handleActiveButtonSelect(1);
-                                handleSelectTool("Pencil");
+                                handleSelectTool(Pencil);
                             }, 251);
                         }
                     }}
@@ -244,7 +246,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         : "brushOptionBoardHide"
                 }`}
                 ref={wrapperRef}
-            >   
+            >
                 {/* Stroke Options */}
                 <div className="grid grid-cols-1 content-center gap-4">
                     {strokes.map((stroke) => (
@@ -286,12 +288,14 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                 ref={wrapperRef2}
             >
                 <div className="text-center self-center w-full">
-                        <Icon icon="trash" style={{ fontSize: "1.5rem" }} 
+                    <Icon
+                        icon="trash"
+                        style={{ fontSize: "1.5rem" }}
                         onClick={() => {
                             handleClear(initLC);
                         }}
-                        />
-                    </div>
+                    />
+                </div>
             </div>
         </>
     );
@@ -317,7 +321,7 @@ export function useOutsideAlerter(ref: any, setShowBrushOption: any) {
             // Unbind the event listener on clean up
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [ref]); 
+    }, [ref]);
 }
 // Handle click outside
 export function useOutsideAlerter2(ref: any, setClearrAllOption: any) {
