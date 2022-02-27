@@ -23,5 +23,6 @@ public static class Constant
         public const string ReceiveNewNote = "ReceiveNewNote";
         public const string ReceiveUpdateNote = "ReceiveUpdateNote";
         public const string ReceiveDeleteNote = "ReceiveDeleteNote";
+        public const string ClearAll = "ClearAll";
     }
 }

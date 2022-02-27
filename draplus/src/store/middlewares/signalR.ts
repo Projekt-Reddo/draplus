@@ -16,6 +16,8 @@ import {
     RECEIVE_NEW_NOTE,
     DELETE_NOTE,
     RECEIVE_REMOVE_NOTE,
+    CLEAR_ALL,
+    RECEIVE_CLEAR,
 } from "store/actions";
 import { API } from "utils/constant";
 
@@ -58,6 +60,11 @@ export const signalRMiddleware = (storeAPI: any) => {
                     type: RECEIVE_SHAPE,
                     payload: shape,
                 });
+            });
+
+            connection.board.on("ClearAll", (clear: any) => {
+                const state = storeAPI.getState();
+                state.initLC.clear();
             });
 
             connection.board.on(
@@ -112,6 +119,9 @@ export const signalRMiddleware = (storeAPI: any) => {
 
             connection.chat.onclose(() => {});
             connection.board.onclose(() => {});
+        }
+        if (action.type === CLEAR_ALL) {
+            connection.board.invoke("ClearAll");
         }
 
         if (action.type === LEAVE_ROOM) {

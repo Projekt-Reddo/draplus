@@ -20,6 +20,8 @@ export const DELETE_NOTE = "note/delete";
 export const RECEIVE_NEW_NOTE = "note/receiveNew";
 export const RECEIVE_UPDATE_NOTE = "note/receiveUpdate";
 export const RECEIVE_REMOVE_NOTE = "note/receiveRemove";
+export const CLEAR_ALL = "clearAll";
+export const RECEIVE_CLEAR = "receiveClear";
 
 export { login };
 export { logout };
