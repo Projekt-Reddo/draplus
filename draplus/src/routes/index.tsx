@@ -26,7 +26,6 @@ const BaseRoutes: React.FC = () => {
         var rs = init();
         if (!location.pathname.endsWith("/") || location.pathname === "") {
             setTempLocation(location.pathname);
-            console.log(tempLocation);
         }
         if (rs) {
             const userStored = localStorage.getItem("user");
@@ -43,7 +42,11 @@ const BaseRoutes: React.FC = () => {
     }, []);
 
     if (isLoading) {
-        return <Loading />;
+        return (
+            <div className="h-screen w-screen bg-[color:var(--bg)] flex items-center justify-center">
+                <Loading />
+            </div>
+        );
     }
 
     return (

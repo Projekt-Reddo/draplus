@@ -120,6 +120,7 @@ namespace DraplusApi.Data
             {
                 BsonClassMap.RegisterClassMap<TextData>();
             }
+            
         }
     }
 }

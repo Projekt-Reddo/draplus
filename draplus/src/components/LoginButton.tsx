@@ -35,7 +35,7 @@ const LoginButton: React.FC<LoginButtonProps> = ({ googleResponse }) => {
                                 />
                             </div>
                             <div className="w-full h-full">
-                                <p className="btn-text border-rounded mr-6 mt-2">
+                                <p className="btn-text border-rounded mr-6 mt-[0.6rem]">
                                     Sign in with google
                                 </p>
                             </div>
