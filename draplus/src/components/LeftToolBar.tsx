@@ -78,7 +78,6 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     const handleClear = (lc: any) => {
         initLC.clear();
         const lcShapeContainer = lc.getSnapshot(["shapes"]);
-        console.log(lcShapeContainer);
         dispatch({
             type: CLEAR_ALL
         });
