@@ -8,11 +8,12 @@ import LeftToolBar from "components/LeftToolBar";
 import Cursor from "components/Cursor";
 
 // Store
-import { DRAW_SHAPE, INITLC, SEND_MOUSE } from "store/actions";
+import { ADD_NOTE, DRAW_SHAPE, INITLC, SEND_MOUSE } from "store/actions";
 
 // Style
 import "literallycanvas/lib/css/literallycanvas.css";
 import "styles/CanvasBoard.css";
+import { OtherTool } from "utils/constant";
 
 interface CanvasBoardProps {}
 
@@ -22,7 +23,11 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
     // Redux state
     const dispatch = useDispatch();
     const shape = useSelector((state: RootStateOrAny) => state.shape);
+<<<<<<< Updated upstream
     const onlineUsers = useSelector((state: any) => state.onlineUsers);
+=======
+    const tool = useSelector((state: RootStateOrAny) => state.tool);
+>>>>>>> Stashed changes
 
     // Handle State
     const [localInitLC, setLocalInitLC] = React.useState<typeof LC>();
@@ -46,6 +51,17 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         setLocalInitLC(lc);
         dispatch({ type: INITLC, payload: lc });
         lc.on("shapeSave", (shape: any) => handleDrawingChange(lc, shape));
+    };
+
+    const handleCreateNote = (e: React.MouseEvent<HTMLElement>) => {
+        dispatch({
+            type: ADD_NOTE,
+            payload: {
+                x: e.clientX,
+                y: e.clientY,
+                text: "",
+            },
+        });
     };
 
     // Load Shape of the other User
@@ -82,7 +98,10 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
     };
 
     return (
-        <div onMouseMove={getMousePosition}>
+        <div
+            onMouseMove={getMousePosition}
+            onClick={tool === OtherTool ? handleCreateNote : () => {}}
+        >
             {/* Cursor */}
             <Cursor />
             {/* Left Toolbar */}

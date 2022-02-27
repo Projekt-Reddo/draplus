@@ -1,6 +1,6 @@
 // Libs
 import * as React from "react";
-import { RootStateOrAny, useSelector } from "react-redux";
+import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
 import LC from "literallycanvas";
 
 // Components
@@ -8,6 +8,7 @@ import Icon from "components/Icon";
 
 //Style
 import "styles/LeftToolBar.css";
+import { OtherTool, Pencil } from "utils/constant";
 
 interface LeftToolBarProps {}
 
@@ -19,6 +20,7 @@ var lastClick = 0;
 const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     // Global State
     const initLC = useSelector((state: RootStateOrAny) => state.initLC);
+    const dispatch = useDispatch();
 
     // Handle State
     const [showBrushOption, setShowBrushOption] = React.useState(false);
@@ -34,6 +36,11 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     // Select Tool
     const handleSelectTool = (toolName: string) => {
         initLC.setTool(new LC.tools[toolName](initLC));
+
+        dispatch({
+            type: toolName,
+        });
+
         if (toolName === "Pencil") {
             initLC.tool.strokeWidth = strokeWidthSelect;
         }
@@ -84,7 +91,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
             id: 4,
             iconName: "sticky-note",
             toolbarFunc: doNothing,
-            toolName: "",
+            toolName: OtherTool,
         },
         { id: 5, iconName: "undo", toolbarFunc: handleUndo, toolName: "" },
         { id: 6, iconName: "redo", toolbarFunc: handleRedo, toolName: "" },
@@ -135,7 +142,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                             watingClick = setTimeout(() => {
                                 watingClick = null;
                                 handleActiveButtonSelect(1);
-                                handleSelectTool("Pencil");
+                                handleSelectTool(Pencil);
                             }, 251);
                         }
                     }}

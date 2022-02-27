@@ -120,6 +120,10 @@ namespace DraplusApi.Data
             {
                 BsonClassMap.RegisterClassMap<TextData>();
             }
+            if (!BsonClassMap.IsClassMapRegistered(typeof(NoteData)))
+            {
+                BsonClassMap.RegisterClassMap<NoteData>();
+            }
         }
     }
 }
