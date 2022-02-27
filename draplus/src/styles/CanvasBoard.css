@@ -9,3 +9,12 @@
 .lc-picker {
     display: none;
 }
+
+.literally .lc-drawing.with-gui .text-tool-input:focus {
+    color: var(--text) !important;
+    background-color: var(--bg) !important;
+    border: dashed 2px grey !important;
+    border-radius: 10% !important;
+
+}
+

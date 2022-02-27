@@ -20,5 +20,6 @@ public static class Constant
         public const string ReceiveMouse = "ReceiveMouse";
         public const string OnlineUsers = "OnlineUsers";
         public const string ReceiveMessage = "ReceiveMessage";
+        public const string ClearAll = "ClearAll";
     }
 }
