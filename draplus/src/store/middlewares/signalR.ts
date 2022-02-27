@@ -10,6 +10,8 @@ import {
     RECEIVE_MOUSE,
     ONLINE_USERS,
     GET_ONLINE_USERS,
+    CLEAR_ALL,
+    RECEIVE_CLEAR,
 } from "store/actions";
 import { API } from "utils/constant";
 
@@ -53,6 +55,11 @@ export const signalRMiddleware = (storeAPI: any) => {
                     payload: shape,
                 });
             });
+            
+            connection.board.on("ClearAll", (clear: any) => {
+                const state = storeAPI.getState();
+                state.initLC.clear();
+            })
 
             connection.board.on(
                 "ReceiveMouse",
@@ -85,6 +92,9 @@ export const signalRMiddleware = (storeAPI: any) => {
 
             connection.chat.onclose(() => {});
             connection.board.onclose(() => {});
+        }
+        if (action.type === CLEAR_ALL) {
+            connection.board.invoke("ClearAll");
         }
 
         if (action.type === LEAVE_ROOM) {
@@ -120,6 +130,7 @@ export const signalRMiddleware = (storeAPI: any) => {
         if (action.type === GET_ONLINE_USERS && connection.board) {
             connection.board.invoke("SendOnlineUsers", action.payload);
         }
+
 
         return next(action);
     };

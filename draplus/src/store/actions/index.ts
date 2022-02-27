@@ -14,6 +14,8 @@ export const JOIN_ROOM = "joinRoom";
 export const LEAVE_ROOM = "leaveRoom";
 export const ONLINE_USERS = "onlineUsers";
 export const GET_ONLINE_USERS = "getOnlineUsers";
+export const CLEAR_ALL = "clearAll";
+export const RECEIVE_CLEAR = "receiveClear";
 
 export { login };
 export { logout };

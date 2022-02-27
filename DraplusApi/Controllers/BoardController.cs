@@ -93,7 +93,7 @@ namespace DraplusApi.Controllers
             return Ok(new ResponseDto(200, "Board deleted"));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("board/{id}")]
         public async Task<ActionResult<BoardReadDto>> GetBoard(string id)
         {
             
