@@ -8,11 +8,12 @@ import LeftToolBar from "components/LeftToolBar";
 import Cursor from "components/Cursor";
 
 // Store
-import { DRAW_SHAPE, INITLC, SEND_MOUSE } from "store/actions";
+import { ADD_NOTE, DRAW_SHAPE, INITLC, SEND_MOUSE } from "store/actions";
 
 // Style
 import "literallycanvas/lib/css/literallycanvas.css";
 import "styles/CanvasBoard.css";
+import { OtherTool } from "utils/constant";
 
 interface CanvasBoardProps {}
 
@@ -23,6 +24,8 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
     const dispatch = useDispatch();
     const shape = useSelector((state: RootStateOrAny) => state.shape);
     const onlineUsers = useSelector((state: any) => state.onlineUsers);
+    const tool = useSelector((state: RootStateOrAny) => state.tool);
+    const initLC = useSelector((state: RootStateOrAny) => state.initLC);
 
     // Handle State
     const [localInitLC, setLocalInitLC] = React.useState<typeof LC>();
@@ -48,6 +51,18 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         lc.on("shapeSave", (shape: any) => handleDrawingChange(lc, shape));
     };
 
+    const handleCreateNote = (e: React.MouseEvent<HTMLElement>) => {
+        dispatch({
+            type: ADD_NOTE,
+            payload: {
+                x: e.clientX,
+                y: e.clientY,
+                text: "",
+                id: `${Date.now()} ${Math.random()}`,
+            },
+        });
+    };
+
     // Load Shape of the other User
     React.useEffect(() => {
         if (localInitLC && shape !== []) {
@@ -58,31 +73,32 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
     }, [shape]);
 
     const getMousePosition = (e: any) => {
-        if (onlineUsers.length > 1) {
+        dispatch({
+            type: SEND_MOUSE,
+            payload: {
+                x: e.pageX,
+                y: e.pageY,
+                isMove: true,
+            },
+        });
+        clearTimeout(timer);
+        timer = setTimeout(() => {
             dispatch({
                 type: SEND_MOUSE,
                 payload: {
                     x: e.pageX,
                     y: e.pageY,
-                    isMove: true,
+                    isMove: false,
                 },
             });
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-                dispatch({
-                    type: SEND_MOUSE,
-                    payload: {
-                        x: e.pageX,
-                        y: e.pageY,
-                        isMove: false,
-                    },
-                });
-            }, 500);
-        }
+        }, 300);
     };
 
     return (
-        <div onMouseMove={getMousePosition}>
+        <div
+            onMouseMove={getMousePosition}
+            onClick={tool === OtherTool ? handleCreateNote : () => {}}
+        >
             {/* Cursor */}
             <Cursor />
             {/* Left Toolbar */}

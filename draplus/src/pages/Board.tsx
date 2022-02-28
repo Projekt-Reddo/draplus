@@ -19,6 +19,7 @@ import Avatar from "components/Avatar";
 
 // Styles
 import "styles/Board.css";
+import Notes from "components/Notes";
 
 interface BoardProps {}
 
@@ -72,6 +73,7 @@ const Board: React.FC<BoardProps> = () => {
             <Chat />
             <Setting />
             <Avatar />
+            <Notes />
         </>
     );
 };
