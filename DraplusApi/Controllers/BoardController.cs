@@ -92,5 +92,15 @@ namespace DraplusApi.Controllers
 
             return Ok(new ResponseDto(200, "Board deleted"));
         }
+
+        [HttpGet("board/{id}")]
+        public async Task<ActionResult<BoardReadDto>> GetBoard(string id)
+        {
+            
+            var board = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id",id));
+            var boardread = _mapper.Map<BoardReadDto>(board);
+            return Ok(boardread);
+        }
+        
     }
 }

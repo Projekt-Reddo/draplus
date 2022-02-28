@@ -14,6 +14,14 @@ export const JOIN_ROOM = "joinRoom";
 export const LEAVE_ROOM = "leaveRoom";
 export const ONLINE_USERS = "onlineUsers";
 export const GET_ONLINE_USERS = "getOnlineUsers";
+export const ADD_NOTE = "note/add";
+export const UPDATE_NOTE = "note/update";
+export const DELETE_NOTE = "note/delete";
+export const RECEIVE_NEW_NOTE = "note/receiveNew";
+export const RECEIVE_UPDATE_NOTE = "note/receiveUpdate";
+export const RECEIVE_REMOVE_NOTE = "note/receiveRemove";
+export const CLEAR_ALL = "clearAll";
+export const RECEIVE_CLEAR = "receiveClear";
 
 export { login };
 export { logout };

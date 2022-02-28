@@ -1,6 +1,6 @@
 // Libs
 import * as React from "react";
-import { RootStateOrAny, useSelector } from "react-redux";
+import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
 import LC from "literallycanvas";
 
 // Components
@@ -8,6 +8,10 @@ import Icon from "components/Icon";
 
 //Style
 import "styles/LeftToolBar.css";
+import { OtherTool, Pencil } from "utils/constant";
+
+//Store
+import { CLEAR_ALL, DRAW_SHAPE } from "store/actions";
 
 interface LeftToolBarProps {}
 
@@ -19,9 +23,12 @@ var lastClick = 0;
 const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     // Global State
     const initLC = useSelector((state: RootStateOrAny) => state.initLC);
+    const dispatch = useDispatch();
+    const clear = useSelector((state: RootStateOrAny) => state.clear);
 
     // Handle State
     const [showBrushOption, setShowBrushOption] = React.useState(false);
+    const [clearAllOption, setClearrAllOption] = React.useState(false);
     const [isSelect, setIsSelect] = React.useState(1);
     const [colorSelect, setColorSelect] = React.useState("#fff");
     const [strokeWidthSelect, setStrokeWidthSelect] = React.useState(5);
@@ -30,10 +37,18 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     const wrapperRef = React.useRef(null);
     useOutsideAlerter(wrapperRef, setShowBrushOption);
 
+    const wrapperRef2 = React.useRef(null);
+    useOutsideAlerter2(wrapperRef2, setClearrAllOption);
+
     // Funtions Handle Draw Canvas
     // Select Tool
     const handleSelectTool = (toolName: string) => {
         initLC.setTool(new LC.tools[toolName](initLC));
+
+        dispatch({
+            type: toolName,
+        });
+
         if (toolName === "Pencil") {
             initLC.tool.strokeWidth = strokeWidthSelect;
         }
@@ -63,6 +78,19 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
         initLC.redo();
     };
 
+    // Clear canvas
+    const handleClear = (lc: any) => {
+        initLC.clear();
+        const lcShapeContainer = lc.getSnapshot(["shapes"]);
+        dispatch({
+            type: CLEAR_ALL,
+        });
+    };
+
+    React.useEffect(() => {
+        //handleClear(initLC);
+    }, [clear]);
+
     // Handle active Button was selected
     const handleActiveButtonSelect = (buttonCode: number) => {
         if (buttonCode === 5 || buttonCode == 6) {
@@ -73,18 +101,18 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
 
     // Const Variable
     const toolbars = [
-        {
-            id: 2,
-            iconName: "eraser",
-            toolbarFunc: doNothing,
-            toolName: "Eraser",
-        },
+        // {
+        //     id: 2,
+        //     iconName: "eraser",
+        //     toolbarFunc: doNothing,
+        //     toolName: "Eraser",
+        // },
         { id: 3, iconName: "font", toolbarFunc: doNothing, toolName: "Text" },
         {
             id: 4,
             iconName: "sticky-note",
             toolbarFunc: doNothing,
-            toolName: "",
+            toolName: OtherTool,
         },
         { id: 5, iconName: "undo", toolbarFunc: handleUndo, toolName: "" },
         { id: 6, iconName: "redo", toolbarFunc: handleRedo, toolName: "" },
@@ -135,7 +163,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                             watingClick = setTimeout(() => {
                                 watingClick = null;
                                 handleActiveButtonSelect(1);
-                                handleSelectTool("Pencil");
+                                handleSelectTool(Pencil);
                             }, 251);
                         }
                     }}
@@ -145,6 +173,37 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                     />
                     <div className="text-center self-center w-full">
                         <Icon icon="pen" style={{ fontSize: "1.5rem" }} />
+                    </div>
+                </div>
+                {/* Eraser */}
+                <div
+                    className="icon flex"
+                    onClick={(e) => {
+                        if (
+                            lastClick &&
+                            e.timeStamp - lastClick < 250 &&
+                            watingClick
+                        ) {
+                            lastClick = 0;
+                            clearTimeout(watingClick);
+                            // handle show clear all button
+                            setClearrAllOption(!clearAllOption);
+                            watingClick = null;
+                        } else {
+                            lastClick = e.timeStamp;
+                            watingClick = setTimeout(() => {
+                                watingClick = null;
+                                handleActiveButtonSelect(2);
+                                handleSelectTool("Eraser");
+                            }, 251);
+                        }
+                    }}
+                >
+                    <div
+                        className={` ${isSelect === 2 ? "whiteLine" : "line"}`}
+                    />
+                    <div className="text-center self-center w-full">
+                        <Icon icon="eraser" style={{ fontSize: "1.5rem" }} />
                     </div>
                 </div>
                 {/* Eraser, Text, Note, Undo, Redo */}
@@ -219,6 +278,25 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                     ))}
                 </div>
             </div>
+            {/* Clear all Option Board */}
+            <div
+                className={` ${
+                    clearAllOption
+                        ? "app-shadow clearAllBoard absolute justify-center flex h-44 w-52 z-10"
+                        : "clearAllBoardHide"
+                }`}
+                ref={wrapperRef2}
+            >
+                <div className="text-center self-center w-full">
+                    <Icon
+                        icon="trash"
+                        style={{ fontSize: "1.5rem" }}
+                        onClick={() => {
+                            handleClear(initLC);
+                        }}
+                    />
+                </div>
+            </div>
         </>
     );
 };
@@ -234,6 +312,26 @@ export function useOutsideAlerter(ref: any, setShowBrushOption: any) {
         function handleClickOutside(event: any) {
             if (ref.current && !ref.current.contains(event.target)) {
                 setShowBrushOption(false);
+            }
+        }
+
+        // Bind the event listener
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            // Unbind the event listener on clean up
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [ref]);
+}
+// Handle click outside
+export function useOutsideAlerter2(ref: any, setClearrAllOption: any) {
+    React.useEffect(() => {
+        /**
+         * Set listData to null
+         */
+        function handleClickOutside(event: any) {
+            if (ref.current && !ref.current.contains(event.target)) {
+                setClearrAllOption(false);
             }
         }
 

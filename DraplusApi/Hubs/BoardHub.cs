@@ -54,6 +54,7 @@ public class BoardHub : Hub
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
+            var temp = shape;
             await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveShape, shape);
 
             // var jsonData = Convert.ToString(shape.Data);
@@ -81,6 +82,21 @@ public class BoardHub : Hub
             // var updateBoard = await _boardRepo.Update(userConnection.Board, boardFromRepo);
         }
     }
+    public async Task ClearAll()
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            var temp = userConnection.Board;
+            var board = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
+            if (userConnection.User.ToString() != board.UserId)
+            {
+                await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ClearAll, 0);
+            }
+            board.Shapes = new List<Shape>();
+            await _boardRepo.Update(temp, board);
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ClearAll,1);
+        }
+    }
 
     public async Task SendMouse(int x, int y, bool isMove)
     {
@@ -99,5 +115,29 @@ public class BoardHub : Hub
     {
         var users = _connections.Values.Where(user => user.Board == boardId).Select(user => user.User);
         return Clients.Group(boardId).SendAsync(HubReturnMethod.OnlineUsers, users);
+    }
+
+    public async Task NewNote(NoteDto note)
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveNewNote, note);
+        }
+    }
+
+    public async Task UpdateNote(NoteUpdateDto note)
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveUpdateNote, note);
+        }
+    }
+
+    public async Task DeleteNote(string noteId)
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveDeleteNote, noteId);
+        }
     }
 }
