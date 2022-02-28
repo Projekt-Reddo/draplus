@@ -14,6 +14,7 @@ import { login } from "store/actions/index";
 import { useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import Loading from "components/Loading";
+import AuthRoute from "./AuthRoute";
 
 const BaseRoutes: React.FC = () => {
     const dispatch = useDispatch();
@@ -51,7 +52,9 @@ const BaseRoutes: React.FC = () => {
 
     return (
         <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<AuthRoute />}>
+                <Route path="/" element={<Login />} />
+            </Route>
             <Route path="/board/:boardId" element={<Board />} />
             <Route path="/board" element={<BoardList />} />
             <Route path="*" element={<ErrorPage />} />
