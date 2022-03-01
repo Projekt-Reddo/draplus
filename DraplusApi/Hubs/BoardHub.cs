@@ -84,6 +84,7 @@ public class BoardHub : Hub
     }
     public async Task ClearAll()
     {
+        
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
             var temp = userConnection.Board;
