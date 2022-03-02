@@ -2,6 +2,10 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace DraplusApi.Models
 {
+
+    /// <summary>
+    /// Common base class for all entities
+    /// </summary>
     public class Entity
     {
         [BsonId]

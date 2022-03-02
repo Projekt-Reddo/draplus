@@ -22,16 +22,6 @@ namespace DraplusApi.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<User>> AddUser([FromBody] User user)
-        {
-            if (user == null)
-            {
-                return BadRequest();
-            }
 
-            var createdUser = await _userRepo.Add(user);
-            return Ok(createdUser);
-        }
     }
 }
