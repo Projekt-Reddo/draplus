@@ -15,16 +15,13 @@ namespace DraplusApi.Controllers
     {
         private readonly IUserRepo _userRepo;
         private readonly IBoardRepo _boardRepo;
-        private readonly IChatRoomRepo _chatroomRepo;
-
         private readonly IMapper _mapper;
         private readonly IJwtGenerator _jwtGenerator;
 
-        public AuthController(IUserRepo userRepo, IBoardRepo boardRepo, IChatRoomRepo chatroomRepo, IMapper mapper, IJwtGenerator jwtGenerator)
+        public AuthController(IUserRepo userRepo, IBoardRepo boardRepo, IMapper mapper, IJwtGenerator jwtGenerator)
         {
             _userRepo = userRepo;
             _boardRepo = boardRepo;
-            _chatroomRepo = chatroomRepo;
             _mapper = mapper;
             _jwtGenerator = jwtGenerator;
         }

@@ -41,7 +41,6 @@ builder.Services.AddSingleton<IMongoContext, MongoContext>();
 
 // Project Services
 builder.Services.AddScoped<IBoardRepo, BoardRepo>();
-builder.Services.AddScoped<IChatRoomRepo, ChatRoomRepo>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 // alows CORS
