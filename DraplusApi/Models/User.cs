@@ -12,5 +12,7 @@ namespace DraplusApi.Models
         [Url]
         public string Avatar { get; set; } = null!;
         public string Issuer { get; set; } = null!;
+        public bool IsBanned { get; set; } = false;
+        public bool IsAdmin { get; set; } = false;
     }
 }
