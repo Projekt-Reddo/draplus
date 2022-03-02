@@ -36,10 +36,10 @@ export const signalRMiddleware = (storeAPI: any) => {
                 board: action.payload.board,
             });
 
-            // await connection.chat.invoke("JoinRoom", {
-            //     user: action.payload.user,
-            //     board: action.payload.board,
-            // });
+            await connection.chat.invoke("JoinRoom", {
+                user: action.payload.user,
+                board: action.payload.board,
+            });
 
             connection.chat.on(
                 "ReceiveMessage",
