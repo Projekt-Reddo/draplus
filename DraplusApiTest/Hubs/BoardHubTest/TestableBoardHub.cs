@@ -16,6 +16,8 @@ namespace DraplusApiTest.Hubs.BoardHubTest
         public Mock<IUserRepo> mockUserRepo { get; set; } = null!;
         public Mock<IBoardRepo> mockBoardRepo { get; set; } = null!;
         public Mock<IDictionary<string, UserConnection>> mockConnections { get; set; } = null!;
+        public Mock<IDictionary<string, List<ShapeReadDto>>> mockShapeList { get; set; } = null!;
+        public Mock<IDictionary<string, List<NoteDto>>> mockNoteList { get; set; } = null!;
 
         [SetUp]
         public void Setup()
@@ -25,6 +27,8 @@ namespace DraplusApiTest.Hubs.BoardHubTest
             mockUserRepo = new Mock<IUserRepo>();
             mockBoardRepo = new Mock<IBoardRepo>();
             mockConnections = new Mock<IDictionary<string, UserConnection>>();
+            mockShapeList = new Mock<IDictionary<string, List<ShapeReadDto>>>();
+            mockNoteList = new Mock<IDictionary<string, List<NoteDto>>>();
         }
     }
 }

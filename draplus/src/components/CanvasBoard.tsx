@@ -23,20 +23,19 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
     // Redux state
     const dispatch = useDispatch();
     const shape = useSelector((state: RootStateOrAny) => state.shape);
+    const myShape = useSelector((state: RootStateOrAny) => state.myShape);
     const onlineUsers = useSelector((state: any) => state.onlineUsers);
     const tool = useSelector((state: RootStateOrAny) => state.tool);
     const initLC = useSelector((state: RootStateOrAny) => state.initLC);
 
     // Handle State
     const [localInitLC, setLocalInitLC] = React.useState<typeof LC>();
-    const [myShape, setMyShape] = React.useState<object[]>([]);
 
     // Get Change of Canvas
     // Send user's shape to other user
     // Set user's shape to myShape state
     const handleDrawingChange = (lc: any, shape: any) => {
         const lcShapeContainer = lc.getSnapshot(["shapes"]);
-        setMyShape(lcShapeContainer.shapes);
         dispatch({
             type: DRAW_SHAPE,
             payload:
@@ -49,7 +48,6 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         setLocalInitLC(lc);
         dispatch({ type: INITLC, payload: lc });
         lc.on("shapeSave", (shape: any) => handleDrawingChange(lc, shape));
-        lc.on("undo", () => console.log(lc));
     };
 
     const handleCreateNote = (e: React.MouseEvent<HTMLElement>) => {
@@ -68,10 +66,10 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
     React.useEffect(() => {
         if (localInitLC && shape !== []) {
             localInitLC.loadSnapshot({
-                shapes: shape.concat(myShape),
+                shapes: [...shape, ...myShape.undoStack],
             });
         }
-    }, [shape]);
+    }, [shape, myShape]);
 
     
 

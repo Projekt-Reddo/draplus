@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DraplusApi.Dtos;
@@ -15,13 +17,21 @@ namespace DraplusApiTest.Hubs.BoardHubTest
         public async Task DrawShape_LinePathData_Success()
         {
             // Arrange
-            var boardHub = new BoardHub(mockConnections.Object, mockBoardRepo.Object, mockMapper.Object, mockUserRepo.Object);
+            var boardHub = new BoardHub(
+                connections: mockConnections.Object,
+                boardRepo: mockBoardRepo.Object,
+                mapper: mockMapper.Object,
+                userRepo: mockUserRepo.Object,
+                shapeList: mockShapeList.Object,
+                noteList: mockNoteList.Object);
             AssignToHubRequiredProperties(boardHub); // Resolve hub dependencies as IClientsProxy...
 
             UserConnection userConnection = new UserConnection { Board = "board1" };
             mockConnections.Setup(connections => connections.TryGetValue(It.IsAny<string>(), out userConnection!)).Returns(true); // ! after userConnection is for null forgiving
 
-            var shape = new ShapeCreateDto { Data = new List<string> { "1", "2", "3", "4" } };
+            mockShapeList.Setup(list => list[It.IsAny<string>()]).Returns(new List<ShapeReadDto>()); // ! after shape is for null forgiving
+
+            var shape = new ShapeReadDto { Data = new List<string> { "1", "2", "3", "4" } };
 
             // Act
             await boardHub.DrawShape(shape);
