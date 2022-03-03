@@ -18,6 +18,9 @@ import {
     RECEIVE_REMOVE_NOTE,
     CLEAR_ALL,
     RECEIVE_CLEAR,
+    REMOVE_SHAPE,
+    UNDO,
+    REDO,
 } from "store/actions";
 import { API } from "utils/constant";
 
@@ -36,10 +39,10 @@ export const signalRMiddleware = (storeAPI: any) => {
                 board: action.payload.board,
             });
 
-            // await connection.chat.invoke("JoinRoom", {
-            //     user: action.payload.user,
-            //     board: action.payload.board,
-            // });
+            await connection.chat.invoke("JoinRoom", {
+                user: action.payload.user,
+                board: action.payload.board,
+            });
 
             connection.chat.on(
                 "ReceiveMessage",
@@ -60,6 +63,16 @@ export const signalRMiddleware = (storeAPI: any) => {
                     type: RECEIVE_SHAPE,
                     payload: shape,
                 });
+            });
+            
+            connection.board.on("ClearAll", (clear: any) => {
+                const state = storeAPI.getState();
+                state.initLC.clear();
+            })
+
+            connection.board.on("ClearAll", (clear: any) => {
+                const state = storeAPI.getState();
+                state.initLC.clear();
             });
 
             connection.board.on("ClearAll", (clear: any) => {
@@ -117,6 +130,13 @@ export const signalRMiddleware = (storeAPI: any) => {
                 });
             });
 
+            connection.board.on("ReceiveUndo", (shapeId: string) => {
+                storeAPI.dispatch({
+                    type: REMOVE_SHAPE,
+                    payload: shapeId,
+                });
+            });
+
             connection.chat.onclose(() => {});
             connection.board.onclose(() => {});
         }
@@ -168,6 +188,24 @@ export const signalRMiddleware = (storeAPI: any) => {
 
         if (action.type === DELETE_NOTE) {
             connection.board.invoke("DeleteNote", action.payload);
+        }
+
+        if (action.type === UNDO) {
+            const undoStack = storeAPI.getState().myShape.undoStack;
+            const lastUndoShape = undoStack[undoStack.length - 1];
+
+            if (lastUndoShape) {
+                connection.board.invoke("Undo", lastUndoShape.id);
+            }
+        }
+
+        if (action.type === REDO) {
+            const redoStack = storeAPI.getState().myShape.redoStack;
+            const lastRedoShape = redoStack[redoStack.length - 1];
+
+            if (lastRedoShape) {
+                connection.board.invoke("Redo", lastRedoShape);
+            }
         }
 
         return next(action);

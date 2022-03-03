@@ -11,7 +11,7 @@ import "styles/LeftToolBar.css";
 import { OtherTool, Pencil } from "utils/constant";
 
 //Store
-import { CLEAR_ALL, DRAW_SHAPE } from "store/actions";
+import { CLEAR_ALL, DRAW_SHAPE, REDO, UNDO } from "store/actions";
 
 interface LeftToolBarProps {}
 
@@ -70,12 +70,16 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
 
     // Undo canvas
     const handleUndo = () => {
-        initLC.undo();
+        dispatch({
+            type: UNDO,
+        });
     };
 
     // Redo canvas
     const handleRedo = () => {
-        initLC.redo();
+        dispatch({
+            type: REDO,
+        });
     };
 
     // Clear canvas
@@ -98,6 +102,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
         }
         setIsSelect(buttonCode);
     };
+    
 
     // Const Variable
     const toolbars = [
@@ -246,7 +251,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         : "brushOptionBoardHide"
                 }`}
                 ref={wrapperRef}
-            >
+            >   
                 {/* Stroke Options */}
                 <div className="grid grid-cols-1 content-center gap-4">
                     {strokes.map((stroke) => (
@@ -321,7 +326,7 @@ export function useOutsideAlerter(ref: any, setShowBrushOption: any) {
             // Unbind the event listener on clean up
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [ref]);
+    }, [ref]); 
 }
 // Handle click outside
 export function useOutsideAlerter2(ref: any, setClearrAllOption: any) {

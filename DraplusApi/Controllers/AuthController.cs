@@ -31,7 +31,7 @@ namespace DraplusApi.Controllers
         {
             try
             {
-                var payload = GoogleJsonWebSignature.ValidateAsync(userView.tokenId, new GoogleJsonWebSignature.ValidationSettings()).Result;
+                var payload = await GoogleJsonWebSignature.ValidateAsync(userView.tokenId, new GoogleJsonWebSignature.ValidationSettings());
                 (var user, var isNew) = await _userRepo.Authenticate(payload);
                 if (isNew)
                 {
