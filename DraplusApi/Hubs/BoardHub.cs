@@ -18,7 +18,7 @@ public class BoardHub : Hub
     private readonly IUserRepo _userRepo;
     private readonly IBoardRepo _boardRepo;
     private readonly IMapper _mapper;
-    
+
     public BoardHub(IDictionary<string, UserConnection> connections, IBoardRepo boardRepo, IMapper mapper, IUserRepo userRepo, IDictionary<string, List<ShapeReadDto>> shapeList, IDictionary<string, List<NoteDto>> noteList)
     {
         _connections = connections;
@@ -28,6 +28,8 @@ public class BoardHub : Hub
         _shapeList = shapeList;
         _noteList = noteList;
     }
+
+    #region Join & Leave room
 
     public async Task JoinRoom(UserConnection userConnection)
     {
@@ -65,6 +67,10 @@ public class BoardHub : Hub
         return base.OnConnectedAsync();
     }
 
+    #endregion
+
+    #region Draw & Clear
+
     public async Task DrawShape(ShapeReadDto shape)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -73,7 +79,8 @@ public class BoardHub : Hub
 
             var existShape = _shapeList[userConnection.Board].FirstOrDefault(s => s.Id == shape.Id);
 
-            if (existShape is null) {
+            if (existShape is null)
+            {
                 _shapeList[userConnection.Board].Add(shape);
             }
 
@@ -106,7 +113,7 @@ public class BoardHub : Hub
     }
     public async Task ClearAll()
     {
-        
+
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
             var temp = userConnection.Board;
@@ -117,9 +124,11 @@ public class BoardHub : Hub
             }
             board.Shapes = new List<Shape>();
             await _boardRepo.Update(temp, board);
-            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ClearAll,1);
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ClearAll, 1);
         }
     }
+
+    #endregion
 
     public async Task SendMouse(int x, int y, bool isMove)
     {
@@ -128,6 +137,8 @@ public class BoardHub : Hub
             await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveMouse, userConnection.User.Id, userConnection.User.Name, x, y, isMove);
         }
     }
+
+    #region Current online user
 
     public async Task SendOnlineUsers(string boardId)
     {
@@ -140,13 +151,18 @@ public class BoardHub : Hub
         return Clients.Group(boardId).SendAsync(HubReturnMethod.OnlineUsers, users);
     }
 
+    #endregion
+
+    #region Note
+
     public async Task NewNote(NoteDto note)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
             var existNote = _noteList[userConnection.Board].FirstOrDefault(s => s.Id == note.Id);
 
-            if (existNote is null) {
+            if (existNote is null)
+            {
                 _noteList[userConnection.Board].Add(note);
             }
 
@@ -158,7 +174,8 @@ public class BoardHub : Hub
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
-            _noteList[userConnection.Board].ForEach(n => {
+            _noteList[userConnection.Board].ForEach(n =>
+            {
                 if (n.Id == note.Id)
                 {
                     n.Text = note.Text;
@@ -179,6 +196,10 @@ public class BoardHub : Hub
         }
     }
 
+    #endregion
+
+    #region Undo & Redo
+
     public async Task Undo(string shapeId)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -188,16 +209,20 @@ public class BoardHub : Hub
         }
     }
 
-    public async Task Redo(ShapeReadDto shape) {
+    public async Task Redo(ShapeReadDto shape)
+    {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
             var existShape = _shapeList[userConnection.Board].FirstOrDefault(s => s.Id == shape.Id);
 
-            if (existShape is null) {
+            if (existShape is null)
+            {
                 _shapeList[userConnection.Board].Add(shape);
             }
 
             await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveShape, shape);
         }
     }
+
+    #endregion
 }
