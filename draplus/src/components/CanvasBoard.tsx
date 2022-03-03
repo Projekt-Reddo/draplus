@@ -73,6 +73,8 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         }
     }, [shape]);
 
+    
+
     const getMousePosition = (e: any) => {
         dispatch({
             type: SEND_MOUSE,
@@ -95,6 +97,8 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         }, 300);
     };
 
+    
+
     return (
         <div
             onMouseMove={getMousePosition}
@@ -103,7 +107,7 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
             {/* Cursor */}
             <Cursor />
             {/* Left Toolbar */}
-            <LeftToolBar />
+            <LeftToolBar  />
             {/* Canvas Board */}
             <LC.LiterallyCanvasReactComponent
                 onInit={handleInit}
