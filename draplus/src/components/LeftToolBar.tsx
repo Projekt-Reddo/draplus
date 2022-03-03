@@ -10,10 +10,8 @@ import Icon from "components/Icon";
 import "styles/LeftToolBar.css";
 import { OtherTool, Pencil } from "utils/constant";
 
-
-
 //Store
-import {CLEAR_ALL,DRAW_SHAPE} from "store/actions";
+import { CLEAR_ALL, DRAW_SHAPE } from "store/actions";
 
 interface LeftToolBarProps {}
 

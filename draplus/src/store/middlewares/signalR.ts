@@ -72,6 +72,11 @@ export const signalRMiddleware = (storeAPI: any) => {
                 state.initLC.clear();
             });
 
+            connection.board.on("ClearAll", (clear: any) => {
+                const state = storeAPI.getState();
+                state.initLC.clear();
+            });
+
             connection.board.on(
                 "ReceiveMouse",
                 (
