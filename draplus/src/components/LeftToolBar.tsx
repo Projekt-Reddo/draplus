@@ -57,6 +57,27 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
         }
     };
 
+    const triggerDownload = (imgURI: string) => {
+        var evt = new MouseEvent("click", {
+            view: window,
+            bubbles: false,
+            cancelable: true,
+        });
+
+        var a = document.createElement("a");
+        a.setAttribute("download", `${new Date().toLocaleString()}` + ".png");
+        a.setAttribute("href", imgURI);
+        a.setAttribute("target", "_blank");
+        a.setAttribute("preventDefault", "true");
+        a.dispatchEvent(evt);
+    };
+
+    // Export Image
+    const handleExportImage = () => {
+        const image = initLC.getImage().toDataURL();
+        triggerDownload(image);
+    };
+
     // Select stroke width for Brush
     const handleSelectToolStrokeWidth = (strokeWidth: number) => {
         setStrokeWidthSelect(strokeWidth);
@@ -102,7 +123,6 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
         }
         setIsSelect(buttonCode);
     };
-    
 
     // Const Variable
     const toolbars = [
@@ -211,7 +231,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         <Icon icon="eraser" style={{ fontSize: "1.5rem" }} />
                     </div>
                 </div>
-                {/* Eraser, Text, Note, Undo, Redo */}
+                {/* Text, Note, Undo, Redo */}
                 {toolbars.map((toolbar) => (
                     <div
                         key={toolbar.id}
@@ -242,6 +262,24 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         </div>
                     </div>
                 ))}
+                {/* Export */}
+                <div
+                    className="icon flex"
+                    onClick={(e) => {
+                        handleActiveButtonSelect(7);
+                        handleExportImage();
+                    }}
+                >
+                    <div
+                        className={` ${isSelect === 7 ? "whiteLine" : "line"}`}
+                    />
+                    <div className="text-center self-center w-full">
+                        <Icon
+                            icon="share-square"
+                            style={{ fontSize: "1.5rem" }}
+                        />
+                    </div>
+                </div>
             </div>
             {/* Brush Option Board */}
             <div
@@ -251,7 +289,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         : "brushOptionBoardHide"
                 }`}
                 ref={wrapperRef}
-            >   
+            >
                 {/* Stroke Options */}
                 <div className="grid grid-cols-1 content-center gap-4">
                     {strokes.map((stroke) => (
@@ -326,7 +364,7 @@ export function useOutsideAlerter(ref: any, setShowBrushOption: any) {
             // Unbind the event listener on clean up
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [ref]); 
+    }, [ref]);
 }
 // Handle click outside
 export function useOutsideAlerter2(ref: any, setClearrAllOption: any) {

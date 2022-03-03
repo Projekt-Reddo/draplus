@@ -93,10 +93,10 @@ const BoardCardOptions: React.FC<BoardCardOptionsProps> = ({ id, refetch }) => {
                 setOpen(true);
             },
         },
-        {
-            icon: "share-square",
-            label: "Export",
-        },
+        // {
+        //     icon: "share-square",
+        //     label: "Export",
+        // },
     ];
 
     // State manage Modal confirm
