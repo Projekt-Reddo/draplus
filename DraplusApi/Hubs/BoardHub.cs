@@ -14,17 +14,19 @@ public class BoardHub : Hub
 {
     private readonly IDictionary<string, UserConnection> _connections;
     private readonly IDictionary<string, List<ShapeReadDto>> _shapeList;
+    private readonly IDictionary<string, List<NoteDto>> _noteList;
     private readonly IUserRepo _userRepo;
     private readonly IBoardRepo _boardRepo;
     private readonly IMapper _mapper;
     
-    public BoardHub(IDictionary<string, UserConnection> connections, IBoardRepo boardRepo, IMapper mapper, IUserRepo userRepo, IDictionary<string, List<ShapeReadDto>> shapeList)
+    public BoardHub(IDictionary<string, UserConnection> connections, IBoardRepo boardRepo, IMapper mapper, IUserRepo userRepo, IDictionary<string, List<ShapeReadDto>> shapeList, IDictionary<string, List<NoteDto>> noteList)
     {
         _connections = connections;
         _userRepo = userRepo;
         _boardRepo = boardRepo;
         _mapper = mapper;
         _shapeList = shapeList;
+        _noteList = noteList;
     }
 
     public async Task JoinRoom(UserConnection userConnection)
@@ -38,6 +40,10 @@ public class BoardHub : Hub
             _shapeList[userConnection.Board] = new List<ShapeReadDto>();
         }
 
+        if (!_noteList.ContainsKey(userConnection.Board))
+        {
+            _noteList[userConnection.Board] = new List<NoteDto>();
+        }
     }
 
     public override Task OnDisconnectedAsync(Exception? exception)
@@ -136,6 +142,12 @@ public class BoardHub : Hub
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
+            var existNote = _noteList[userConnection.Board].FirstOrDefault(s => s.Id == note.Id);
+
+            if (existNote is null) {
+                _noteList[userConnection.Board].Add(note);
+            }
+
             await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveNewNote, note);
         }
     }
@@ -144,6 +156,13 @@ public class BoardHub : Hub
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
+            _noteList[userConnection.Board].ForEach(n => {
+                if (n.Id == note.Id)
+                {
+                    n.Text = note.Text;
+                }
+            });
+
             await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveUpdateNote, note);
         }
     }
@@ -152,6 +171,8 @@ public class BoardHub : Hub
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
+            _noteList[userConnection.Board] = _noteList[userConnection.Board].Where((s) => s.Id != noteId).ToList();
+
             await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveDeleteNote, noteId);
         }
     }
