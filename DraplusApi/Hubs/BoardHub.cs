@@ -53,6 +53,7 @@ public class BoardHub : Hub
         {
             OnlineUsers(userConnection.Board);
         }
+
         return base.OnConnectedAsync();
     }
 
@@ -62,7 +63,11 @@ public class BoardHub : Hub
         {
             var temp = shape;
 
-            _shapeList[userConnection.Board].Add(shape);
+            var existShape = _shapeList[userConnection.Board].FirstOrDefault(s => s.Id == shape.Id);
+
+            if (existShape is null) {
+                _shapeList[userConnection.Board].Add(shape);
+            }
 
             await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveShape, shape);
 
@@ -155,6 +160,7 @@ public class BoardHub : Hub
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
+            _shapeList[userConnection.Board] = _shapeList[userConnection.Board].Where((s) => s.Id != shapeId).ToList();
             await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveUndo, shapeId);
         }
     }
@@ -162,6 +168,12 @@ public class BoardHub : Hub
     public async Task Redo(ShapeReadDto shape) {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
+            var existShape = _shapeList[userConnection.Board].FirstOrDefault(s => s.Id == shape.Id);
+
+            if (existShape is null) {
+                _shapeList[userConnection.Board].Add(shape);
+            }
+
             await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveShape, shape);
         }
     }
