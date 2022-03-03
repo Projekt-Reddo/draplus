@@ -56,6 +56,31 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
             initLC.tool.strokeWidth = 30;
         }
     };
+    function downloadBlob(blob: any, filename: any) {
+        const objectUrl = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = objectUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 5000);
+    }
+    // Export Image
+    const handleExportImage = () => {
+        const data = initLC.getImage();
+        const data1 = initLC.getSnapshot();
+        const link = document.createElement("a");
+        // const link = document.createElement("a");
+        // LC.renderSnapshotToSVG(data1, "image.png");
+        const data2 = initLC.getSVGString();
+        console.log(data2);
+
+        const blob = new Blob([data2], { type: "image/svg+xml" });
+        downloadBlob(blob, `myimage.svg`);
+    };
 
     // Select stroke width for Brush
     const handleSelectToolStrokeWidth = (strokeWidth: number) => {
@@ -206,7 +231,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         <Icon icon="eraser" style={{ fontSize: "1.5rem" }} />
                     </div>
                 </div>
-                {/* Eraser, Text, Note, Undo, Redo */}
+                {/* Text, Note, Undo, Redo */}
                 {toolbars.map((toolbar) => (
                     <div
                         key={toolbar.id}
@@ -237,6 +262,24 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         </div>
                     </div>
                 ))}
+                {/* Export */}
+                <div
+                    className="icon flex"
+                    onClick={(e) => {
+                        handleActiveButtonSelect(7);
+                        handleExportImage();
+                    }}
+                >
+                    <div
+                        className={` ${isSelect === 7 ? "whiteLine" : "line"}`}
+                    />
+                    <div className="text-center self-center w-full">
+                        <Icon
+                            icon="share-square"
+                            style={{ fontSize: "1.5rem" }}
+                        />
+                    </div>
+                </div>
             </div>
             {/* Brush Option Board */}
             <div
