@@ -8,7 +8,7 @@ import Icon from "components/Icon";
 
 //Style
 import "styles/LeftToolBar.css";
-import { OtherTool, Pencil } from "utils/constant";
+import { OtherTool, Pencil, Text, Eraser } from "utils/constant";
 
 //Store
 import { CLEAR_ALL, DRAW_SHAPE, REDO, UNDO } from "store/actions";
@@ -30,6 +30,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     const [showBrushOption, setShowBrushOption] = React.useState(false);
     const [clearAllOption, setClearrAllOption] = React.useState(false);
     const [isSelect, setIsSelect] = React.useState(1);
+    const [isStrokeWidthSelect, setIsStrokeWidthSelect] = React.useState(5);
     const [colorSelect, setColorSelect] = React.useState("#fff");
     const [strokeWidthSelect, setStrokeWidthSelect] = React.useState(5);
 
@@ -102,17 +103,10 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
         }
         setIsSelect(buttonCode);
     };
-    
 
     // Const Variable
     const toolbars = [
-        // {
-        //     id: 2,
-        //     iconName: "eraser",
-        //     toolbarFunc: doNothing,
-        //     toolName: "Eraser",
-        // },
-        { id: 3, iconName: "font", toolbarFunc: doNothing, toolName: "Text" },
+        { id: 3, iconName: "font", toolbarFunc: doNothing, toolName: Text },
         {
             id: 4,
             iconName: "sticky-note",
@@ -199,7 +193,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                             watingClick = setTimeout(() => {
                                 watingClick = null;
                                 handleActiveButtonSelect(2);
-                                handleSelectTool("Eraser");
+                                handleSelectTool(Eraser);
                             }, 251);
                         }
                     }}
@@ -211,7 +205,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         <Icon icon="eraser" style={{ fontSize: "1.5rem" }} />
                     </div>
                 </div>
-                {/* Eraser, Text, Note, Undo, Redo */}
+                {/*Text, Note, Undo, Redo */}
                 {toolbars.map((toolbar) => (
                     <div
                         key={toolbar.id}
@@ -251,20 +245,26 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         : "brushOptionBoardHide"
                 }`}
                 ref={wrapperRef}
-            >   
+            >
                 {/* Stroke Options */}
                 <div className="grid grid-cols-1 content-center gap-4">
                     {strokes.map((stroke) => (
                         <div
                             key={stroke.width}
                             className={stroke.size}
-                            onClick={() =>
-                                handleSelectToolStrokeWidth(stroke.width)
+                            style={
+                                isStrokeWidthSelect === stroke.width
+                                    ? { opacity: 1 }
+                                    : {}
                             }
+                            onClick={() => {
+                                handleSelectToolStrokeWidth(stroke.width);
+                                setIsStrokeWidthSelect(stroke.width);
+                            }}
                         />
                     ))}
                 </div>
-                {/* Vertiacal White Line */}
+                {/* Vertical White Line */}
                 <div className="py-4 mx-4">
                     <div className="verticalLine" />
                 </div>
@@ -273,7 +273,9 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                     {colors.map((color) => (
                         <div
                             key={color}
-                            style={{ backgroundColor: color }}
+                            style={{
+                                backgroundColor: color,
+                            }}
                             className="dot"
                             onClick={() => {
                                 handleSelectToolColor(color);
@@ -326,7 +328,7 @@ export function useOutsideAlerter(ref: any, setShowBrushOption: any) {
             // Unbind the event listener on clean up
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [ref]); 
+    }, [ref]);
 }
 // Handle click outside
 export function useOutsideAlerter2(ref: any, setClearrAllOption: any) {
