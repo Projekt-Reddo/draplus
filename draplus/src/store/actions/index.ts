@@ -10,6 +10,7 @@ export const DRAW_SHAPE = "drawShape";
 export const RECEIVE_MOUSE = "receiveMouse";
 export const SEND_MOUSE = "sendMouse";
 export const INITLC = "lc/init";
+export const CONNECT_SIGNALR = "connectSignalr";
 export const JOIN_ROOM = "joinRoom";
 export const LEAVE_ROOM = "leaveRoom";
 export const ONLINE_USERS = "onlineUsers";
