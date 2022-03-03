@@ -46,7 +46,7 @@ namespace DraplusApi.Controllers
 
             if (user == null)
             {
-                return BadRequest(new ResponseDto(404, "User not found"));
+                return NotFound(new ResponseDto(404, "User not found"));
             }
 
             // Create new chat room & board
@@ -96,11 +96,11 @@ namespace DraplusApi.Controllers
         [HttpGet("board/{id}")]
         public async Task<ActionResult<BoardReadDto>> GetBoard(string id)
         {
-            
-            var board = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id",id));
+
+            var board = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", id));
             var boardread = _mapper.Map<BoardReadDto>(board);
             return Ok(boardread);
         }
-        
+
     }
 }
