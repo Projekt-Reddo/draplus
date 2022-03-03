@@ -8,6 +8,7 @@ import onlineUsersReducer from "./onlineUsers";
 import boardReducer from "./board";
 import toolReducer from "./tool";
 import noteReducer from "./note";
+import myShapeReducer from "./myShape";
 
 const rootReducer = combineReducers({
     user: userReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
     board: boardReducer,
     tool: toolReducer,
     notes: noteReducer,
+    myShape: myShapeReducer,
 });
 
 export default rootReducer;
