@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import Loading from "components/Loading";
 import AuthRoute from "./AuthRoute";
 import UserRoute from "./UserRoute";
+import HelpPage from "pages/HelpPage";
 
 const BaseRoutes: React.FC = () => {
     const dispatch = useDispatch();
@@ -51,6 +52,9 @@ const BaseRoutes: React.FC = () => {
             </Route>
             <Route path="/" element={<UserRoute />}>
                 <Route path="/board" element={<BoardList />} />
+            </Route>
+            <Route path="/" element={<UserRoute />}>
+                <Route path="/help" element={<HelpPage />} />
             </Route>
 
             <Route path="*" element={<ErrorPage />} />

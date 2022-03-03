@@ -21,6 +21,7 @@ import {
     REMOVE_SHAPE,
     UNDO,
     REDO,
+    CONNECT_SIGNALR,
 } from "store/actions";
 import { API } from "utils/constant";
 
@@ -30,10 +31,18 @@ var connection: {
 
 export const signalRMiddleware = (storeAPI: any) => {
     return (next: any) => async (action: any) => {
-        if (action.type === JOIN_ROOM) {
-            connection.board = await createSignalRConnection(`${API}/board`);
-            connection.chat = await createSignalRConnection(`${API}/chat`);
+        //#region Connect, Join & Leave room
 
+        if (action.type === CONNECT_SIGNALR) {
+            if (!connection.chat && !connection.board) {
+                connection.board = await createSignalRConnection(
+                    `${API}/board`
+                );
+                connection.chat = await createSignalRConnection(`${API}/chat`);
+            }
+        }
+
+        if (action.type === JOIN_ROOM) {
             await connection.board.invoke("JoinRoom", {
                 user: action.payload.user,
                 board: action.payload.board,
@@ -63,6 +72,16 @@ export const signalRMiddleware = (storeAPI: any) => {
                     type: RECEIVE_SHAPE,
                     payload: shape,
                 });
+            });
+
+            connection.board.on("ClearAll", (clear: any) => {
+                const state = storeAPI.getState();
+                state.initLC.clear();
+            });
+
+            connection.board.on("ClearAll", (clear: any) => {
+                const state = storeAPI.getState();
+                state.initLC.clear();
             });
 
             connection.board.on("ClearAll", (clear: any) => {
@@ -130,18 +149,15 @@ export const signalRMiddleware = (storeAPI: any) => {
             connection.chat.onclose(() => {});
             connection.board.onclose(() => {});
         }
-        if (action.type === CLEAR_ALL) {
-            connection.board.invoke("ClearAll");
-        }
 
         if (action.type === LEAVE_ROOM) {
-            try {
-                connection.board.stop();
-                connection.chat.stop();
-            } catch (e) {
-                console.log(e);
-            }
+            connection.board.invoke("LeaveRoom");
+            connection.chat.invoke("LeaveRoom");
         }
+
+        //#endregion
+
+        //#region Chat action
 
         if (action.type === SEND_MESSAGE) {
             connection.chat.invoke(
@@ -149,6 +165,14 @@ export const signalRMiddleware = (storeAPI: any) => {
                 action.payload.user,
                 action.payload.message
             );
+        }
+
+        //#endregion
+
+        //#region Board action
+
+        if (action.type === CLEAR_ALL) {
+            connection.board.invoke("ClearAll");
         }
 
         if (action.type === DRAW_SHAPE) {
@@ -168,6 +192,10 @@ export const signalRMiddleware = (storeAPI: any) => {
             connection.board.invoke("SendOnlineUsers", action.payload);
         }
 
+        //#endregion
+
+        //#region Note
+
         if (action.type === ADD_NOTE) {
             connection.board.invoke("NewNote", action.payload);
         }
@@ -179,6 +207,10 @@ export const signalRMiddleware = (storeAPI: any) => {
         if (action.type === DELETE_NOTE) {
             connection.board.invoke("DeleteNote", action.payload);
         }
+
+        //#endregion
+
+        //#region Undo & Redo
 
         if (action.type === UNDO) {
             const undoStack = storeAPI.getState().myShape.undoStack;
@@ -197,6 +229,8 @@ export const signalRMiddleware = (storeAPI: any) => {
                 connection.board.invoke("Redo", lastRedoShape);
             }
         }
+
+        //#endregion
 
         return next(action);
     };

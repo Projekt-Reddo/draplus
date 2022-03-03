@@ -1,0 +1,31 @@
+.tabSelect:hover {
+    background-color: #3d3d3d;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.menu-bars {
+    font-size: 2rem;
+}
+
+.dropDown {
+    display: none;
+}
+
+.frame {
+    background-color: #3d3d3d;
+    border-radius: 8px;
+}
+
+@media screen and (max-width: 996px) {
+    .sideBar {
+        display: none;
+    }
+
+    .dropDown {
+        display: block;
+        width: 100%;
+        background-color: #3d3d3d;
+        border-radius: 8px;
+    }
+}

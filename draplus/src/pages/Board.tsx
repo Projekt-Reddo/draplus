@@ -9,6 +9,7 @@ import {
     LEAVE_ROOM,
     GET_ONLINE_USERS,
     ONLINE_USERS,
+    SEND_MOUSE,
 } from "store/actions";
 
 // Components
@@ -34,7 +35,7 @@ const Board: React.FC<BoardProps> = () => {
 
     React.useEffect(() => {
         // Join Board
-        if (params.boardId && user.user) {
+        if (params.boardId && user.isAuthenticated) {
             dispatch({
                 type: JOIN_ROOM,
                 payload: {
@@ -53,6 +54,14 @@ const Board: React.FC<BoardProps> = () => {
             dispatch({
                 type: ONLINE_USERS,
                 payload: [],
+            });
+            dispatch({
+                type: SEND_MOUSE,
+                payload: {
+                    x: 0,
+                    y: 0,
+                    isMove: false,
+                },
             });
         };
     }, []);
