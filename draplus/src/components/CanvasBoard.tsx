@@ -71,31 +71,29 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         }
     }, [shape, myShape]);
 
-    
-
     const getMousePosition = (e: any) => {
-        dispatch({
-            type: SEND_MOUSE,
-            payload: {
-                x: e.pageX,
-                y: e.pageY,
-                isMove: true,
-            },
-        });
-        clearTimeout(timer);
-        timer = setTimeout(() => {
+        if (onlineUsers.length > 1) {
             dispatch({
                 type: SEND_MOUSE,
                 payload: {
                     x: e.pageX,
                     y: e.pageY,
-                    isMove: false,
+                    isMove: true,
                 },
             });
-        }, 300);
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                dispatch({
+                    type: SEND_MOUSE,
+                    payload: {
+                        x: e.pageX,
+                        y: e.pageY,
+                        isMove: false,
+                    },
+                });
+            }, 300);
+        }
     };
-
-    
 
     return (
         <div
@@ -105,7 +103,7 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
             {/* Cursor */}
             <Cursor />
             {/* Left Toolbar */}
-            <LeftToolBar  />
+            <LeftToolBar />
             {/* Canvas Board */}
             <LC.LiterallyCanvasReactComponent
                 onInit={handleInit}
