@@ -5,25 +5,26 @@ using DraplusApi.Models;
 using DraplusApi.Data;
 using MongoDB.Driver;
 using AutoMapper;
-using Newtonsoft.Json;
+
 using static Constant;
 
 namespace DraplusApi.Hubs;
 
-
 public class BoardHub : Hub
 {
     private readonly IDictionary<string, UserConnection> _connections;
+    private readonly IDictionary<string, List<ShapeReadDto>> _shapeList;
     private readonly IUserRepo _userRepo;
     private readonly IBoardRepo _boardRepo;
     private readonly IMapper _mapper;
-
-    public BoardHub(IDictionary<string, UserConnection> connections, IBoardRepo boardRepo, IMapper mapper, IUserRepo userRepo)
+    
+    public BoardHub(IDictionary<string, UserConnection> connections, IBoardRepo boardRepo, IMapper mapper, IUserRepo userRepo, IDictionary<string, List<ShapeReadDto>> shapeList)
     {
         _connections = connections;
         _userRepo = userRepo;
         _boardRepo = boardRepo;
         _mapper = mapper;
+        _shapeList = shapeList;
     }
 
     public async Task JoinRoom(UserConnection userConnection)
@@ -31,6 +32,11 @@ public class BoardHub : Hub
         await Groups.AddToGroupAsync(Context.ConnectionId, userConnection.Board);
 
         _connections[Context.ConnectionId] = userConnection;
+
+        if (!_shapeList.ContainsKey(userConnection.Board))
+        {
+            _shapeList[userConnection.Board] = new List<ShapeReadDto>();
+        }
 
     }
 
@@ -50,11 +56,14 @@ public class BoardHub : Hub
         return base.OnConnectedAsync();
     }
 
-    public async Task DrawShape(ShapeCreateDto shape)
+    public async Task DrawShape(ShapeReadDto shape)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
             var temp = shape;
+
+            _shapeList[userConnection.Board].Add(shape);
+
             await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveShape, shape);
 
             // var jsonData = Convert.ToString(shape.Data);
@@ -139,6 +148,21 @@ public class BoardHub : Hub
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
             await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveDeleteNote, noteId);
+        }
+    }
+
+    public async Task Undo(string shapeId)
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveUndo, shapeId);
+        }
+    }
+
+    public async Task Redo(ShapeReadDto shape) {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveShape, shape);
         }
     }
 }

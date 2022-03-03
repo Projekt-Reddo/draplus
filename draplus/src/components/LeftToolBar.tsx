@@ -11,7 +11,7 @@ import "styles/LeftToolBar.css";
 import { OtherTool, Pencil } from "utils/constant";
 
 //Store
-import { CLEAR_ALL, DRAW_SHAPE } from "store/actions";
+import { CLEAR_ALL, DRAW_SHAPE, REDO, UNDO } from "store/actions";
 
 interface LeftToolBarProps {}
 
@@ -70,12 +70,16 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
 
     // Undo canvas
     const handleUndo = () => {
-        initLC.undo();
+        dispatch({
+            type: UNDO,
+        });
     };
 
     // Redo canvas
     const handleRedo = () => {
-        initLC.redo();
+        dispatch({
+            type: REDO,
+        });
     };
 
     // Clear canvas
