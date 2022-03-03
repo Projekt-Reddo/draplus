@@ -25,13 +25,11 @@ import {
 } from "store/actions";
 import { API } from "utils/constant";
 
-var connection: {
-    [key: string]: HubConnection;
-} = {};
-
 export const signalRMiddleware = (storeAPI: any) => {
     return (next: any) => async (action: any) => {
         //#region Connect, Join & Leave room
+
+        var connection = storeAPI.getState().connection;
 
         if (action.type === CONNECT_SIGNALR) {
             if (!connection.chat && !connection.board) {
@@ -39,6 +37,11 @@ export const signalRMiddleware = (storeAPI: any) => {
                     `${API}/board`
                 );
                 connection.chat = await createSignalRConnection(`${API}/chat`);
+
+                action.payload = {
+                    board: connection.board,
+                    chat: connection.chat,
+                };
             }
         }
 
