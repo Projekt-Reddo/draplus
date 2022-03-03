@@ -61,6 +61,16 @@ export const signalRMiddleware = (storeAPI: any) => {
                     payload: shape,
                 });
             });
+            
+            connection.board.on("ClearAll", (clear: any) => {
+                const state = storeAPI.getState();
+                state.initLC.clear();
+            })
+
+            connection.board.on("ClearAll", (clear: any) => {
+                const state = storeAPI.getState();
+                state.initLC.clear();
+            });
 
             connection.board.on("ClearAll", (clear: any) => {
                 const state = storeAPI.getState();

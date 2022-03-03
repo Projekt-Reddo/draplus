@@ -123,6 +123,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
         }
         setIsSelect(buttonCode);
     };
+    
 
     // Const Variable
     const toolbars = [
@@ -289,7 +290,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         : "brushOptionBoardHide"
                 }`}
                 ref={wrapperRef}
-            >
+            >   
                 {/* Stroke Options */}
                 <div className="grid grid-cols-1 content-center gap-4">
                     {strokes.map((stroke) => (
@@ -364,7 +365,7 @@ export function useOutsideAlerter(ref: any, setShowBrushOption: any) {
             // Unbind the event listener on clean up
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [ref]);
+    }, [ref]); 
 }
 // Handle click outside
 export function useOutsideAlerter2(ref: any, setClearrAllOption: any) {

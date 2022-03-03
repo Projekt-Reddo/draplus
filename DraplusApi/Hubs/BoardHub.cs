@@ -31,6 +31,8 @@ public class BoardHub : Hub
         await Groups.AddToGroupAsync(Context.ConnectionId, userConnection.Board);
 
         _connections[Context.ConnectionId] = userConnection;
+        var shape = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
+        await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveShape, shape.Shapes);
 
     }
 
