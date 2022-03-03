@@ -49,6 +49,7 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         setLocalInitLC(lc);
         dispatch({ type: INITLC, payload: lc });
         lc.on("shapeSave", (shape: any) => handleDrawingChange(lc, shape));
+        lc.on("undo", () => console.log(lc));
     };
 
     const handleCreateNote = (e: React.MouseEvent<HTMLElement>) => {
