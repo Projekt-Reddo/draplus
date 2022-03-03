@@ -12,32 +12,24 @@ import { useEffect } from "react";
 import { init } from "utils/loginHandlers";
 import { login } from "store/actions/index";
 import { useDispatch } from "react-redux";
-import { useNavigate, useLocation } from "react-router-dom";
 import Loading from "components/Loading";
+import AuthRoute from "./AuthRoute";
+import UserRoute from "./UserRoute";
 
 const BaseRoutes: React.FC = () => {
     const dispatch = useDispatch();
-    // for navigate
-    const [tempLocation, setTempLocation] = React.useState<string>("/");
-    const location = useLocation();
-    const navigate = useNavigate();
+
     const [isLoading, setIsLoading] = React.useState(true);
     useEffect(() => {
         var rs = init();
-        if (!location.pathname.endsWith("/") || location.pathname === "") {
-            setTempLocation(location.pathname);
-        }
+
         if (rs) {
             const userStored = localStorage.getItem("user");
             const user = JSON.parse(userStored || "{}");
             const accessToken = localStorage.getItem("accessToken");
             dispatch(login({ ...user, accessToken: accessToken }));
-            if (tempLocation !== "/") {
-                navigate(tempLocation);
-            }
-        } else {
-            navigate("/");
         }
+
         setIsLoading(false);
     }, []);
 
@@ -51,9 +43,16 @@ const BaseRoutes: React.FC = () => {
 
     return (
         <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/board/:boardId" element={<Board />} />
-            <Route path="/board" element={<BoardList />} />
+            <Route path="/" element={<AuthRoute />}>
+                <Route path="/" element={<Login />} />
+            </Route>
+            <Route path="/" element={<UserRoute />}>
+                <Route path="/board/:boardId" element={<Board />} />
+            </Route>
+            <Route path="/" element={<UserRoute />}>
+                <Route path="/board" element={<BoardList />} />
+            </Route>
+
             <Route path="*" element={<ErrorPage />} />
         </Routes>
     );

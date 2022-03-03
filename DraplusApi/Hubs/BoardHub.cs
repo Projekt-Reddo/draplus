@@ -31,6 +31,8 @@ public class BoardHub : Hub
         await Groups.AddToGroupAsync(Context.ConnectionId, userConnection.Board);
 
         _connections[Context.ConnectionId] = userConnection;
+        var shape = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
+        await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveShape, shape.Shapes);
 
     }
 
@@ -84,6 +86,7 @@ public class BoardHub : Hub
     }
     public async Task ClearAll()
     {
+        
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
             var temp = userConnection.Board;
@@ -115,5 +118,29 @@ public class BoardHub : Hub
     {
         var users = _connections.Values.Where(user => user.Board == boardId).Select(user => user.User);
         return Clients.Group(boardId).SendAsync(HubReturnMethod.OnlineUsers, users);
+    }
+
+    public async Task NewNote(NoteDto note)
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveNewNote, note);
+        }
+    }
+
+    public async Task UpdateNote(NoteUpdateDto note)
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveUpdateNote, note);
+        }
+    }
+
+    public async Task DeleteNote(string noteId)
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveDeleteNote, noteId);
+        }
     }
 }

@@ -6,6 +6,8 @@ import chatReducer from "./chat";
 import mouseReducer from "./mouse";
 import onlineUsersReducer from "./onlineUsers";
 import boardReducer from "./board";
+import toolReducer from "./tool";
+import noteReducer from "./note";
 
 const rootReducer = combineReducers({
     user: userReducer,
@@ -15,6 +17,8 @@ const rootReducer = combineReducers({
     mouse: mouseReducer,
     onlineUsers: onlineUsersReducer,
     board: boardReducer,
+    tool: toolReducer,
+    notes: noteReducer,
 });
 
 export default rootReducer;

@@ -41,7 +41,6 @@ builder.Services.AddSingleton<IMongoContext, MongoContext>();
 
 // Project Services
 builder.Services.AddScoped<IBoardRepo, BoardRepo>();
-builder.Services.AddScoped<IChatRoomRepo, ChatRoomRepo>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 // alows CORS
@@ -50,6 +49,7 @@ builder.Services.AddCors();
 // Config for SignalR
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<IDictionary<string, UserConnection>>(opt => new Dictionary<string, UserConnection>());
+builder.Services.AddSingleton<IDictionary<string, UserConnectionChat>>(opt => new Dictionary<string, UserConnectionChat>());
 
 // Authentication
 ConfigurationManager configuration = builder.Configuration;
