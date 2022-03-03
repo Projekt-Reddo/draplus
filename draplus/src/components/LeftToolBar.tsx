@@ -56,30 +56,26 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
             initLC.tool.strokeWidth = 30;
         }
     };
-    function downloadBlob(blob: any, filename: any) {
-        const objectUrl = URL.createObjectURL(blob);
 
-        const link = document.createElement("a");
-        link.href = objectUrl;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    const triggerDownload = (imgURI: string) => {
+        var evt = new MouseEvent("click", {
+            view: window,
+            bubbles: false,
+            cancelable: true,
+        });
 
-        setTimeout(() => URL.revokeObjectURL(objectUrl), 5000);
-    }
+        var a = document.createElement("a");
+        a.setAttribute("download", `${new Date().toLocaleString()}` + ".png");
+        a.setAttribute("href", imgURI);
+        a.setAttribute("target", "_blank");
+        a.setAttribute("preventDefault", "true");
+        a.dispatchEvent(evt);
+    };
+
     // Export Image
     const handleExportImage = () => {
-        const data = initLC.getImage();
-        const data1 = initLC.getSnapshot();
-        const link = document.createElement("a");
-        // const link = document.createElement("a");
-        // LC.renderSnapshotToSVG(data1, "image.png");
-        const data2 = initLC.getSVGString();
-        console.log(data2);
-
-        const blob = new Blob([data2], { type: "image/svg+xml" });
-        downloadBlob(blob, `myimage.svg`);
+        const image = initLC.getImage().toDataURL();
+        triggerDownload(image);
     };
 
     // Select stroke width for Brush
@@ -127,7 +123,6 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
         }
         setIsSelect(buttonCode);
     };
-    
 
     // Const Variable
     const toolbars = [
@@ -294,7 +289,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         : "brushOptionBoardHide"
                 }`}
                 ref={wrapperRef}
-            >   
+            >
                 {/* Stroke Options */}
                 <div className="grid grid-cols-1 content-center gap-4">
                     {strokes.map((stroke) => (
@@ -369,7 +364,7 @@ export function useOutsideAlerter(ref: any, setShowBrushOption: any) {
             // Unbind the event listener on clean up
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [ref]); 
+    }, [ref]);
 }
 // Handle click outside
 export function useOutsideAlerter2(ref: any, setClearrAllOption: any) {
