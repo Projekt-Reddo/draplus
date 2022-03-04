@@ -109,7 +109,6 @@ namespace DraplusApi.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<ResponseDto>> UpdateBoardName(string id, [FromBody] BoardForChangeNameDto boardForChangeNameDto)
         {
-            Console.Write("hellow");
             var board = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", id));
              if (board == null)
             {
