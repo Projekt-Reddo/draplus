@@ -4,7 +4,7 @@ import { Menu, Transition } from "@headlessui/react";
 import "styles/Setting.css";
 import { Link, useNavigate } from "react-router-dom";
 import Icon from "components/Icon";
-import { useLocation } from "react-router-dom";
+import { matchRoutes, useLocation } from "react-router-dom";
 import Notification from "components/Notification";
 
 interface SettingProps {}
@@ -47,6 +47,12 @@ const Setting: React.FC<SettingProps> = () => {
     // State manage Notification component
     const [toggle, setToggle] = React.useState(false);
 
+    const routes = [{ path: "/board/:id" }];
+
+    const match = matchRoutes(routes, location.pathname);
+
+    console.log(match);
+
     return (
         <>
             <Menu as="div">
@@ -67,50 +73,62 @@ const Setting: React.FC<SettingProps> = () => {
                 >
                     <Menu.Items className="origin-top-right fixed right-10 top-20 mt-2 w-52 px-2 rounded-md shadow-lg setting-item divide-y divide-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none">
                         {SettingItems.map(
-                            (item: SettingItem, index: number) => (
-                                <div className="py-1" key={index}>
-                                    <Menu.Item>
-                                        {({ active }) => (
-                                            <div
-                                                className={`setting-item cursor-pointer
-                    ${active ? "text-slate-400" : "text-slate-100"}
-                     block px-4 py-2`}
-                                                onClick={
-                                                    item.name === "Share"
-                                                        ? (e) => {
-                                                              // Prevent redirect
-                                                              e.preventDefault();
+                            (item: SettingItem, index: number) => {
+                                if (!match && item.name === "Share") {
+                                    return (
+                                        <React.Fragment
+                                            key={index}
+                                        ></React.Fragment>
+                                    );
+                                }
 
-                                                              // Copy current url to clipboard
-                                                              navigator.clipboard.writeText(
-                                                                  `${window.location.origin}${location.pathname}`
-                                                              );
+                                return (
+                                    <div className="py-1" key={index}>
+                                        <Menu.Item>
+                                            {({ active }) => (
+                                                <div
+                                                    className={`setting-item cursor-pointer
+                ${active ? "text-slate-400" : "text-slate-100"}
+                 block px-4 py-2`}
+                                                    onClick={
+                                                        item.name === "Share"
+                                                            ? (e) => {
+                                                                  // Prevent redirect
+                                                                  e.preventDefault();
 
-                                                              // Event for IE
-                                                              //  window.clipboardData.setData("Text", "https://draplus.app/");
+                                                                  // Copy current url to clipboard
+                                                                  navigator.clipboard.writeText(
+                                                                      `${window.location.origin}${location.pathname}`
+                                                                  );
 
-                                                              // Show notification
-                                                              setToggle(true);
-                                                          }
-                                                        : (e) => {
-                                                              e.preventDefault();
-                                                              navigate(
-                                                                  item.path
-                                                              );
-                                                          }
-                                                }
-                                            >
-                                                <Icon
-                                                    className="mr-4"
-                                                    icon={item.icon}
-                                                    size="lg"
-                                                />
-                                                {item.name}
-                                            </div>
-                                        )}
-                                    </Menu.Item>
-                                </div>
-                            )
+                                                                  // Event for IE
+                                                                  //  window.clipboardData.setData("Text", "https://draplus.app/");
+
+                                                                  // Show notification
+                                                                  setToggle(
+                                                                      true
+                                                                  );
+                                                              }
+                                                            : (e) => {
+                                                                  e.preventDefault();
+                                                                  navigate(
+                                                                      item.path
+                                                                  );
+                                                              }
+                                                    }
+                                                >
+                                                    <Icon
+                                                        className="mr-4"
+                                                        icon={item.icon}
+                                                        size="lg"
+                                                    />
+                                                    {item.name}
+                                                </div>
+                                            )}
+                                        </Menu.Item>
+                                    </div>
+                                );
+                            }
                         )}
                     </Menu.Items>
                 </Transition>

@@ -5,7 +5,7 @@ import "styles/Setting.css";
 import { useNavigate } from "react-router-dom";
 import Icon from "components/Icon";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "store/actions";
+import { DISCONNECT_SIGNALR, logout } from "store/actions";
 
 interface AvatarProps {}
 
@@ -58,6 +58,7 @@ const Avatar: React.FC<AvatarProps> = () => {
             isClickable: true,
             onClick: () => {
                 dispatch(logout());
+                dispatch({ type: DISCONNECT_SIGNALR });
                 navigate("/");
             },
         },
