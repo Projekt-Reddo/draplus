@@ -9,6 +9,7 @@ import {
     LEAVE_ROOM,
     GET_ONLINE_USERS,
     ONLINE_USERS,
+    SEND_MOUSE,
 } from "store/actions";
 
 // Components
@@ -31,19 +32,9 @@ const Board: React.FC<BoardProps> = () => {
     // Global State
     const user = useSelector((state: any) => state.user);
     const board = useSelector((state: any) => state.board);
+    const connection = useSelector((state: any) => state.connection);
 
     React.useEffect(() => {
-        // Join Board
-        if (params.boardId && user.user) {
-            dispatch({
-                type: JOIN_ROOM,
-                payload: {
-                    user: user.user,
-                    board: params.boardId,
-                },
-            });
-        }
-
         // User Leave Room
         return () => {
             dispatch({
@@ -53,6 +44,14 @@ const Board: React.FC<BoardProps> = () => {
             dispatch({
                 type: ONLINE_USERS,
                 payload: [],
+            });
+            dispatch({
+                type: SEND_MOUSE,
+                payload: {
+                    x: 0,
+                    y: 0,
+                    isMove: false,
+                },
             });
         };
     }, []);
@@ -66,6 +65,20 @@ const Board: React.FC<BoardProps> = () => {
             });
         }
     }, [board]);
+
+    // Join Room
+    React.useEffect(() => {
+        // Join Board
+        if (params.boardId && user.isAuthenticated && connection.board) {
+            dispatch({
+                type: JOIN_ROOM,
+                payload: {
+                    user: user.user,
+                    board: params.boardId,
+                },
+            });
+        }
+    }, [connection]);
 
     return (
         <>

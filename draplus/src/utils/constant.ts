@@ -4,3 +4,5 @@ export const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || "";
 export const GOOGLE_AUTH_CALLBACK_URL = `${API}/api/auth/google`;
 export const OtherTool = "Tool";
 export const Pencil = "Pencil";
+export const Eraser = "Eraser";
+export const Text = "Text";

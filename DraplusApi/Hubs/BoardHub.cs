@@ -18,7 +18,7 @@ public class BoardHub : Hub
     private readonly IUserRepo _userRepo;
     private readonly IBoardRepo _boardRepo;
     private readonly IMapper _mapper;
-
+    
     public BoardHub(IDictionary<string, UserConnection> connections, IBoardRepo boardRepo, IMapper mapper, IUserRepo userRepo, IDictionary<string, List<ShapeReadDto>> shapeList, IDictionary<string, List<NoteDto>> noteList)
     {
         _connections = connections;
@@ -50,6 +50,23 @@ public class BoardHub : Hub
         }
     }
 
+    public async Task LeaveRoom()
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, userConnection.Board);
+
+            _connections.Remove(Context.ConnectionId);
+            _shapeList.Remove(userConnection.Board);
+            _noteList.Remove(userConnection.Board);
+        }
+        
+        if (userConnection != null)
+        {
+            await OnlineUsers(userConnection.Board);
+        }
+    }
+
     public override Task OnDisconnectedAsync(Exception? exception)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -66,10 +83,6 @@ public class BoardHub : Hub
 
         return base.OnConnectedAsync();
     }
-
-    #endregion
-
-    #region Draw & Clear
 
     public async Task DrawShape(ShapeReadDto shape)
     {
