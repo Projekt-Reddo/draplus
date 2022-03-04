@@ -13,6 +13,7 @@ export const INITLC = "lc/init";
 export const CONNECT_SIGNALR = "connectSignalr";
 export const JOIN_ROOM = "joinRoom";
 export const LEAVE_ROOM = "leaveRoom";
+export const DISCONNECT_SIGNALR = "disconnectSignalr";
 export const ONLINE_USERS = "onlineUsers";
 export const GET_ONLINE_USERS = "getOnlineUsers";
 export const ADD_NOTE = "note/add";

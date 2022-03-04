@@ -1,3 +1,4 @@
+import { DISCONNECT_SIGNALR } from "./../actions/index";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import {
     JOIN_ROOM,
@@ -42,6 +43,15 @@ export const signalRMiddleware = (storeAPI: any) => {
                     board: connection.board,
                     chat: connection.chat,
                 };
+            }
+        }
+
+        if (action.type === DISCONNECT_SIGNALR) {
+            try {
+                await connection.board.stop();
+                await connection.chat.stop();
+            } catch (e) {
+                console.log(e);
             }
         }
 
