@@ -32,19 +32,9 @@ const Board: React.FC<BoardProps> = () => {
     // Global State
     const user = useSelector((state: any) => state.user);
     const board = useSelector((state: any) => state.board);
+    const connection = useSelector((state: any) => state.connection);
 
     React.useEffect(() => {
-        // Join Board
-        if (params.boardId && user.isAuthenticated) {
-            dispatch({
-                type: JOIN_ROOM,
-                payload: {
-                    user: user.user,
-                    board: params.boardId,
-                },
-            });
-        }
-
         // User Leave Room
         return () => {
             dispatch({
@@ -75,6 +65,20 @@ const Board: React.FC<BoardProps> = () => {
             });
         }
     }, [board]);
+
+    // Join Room
+    React.useEffect(() => {
+        // Join Board
+        if (params.boardId && user.isAuthenticated && connection.board) {
+            dispatch({
+                type: JOIN_ROOM,
+                payload: {
+                    user: user.user,
+                    board: params.boardId,
+                },
+            });
+        }
+    }, [connection]);
 
     return (
         <>
