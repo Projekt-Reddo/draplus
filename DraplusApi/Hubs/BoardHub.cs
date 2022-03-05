@@ -50,10 +50,33 @@ public class BoardHub : Hub
         }
     }
 
+    public async Task LeaveRoom()
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
+        {
+            // Set mouse move to False
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveMouse, userConnection.User.Id, userConnection.User.Name, 0, 0, false);
+
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, userConnection.Board);
+
+            _connections.Remove(Context.ConnectionId);
+            _shapeList.Remove(userConnection.Board);
+            _noteList.Remove(userConnection.Board);
+        }
+
+        if (userConnection != null)
+        {
+            await OnlineUsers(userConnection.Board);
+        }
+    }
+
     public override Task OnDisconnectedAsync(Exception? exception)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
+            // Set mouse move to False
+            Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveMouse, userConnection.User.Id, userConnection.User.Name, 0, 0, false);
+
             _connections.Remove(Context.ConnectionId);
 
             Groups.RemoveFromGroupAsync(Context.ConnectionId, userConnection.Board);
@@ -66,10 +89,6 @@ public class BoardHub : Hub
 
         return base.OnConnectedAsync();
     }
-
-    #endregion
-
-    #region Draw & Clear
 
     public async Task DrawShape(ShapeReadDto shape)
     {

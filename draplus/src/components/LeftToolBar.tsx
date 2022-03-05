@@ -162,7 +162,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
 
     return (
         <>
-            <div className="app-shadow leftToolBar absolute grid grid-cols-1 gap-5 overflow-y-hidden content-center h-[33rem] w-14 z-10">
+            <div className="app-shadow leftToolBar absolute grid grid-cols-1 gap-5 overflow-y-hidden content-center h-[35rem] w-14 z-10">
                 {/* Tools */}
                 {/* Brush */}
                 <div
@@ -265,9 +265,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         handleExportImage();
                     }}
                 >
-                    <div
-                        className={` ${isSelect === 7 ? "whiteLine" : "line"}`}
-                    />
+                    <div className="line" />
                     <div className="text-center self-center w-full">
                         <Icon
                             icon="share-square"
