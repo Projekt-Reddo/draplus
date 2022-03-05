@@ -265,9 +265,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         handleExportImage();
                     }}
                 >
-                    <div
-                        className={` ${isSelect === 7 ? "whiteLine" : "line"}`}
-                    />
+                    <div className="line" />
                     <div className="text-center self-center w-full">
                         <Icon
                             icon="share-square"

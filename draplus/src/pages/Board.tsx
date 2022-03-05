@@ -45,14 +45,6 @@ const Board: React.FC<BoardProps> = () => {
                 type: ONLINE_USERS,
                 payload: [],
             });
-            dispatch({
-                type: SEND_MOUSE,
-                payload: {
-                    x: 0,
-                    y: 0,
-                    isMove: false,
-                },
-            });
         };
     }, []);
 
