@@ -101,6 +101,28 @@ namespace DraplusApi.Controllers
             var boardread = _mapper.Map<BoardReadDto>(board);
             return Ok(boardread);
         }
+         /// <summary>
+        /// Update an board name by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>200 / 404</returns>
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ResponseDto>> UpdateBoardName(string id, [FromBody] BoardForChangeNameDto boardForChangeNameDto)
+        {
+            var board = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", id));
+             if (board == null)
+            {
+                return BadRequest(new ResponseDto(404, "Board not found"));
+            }
+            board.Name = boardForChangeNameDto.Name;
+            var rs = await _boardRepo.Update(id, board);
 
+            if (rs == false)
+            {
+                return BadRequest(new ResponseDto(404, "Change board name failed"));
+            }
+
+            return Ok(new ResponseDto(200, "Board Name Updated"));
+        }
     }
 }
