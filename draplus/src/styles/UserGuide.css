@@ -4,17 +4,15 @@
     cursor: pointer;
 }
 
-.menu-bars {
-    font-size: 2rem;
-}
-
-.dropDown {
-    display: none;
-}
-
 .frame {
     background-color: #3d3d3d;
     border-radius: 8px;
+}
+
+.scrollContent {
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    height: calc(100vh - 7rem);
 }
 
 @media screen and (max-width: 996px) {
