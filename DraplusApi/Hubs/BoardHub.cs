@@ -55,6 +55,9 @@ public class BoardHub : Hub
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
+            // Set mouse move to False
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveMouse, userConnection.User.Id, userConnection.User.Name, 0, 0, false);
+
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, userConnection.Board);
 
             _connections.Remove(Context.ConnectionId);
@@ -112,6 +115,9 @@ public class BoardHub : Hub
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
+            // Set mouse move to False
+            Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveMouse, userConnection.User.Id, userConnection.User.Name, 0, 0, false);
+
             _connections.Remove(Context.ConnectionId);
 
             Groups.RemoveFromGroupAsync(Context.ConnectionId, userConnection.Board);
