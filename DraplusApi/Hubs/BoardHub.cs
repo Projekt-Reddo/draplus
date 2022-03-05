@@ -7,6 +7,7 @@ using MongoDB.Driver;
 using AutoMapper;
 
 using static Constant;
+using Newtonsoft.Json;
 
 namespace DraplusApi.Hubs;
 
@@ -60,8 +61,48 @@ public class BoardHub : Hub
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, userConnection.Board);
 
             _connections.Remove(Context.ConnectionId);
-            _shapeList.Remove(userConnection.Board);
-            _noteList.Remove(userConnection.Board);
+
+            #region Save shapes when no one in board
+
+            var remainingConnections = _connections.Values.Where(x => x.Board == userConnection.Board);
+
+            if (remainingConnections.Count() == 0)
+            {
+                var boardFromRepo = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
+
+                foreach (var shape in _shapeList[userConnection.Board])
+                {
+                    var jsonData = Convert.ToString(shape.Data);
+
+                    try
+                    {
+                        var data = JsonConvert.DeserializeObject<LinePathData>(jsonData);
+                        shape.Data = data;
+                    }
+                    catch
+                    {
+                        var data = JsonConvert.DeserializeObject<TextData>(jsonData);
+                        shape.Data = data;
+                    }
+
+
+                    var shapeToUpdate = _mapper.Map<Shape>(shape);
+
+                    if (boardFromRepo.Shapes == null)
+                    {
+                        boardFromRepo.Shapes = new List<Shape>();
+                    }
+
+                    boardFromRepo.Shapes.Add(shapeToUpdate);
+                }
+
+                var updateBoard = await _boardRepo.Update(userConnection.Board, boardFromRepo);
+
+                _shapeList.Remove(userConnection.Board);
+                _noteList.Remove(userConnection.Board);
+            }
+
+            #endregion
         }
 
         if (userConnection != null)

@@ -2,7 +2,7 @@ import * as React from "react";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import "styles/Setting.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Icon from "components/Icon";
 import { matchRoutes, useLocation } from "react-router-dom";
 import Notification from "components/Notification";
@@ -50,8 +50,6 @@ const Setting: React.FC<SettingProps> = () => {
     const routes = [{ path: "/board/:id" }];
 
     const match = matchRoutes(routes, location.pathname);
-
-    console.log(match);
 
     return (
         <>
@@ -137,7 +135,6 @@ const Setting: React.FC<SettingProps> = () => {
             <Notification
                 icon="circle-check"
                 title="Copy to clipboard successfully"
-                // message="Now you can share this link"
                 toggle={toggle}
                 setToggle={setToggle}
             />
