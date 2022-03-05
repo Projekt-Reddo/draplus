@@ -31,7 +31,7 @@ const kotaes = [
     {
         id: 1,
         mondai: "What can I do with Dảkboard?",
-        kotae: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
+        kotae: "Draplus is a collaborating drawing software based on web application. System support user for many features such as: Collaborating drawing Quick take note Group chat View online people",
     },
     {
         id: 2,
@@ -96,21 +96,8 @@ const UserGuide: React.FC<UserGuideProps> = () => {
     return (
         <div className="flex pt-28">
             {/* SideBar */}
-            <div
-                className="sideBar"
-                style={{
-                    width: "20rem",
-                }}
-            >
-                <div
-                    className="grid grid-cols-1 gap-2 fixed h-screen ml-4"
-                    style={{
-                        maxWidth: "18rem",
-                        width: "18rem",
-                        overflowY: "scroll",
-                        overscrollBehavior: "contain",
-                    }}
-                >
+            <div className="sideBar w-80">
+                <div className="scrollContent grid grid-cols-1 gap-2 fixed ml-4 w-[18rem] max-w-[18rem]">
                     {mondais.map((mondai) => (
                         <a
                             href={`#${mondai.id}`}
@@ -123,37 +110,37 @@ const UserGuide: React.FC<UserGuideProps> = () => {
                 </div>
             </div>
 
-            <div
-                className="mx-4"
-                style={{
-                    width: "50rem",
-                }}
-            >
+            {/* Content */}
+            <div className="scrollContent mx-4 w-[50rem]">
                 {/* DropDown */}
-                <div
-                    className="dropDown text-white p-2 mb-1"
-                    onClick={() => setShowDropDown(!showDropDown)}
-                >
-                    On this page
-                </div>
+                <div>
+                    <div
+                        className="dropDown hidden text-white p-2 mb-1"
+                        onClick={() => setShowDropDown(!showDropDown)}
+                    >
+                        On this page
+                    </div>
 
-                <div
-                    className={
-                        showDropDown ? `frame z-10 list-none mb-2` : `hidden`
-                    }
-                >
-                    <ul className="p-2">
-                        {mondais.map((mondai) => (
-                            <li key={mondai.id} className="text-white py-1">
-                                <a
-                                    href={`#${mondai.id}`}
-                                    onClick={() => setShowDropDown(false)}
-                                >
-                                    {mondai.mondai}
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
+                    <div
+                        className={
+                            showDropDown
+                                ? `frame z-10 list-none mb-2`
+                                : `hidden`
+                        }
+                    >
+                        <ul className="p-2">
+                            {mondais.map((mondai) => (
+                                <li key={mondai.id} className="text-white py-1">
+                                    <a
+                                        href={`#${mondai.id}`}
+                                        onClick={() => setShowDropDown(false)}
+                                    >
+                                        {mondai.mondai}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
 
                 {/* Header */}
