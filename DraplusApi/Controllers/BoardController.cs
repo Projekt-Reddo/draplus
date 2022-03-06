@@ -93,15 +93,7 @@ namespace DraplusApi.Controllers
             return Ok(new ResponseDto(200, "Board deleted"));
         }
 
-        [HttpGet("board/{id}")]
-        public async Task<ActionResult<BoardReadDto>> GetBoard(string id)
-        {
-
-            var board = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", id));
-            var boardread = _mapper.Map<BoardReadDto>(board);
-            return Ok(boardread);
-        }
-         /// <summary>
+        /// <summary>
         /// Update an board name by id
         /// </summary>
         /// <param name="id"></param>
@@ -110,7 +102,7 @@ namespace DraplusApi.Controllers
         public async Task<ActionResult<ResponseDto>> UpdateBoardName(string id, [FromBody] BoardForChangeNameDto boardForChangeNameDto)
         {
             var board = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", id));
-             if (board == null)
+            if (board == null)
             {
                 return BadRequest(new ResponseDto(404, "Board not found"));
             }

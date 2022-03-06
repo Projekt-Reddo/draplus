@@ -4,6 +4,7 @@ import { DELETE_NOTE, UPDATE_NOTE } from "store/actions";
 import Icon from "./Icon";
 import "styles/Notes.css";
 import ContentEditable from "react-contenteditable";
+import { useOutsideAlerter } from "utils/useOutsideAlerter";
 
 interface NoteItemProps {
     note: Note;
@@ -13,6 +14,19 @@ const NoteItem: React.FC<NoteItemProps> = ({ note: { x, y, id, text } }) => {
     const dispatch = useDispatch();
 
     const contentEditable = React.useRef<HTMLDivElement>(null);
+    const ref = React.useRef<HTMLDivElement>(null);
+
+    const [isOutside, setIsOutside] = React.useState(false);
+
+    const handleClickOutside = (isOutsideClick: boolean) => {
+        setIsOutside(isOutsideClick);
+
+        if (isOutsideClick) {
+            contentEditable.current?.blur();
+        }
+    };
+
+    useOutsideAlerter(ref, handleClickOutside);
 
     const handleChange = (e: any) => {
         dispatch({
@@ -31,18 +45,21 @@ const NoteItem: React.FC<NoteItemProps> = ({ note: { x, y, id, text } }) => {
                 left: x,
                 top: y,
             }}
+            ref={ref}
         >
-            <span
-                className="absolute top-0 right-0 inline-flex items-center justify-center p-1 text-xs leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full cursor-pointer"
-                onClick={() => {
-                    dispatch({
-                        type: DELETE_NOTE,
-                        payload: id,
-                    });
-                }}
-            >
-                <Icon icon="times" />
-            </span>
+            {!isOutside && (
+                <span
+                    className="absolute top-0 right-0 inline-flex items-center justify-center p-1 text-xs leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full cursor-pointer"
+                    onClick={() => {
+                        dispatch({
+                            type: DELETE_NOTE,
+                            payload: id,
+                        });
+                    }}
+                >
+                    <Icon icon="times" />
+                </span>
+            )}
 
             <ContentEditable
                 innerRef={contentEditable}
