@@ -11,6 +11,13 @@ public class UserConnection
     public string Board { get; set; } = null!;
 }
 
+public class UserConnectionChat
+{
+    public UserInfoInUserConnection User { get; set; } = null!;
+    public string Board { get; set; } = null!;
+    public string Type = "Chat";
+}
+
 public class UserInfoInUserConnection
 {
     public string Id { get; set; } = null!;

@@ -15,16 +15,13 @@ namespace DraplusApi.Controllers
     {
         private readonly IUserRepo _userRepo;
         private readonly IBoardRepo _boardRepo;
-        private readonly IChatRoomRepo _chatroomRepo;
-
         private readonly IMapper _mapper;
         private readonly IJwtGenerator _jwtGenerator;
 
-        public AuthController(IUserRepo userRepo, IBoardRepo boardRepo, IChatRoomRepo chatroomRepo, IMapper mapper, IJwtGenerator jwtGenerator)
+        public AuthController(IUserRepo userRepo, IBoardRepo boardRepo, IMapper mapper, IJwtGenerator jwtGenerator)
         {
             _userRepo = userRepo;
             _boardRepo = boardRepo;
-            _chatroomRepo = chatroomRepo;
             _mapper = mapper;
             _jwtGenerator = jwtGenerator;
         }
@@ -34,7 +31,7 @@ namespace DraplusApi.Controllers
         {
             try
             {
-                var payload = GoogleJsonWebSignature.ValidateAsync(userView.tokenId, new GoogleJsonWebSignature.ValidationSettings()).Result;
+                var payload = await GoogleJsonWebSignature.ValidateAsync(userView.tokenId, new GoogleJsonWebSignature.ValidationSettings());
                 (var user, var isNew) = await _userRepo.Authenticate(payload);
                 if (isNew)
                 {

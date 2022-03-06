@@ -19,6 +19,12 @@ namespace DraplusApi.Helpers
         {
             this.key = key;
         }
+
+        /// <summary>
+        /// Generate claims list for user from DB
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public Claim[] GenerateClaims(User user)
         {
             var claims = new[]
@@ -27,6 +33,12 @@ namespace DraplusApi.Helpers
                 };
             return claims;
         }
+
+        /// <summary>
+        /// Generate jwt token with input claims in token payload
+        /// </summary>
+        /// <param name="claims"></param>
+        /// <returns></returns>
         public string GenerateJwtToken(IEnumerable<Claim> claims)
         {
             // Declare token and properties

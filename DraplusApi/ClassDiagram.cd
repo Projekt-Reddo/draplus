@@ -1,0 +1,397 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Alphabetical">
+  <Class Name="DraplusApi.Controllers.AuthController">
+    <Position X="3" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABAAgAAAAAAEAAAAAAAAAAEAA=</HashCode>
+      <FileName>Controllers\AuthController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Controllers.BoardController">
+    <Position X="6.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAAAAAABBAAAAAAAAEAAAAAABAAAEgA=</HashCode>
+      <FileName>Controllers\BoardController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Controllers.UserController">
+    <Position X="4.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Controllers\UserController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Data.BoardRepo">
+    <Position X="11" Y="4" Width="1.5" />
+    <InheritanceLine Type="DraplusApi.Data.Repository&lt;TEntity&gt;" ManuallyRouted="true">
+      <Path>
+        <Point X="12.75" Y="6.25" />
+        <Point X="12.75" Y="5.837" />
+        <Point X="11.75" Y="5.837" />
+        <Point X="11.75" Y="5.233" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\BoardRepo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DraplusApi.Data.DataContext">
+    <Position X="15.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\DataContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Data.MongoContext" BaseTypeListCollapsed="true">
+    <Position X="17" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\MongoContext.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DraplusApi.Data.Repository&lt;TEntity&gt;">
+    <Position X="12" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAZAAAAAACAAAEAAQAAAAAAAAAEAAAQAAgAAAAAAAAA=</HashCode>
+      <FileName>Data\Repository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DraplusApi.Data.UserRepo">
+    <Position X="13.25" Y="3.75" Width="1.5" />
+    <InheritanceLine Type="DraplusApi.Data.Repository&lt;TEntity&gt;" ManuallyRouted="true">
+      <Path>
+        <Point X="12.75" Y="6.25" />
+        <Point X="12.75" Y="5.789" />
+        <Point X="14" Y="5.789" />
+        <Point X="14" Y="5.367" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\UserRepo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DraplusApi.Dtos.AuthDto" Collapsed="true">
+    <Position X="20.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAAAAACAAABAAACQAAAQAmAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Dtos\AuthDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Dtos.BoardCreateDto" Collapsed="true">
+    <Position X="22.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Dtos\BoardDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Dtos.BoardReadDto" Collapsed="true">
+    <Position X="25.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAGAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Dtos\BoardDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Dtos.BoardForListDto" Collapsed="true">
+    <Position X="24" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAACAAAAAAAAAAAAACAAAAQgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Dtos\BoardDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Dtos.ChatDto" Collapsed="true">
+    <Position X="20.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Dtos\ChatDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Dtos.DictionaryKey" Collapsed="true">
+    <Position X="22.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Dtos\DictionaryDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Dtos.NoteDto" Collapsed="true">
+    <Position X="24" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAYAA=</HashCode>
+      <FileName>Dtos\NoteDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Dtos.NoteUpdateDto" Collapsed="true">
+    <Position X="25.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Dtos\NoteDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Dtos.ResponseDto" Collapsed="true">
+    <Position X="20.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAQAEAAAAAAAAAAAAAAAAgAAAIAAAAAA=</HashCode>
+      <FileName>Dtos\ResponseDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Dtos.ShapeCreateDto" Collapsed="true">
+    <Position X="22.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Dtos\ShapeDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Dtos.ShapeReadDto" Collapsed="true">
+    <Position X="24" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAACAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Dtos\ShapeDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Dtos.ShapeStack" Collapsed="true">
+    <Position X="25.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAIAAAAAAAAAA=</HashCode>
+      <FileName>Dtos\ShapeDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Dtos.UserView" Collapsed="true">
+    <Position X="25.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>Dtos\UserDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Dtos.UserConnection" Collapsed="true">
+    <Position X="20.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>Dtos\UserDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Dtos.UserConnectionChat" Collapsed="true">
+    <Position X="22.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAACAAAAA=</HashCode>
+      <FileName>Dtos\UserDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Dtos.UserInfoInUserConnection" Collapsed="true">
+    <Position X="24" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAQAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Dtos\UserDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Constant" Collapsed="true">
+    <Position X="15.5" Y="11.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Constant.DbConfig" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Helpers\Constant.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="Constant.ShapeDataType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Helpers\Constant.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="Constant.HubReturnMethod" Collapsed="true">
+        <Compartments>
+          <Compartment Name="Members" Collapsed="true" />
+        </Compartments>
+        <TypeIdentifier>
+          <NewMemberFileName>Helpers\Constant.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\Constant.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Helpers.JwtGenerator" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="17.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAICAA=</HashCode>
+      <FileName>Helpers\JwtGenerator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DraplusApi.Hubs.BoardHub">
+    <Position X="3.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAGAABABAAAABAAkFgAAIAEQBIAgAAAAAFAA=</HashCode>
+      <FileName>Hubs\BoardHub.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Hubs.ChatHub">
+    <Position X="5.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAEAAACAAACAAAAAAgAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Hubs\ChatHub.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Models.Board">
+    <Position X="25.25" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAwgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Board.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Models.Entity">
+    <Position X="26.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAACAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Entity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Models.ErasedLinePathData" Collapsed="true">
+    <Position X="21.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ErasedLinePathData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Models.LinePathData" Collapsed="true">
+    <Position X="23.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\LinePathData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Models.Message" Collapsed="true">
+    <Position X="20.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAgAAAAAAAAAAAAgAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Message.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Models.MongoDbSetting" Collapsed="true">
+    <Position X="22.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAABAAA=</HashCode>
+      <FileName>Models\MongoDbSetting.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Models.Note" Collapsed="true">
+    <Position X="24" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAYAA=</HashCode>
+      <FileName>Models\Note.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Models.PathData">
+    <Position X="22.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAACGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAIQ=</HashCode>
+      <FileName>Models\PathData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Models.Shape" Collapsed="true">
+    <Position X="20.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAACAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Shape.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Models.TextData" Collapsed="true">
+    <Position X="25.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAigASYAE=</HashCode>
+      <FileName>Models\TextData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Models.User">
+    <Position X="27.25" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAACAAABAAAAQAAAQACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Profiles.AuthProfile">
+    <Position X="20.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Profiles\AuthProfiles.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Profiles.BoardProfile">
+    <Position X="23.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Profiles\BoardProfile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DraplusApi.Profiles.ShapeProfile">
+    <Position X="25.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Profiles\ShapeProfile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.AspNetCore.Mvc.ControllerBase" Collapsed="true">
+    <Position X="4.75" Y="3" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Interface Name="DraplusApi.Data.IBoardRepo">
+    <Position X="16" Y="4" Width="1.5" />
+    <InheritanceLine Type="DraplusApi.Data.IRepository&lt;TEntity&gt;" ManuallyRouted="true">
+      <Path>
+        <Point X="17.75" Y="6.75" />
+        <Point X="17.75" Y="5.503" />
+        <Point X="16.75" Y="5.503" />
+        <Point X="16.75" Y="4.997" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\BoardRepo.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DraplusApi.Data.IMongoContext">
+    <Position X="17" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\MongoContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DraplusApi.Data.IRepository&lt;TEntity&gt;">
+    <Position X="17" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAZAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Data\Repository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DraplusApi.Data.IUserRepo">
+    <Position X="18.25" Y="4" Width="1.5" />
+    <InheritanceLine Type="DraplusApi.Data.IRepository&lt;TEntity&gt;" ManuallyRouted="true">
+      <Path>
+        <Point X="17.75" Y="6.75" />
+        <Point X="17.75" Y="5.525" />
+        <Point X="19" Y="5.525" />
+        <Point X="19" Y="5.233" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\UserRepo.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DraplusApi.Helpers.IJwtGenerator" Collapsed="true">
+    <Position X="17.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAICAA=</HashCode>
+      <FileName>Helpers\JwtGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

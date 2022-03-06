@@ -10,6 +10,7 @@ namespace DraplusApi.Profiles
         {
             CreateMap<Shape, ShapeReadDto>();
             CreateMap<ShapeCreateDto, Shape>();
+            CreateMap<ShapeReadDto, Shape>().ForMember(x => x.Id, opt => opt.Ignore());
         }
     }
 }

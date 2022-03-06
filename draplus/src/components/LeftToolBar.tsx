@@ -8,10 +8,10 @@ import Icon from "components/Icon";
 
 //Style
 import "styles/LeftToolBar.css";
-import { OtherTool, Pencil } from "utils/constant";
+import { OtherTool, Pencil, Text, Eraser } from "utils/constant";
 
 //Store
-import { CLEAR_ALL, DRAW_SHAPE } from "store/actions";
+import { CLEAR_ALL, DRAW_SHAPE, REDO, UNDO } from "store/actions";
 
 interface LeftToolBarProps {}
 
@@ -30,6 +30,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     const [showBrushOption, setShowBrushOption] = React.useState(false);
     const [clearAllOption, setClearrAllOption] = React.useState(false);
     const [isSelect, setIsSelect] = React.useState(1);
+    const [isStrokeWidthSelect, setIsStrokeWidthSelect] = React.useState(5);
     const [colorSelect, setColorSelect] = React.useState("#fff");
     const [strokeWidthSelect, setStrokeWidthSelect] = React.useState(5);
 
@@ -57,6 +58,27 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
         }
     };
 
+    const triggerDownload = (imgURI: string) => {
+        var evt = new MouseEvent("click", {
+            view: window,
+            bubbles: false,
+            cancelable: true,
+        });
+
+        var a = document.createElement("a");
+        a.setAttribute("download", `${Date.now()}` + ".png");
+        a.setAttribute("href", imgURI);
+        a.setAttribute("target", "_blank");
+        a.setAttribute("preventDefault", "true");
+        a.dispatchEvent(evt);
+    };
+
+    // Export Image
+    const handleExportImage = () => {
+        const image = initLC.getImage().toDataURL();
+        triggerDownload(image);
+    };
+
     // Select stroke width for Brush
     const handleSelectToolStrokeWidth = (strokeWidth: number) => {
         setStrokeWidthSelect(strokeWidth);
@@ -70,12 +92,16 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
 
     // Undo canvas
     const handleUndo = () => {
-        initLC.undo();
+        dispatch({
+            type: UNDO,
+        });
     };
 
     // Redo canvas
     const handleRedo = () => {
-        initLC.redo();
+        dispatch({
+            type: REDO,
+        });
     };
 
     // Clear canvas
@@ -93,7 +119,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
 
     // Handle active Button was selected
     const handleActiveButtonSelect = (buttonCode: number) => {
-        if (buttonCode === 5 || buttonCode == 6) {
+        if (buttonCode === 5 || buttonCode == 6 || buttonCode == 7) {
             return;
         }
         setIsSelect(buttonCode);
@@ -101,13 +127,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
 
     // Const Variable
     const toolbars = [
-        // {
-        //     id: 2,
-        //     iconName: "eraser",
-        //     toolbarFunc: doNothing,
-        //     toolName: "Eraser",
-        // },
-        { id: 3, iconName: "font", toolbarFunc: doNothing, toolName: "Text" },
+        { id: 3, iconName: "font", toolbarFunc: doNothing, toolName: Text },
         {
             id: 4,
             iconName: "sticky-note",
@@ -142,7 +162,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
 
     return (
         <>
-            <div className="app-shadow leftToolBar absolute grid grid-cols-1 gap-5 overflow-y-hidden content-center h-[33rem] w-14 z-10">
+            <div className="app-shadow leftToolBar absolute grid grid-cols-1 gap-5 overflow-y-hidden content-center h-[35rem] w-14 z-10">
                 {/* Tools */}
                 {/* Brush */}
                 <div
@@ -194,7 +214,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                             watingClick = setTimeout(() => {
                                 watingClick = null;
                                 handleActiveButtonSelect(2);
-                                handleSelectTool("Eraser");
+                                handleSelectTool(Eraser);
                             }, 251);
                         }
                     }}
@@ -206,7 +226,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         <Icon icon="eraser" style={{ fontSize: "1.5rem" }} />
                     </div>
                 </div>
-                {/* Eraser, Text, Note, Undo, Redo */}
+                {/* Text, Note, Undo, Redo */}
                 {toolbars.map((toolbar) => (
                     <div
                         key={toolbar.id}
@@ -237,6 +257,22 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         </div>
                     </div>
                 ))}
+                {/* Export */}
+                <div
+                    className="icon flex"
+                    onClick={(e) => {
+                        handleActiveButtonSelect(7);
+                        handleExportImage();
+                    }}
+                >
+                    <div className="line" />
+                    <div className="text-center self-center w-full">
+                        <Icon
+                            icon="share-square"
+                            style={{ fontSize: "1.5rem" }}
+                        />
+                    </div>
+                </div>
             </div>
             {/* Brush Option Board */}
             <div
@@ -253,13 +289,19 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         <div
                             key={stroke.width}
                             className={stroke.size}
-                            onClick={() =>
-                                handleSelectToolStrokeWidth(stroke.width)
+                            style={
+                                isStrokeWidthSelect === stroke.width
+                                    ? { opacity: 1 }
+                                    : {}
                             }
+                            onClick={() => {
+                                handleSelectToolStrokeWidth(stroke.width);
+                                setIsStrokeWidthSelect(stroke.width);
+                            }}
                         />
                     ))}
                 </div>
-                {/* Vertiacal White Line */}
+                {/* Vertical White Line */}
                 <div className="py-4 mx-4">
                     <div className="verticalLine" />
                 </div>
@@ -268,7 +310,9 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                     {colors.map((color) => (
                         <div
                             key={color}
-                            style={{ backgroundColor: color }}
+                            style={{
+                                backgroundColor: color,
+                            }}
                             className="dot"
                             onClick={() => {
                                 handleSelectToolColor(color);
