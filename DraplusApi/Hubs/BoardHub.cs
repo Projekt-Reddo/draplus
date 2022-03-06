@@ -7,6 +7,7 @@ using MongoDB.Driver;
 using AutoMapper;
 
 using static Constant;
+using Newtonsoft.Json;
 
 namespace DraplusApi.Hubs;
 
@@ -18,7 +19,7 @@ public class BoardHub : Hub
     private readonly IUserRepo _userRepo;
     private readonly IBoardRepo _boardRepo;
     private readonly IMapper _mapper;
-    
+
     public BoardHub(IDictionary<string, UserConnection> connections, IBoardRepo boardRepo, IMapper mapper, IUserRepo userRepo, IDictionary<string, List<ShapeReadDto>> shapeList, IDictionary<string, List<NoteDto>> noteList)
     {
         _connections = connections;
@@ -54,13 +55,17 @@ public class BoardHub : Hub
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, userConnection.Board);
+            // Set mouse move to False
+            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveMouse, userConnection.User.Id, userConnection.User.Name, 0, 0, false);
 
+            // Remove current user from Group & connections
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, userConnection.Board);
             _connections.Remove(Context.ConnectionId);
-            _shapeList.Remove(userConnection.Board);
-            _noteList.Remove(userConnection.Board);
+
+            // Save data when no one in room
+            await SaveShapes(userConnection);
         }
-        
+
         if (userConnection != null)
         {
             await OnlineUsers(userConnection.Board);
@@ -71,9 +76,15 @@ public class BoardHub : Hub
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
+            // Set mouse move to False
+            Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveMouse, userConnection.User.Id, userConnection.User.Name, 0, 0, false);
+
+            // Remove current user from Group & connections
+            Groups.RemoveFromGroupAsync(Context.ConnectionId, userConnection.Board);
             _connections.Remove(Context.ConnectionId);
 
-            Groups.RemoveFromGroupAsync(Context.ConnectionId, userConnection.Board);
+            // Save data when no one in room
+            SaveShapes(userConnection);
         }
 
         if (userConnection != null)
@@ -83,6 +94,49 @@ public class BoardHub : Hub
 
         return base.OnConnectedAsync();
     }
+
+    public async Task SaveShapes(UserConnection userConnection)
+    {
+        var remainingConnections = _connections.Values.Where(x => x.Board == userConnection.Board);
+
+        if (remainingConnections.Count() == 0)
+        {
+            var boardFromRepo = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
+
+            foreach (var shape in _shapeList[userConnection.Board])
+            {
+                var jsonData = Convert.ToString(shape.Data);
+
+                try
+                {
+                    var data = JsonConvert.DeserializeObject<LinePathData>(jsonData);
+                    shape.Data = data;
+                }
+                catch
+                {
+                    var data = JsonConvert.DeserializeObject<TextData>(jsonData);
+                    shape.Data = data;
+                }
+
+
+                var shapeToUpdate = _mapper.Map<Shape>(shape);
+
+                if (boardFromRepo.Shapes == null)
+                {
+                    boardFromRepo.Shapes = new List<Shape>();
+                }
+
+                boardFromRepo.Shapes.Add(shapeToUpdate);
+            }
+
+            var updateBoard = await _boardRepo.Update(userConnection.Board, boardFromRepo);
+
+            _shapeList.Remove(userConnection.Board);
+            _noteList.Remove(userConnection.Board);
+        }
+    }
+
+    #endregion
 
     public async Task DrawShape(ShapeReadDto shape)
     {
@@ -98,32 +152,9 @@ public class BoardHub : Hub
             }
 
             await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveShape, shape);
-
-            // var jsonData = Convert.ToString(shape.Data);
-
-            // try
-            // {
-            //     var data = JsonConvert.DeserializeObject<LinePathData>(jsonData);
-            //     shape.Data = data;
-            // }
-            // catch
-            // {
-            //     var data = JsonConvert.DeserializeObject<TextData>(jsonData);
-            //     shape.Data = data;
-            // }
-
-            // var boardFromRepo = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
-            // var shapeToUpdate = _mapper.Map<Shape>(shape);
-
-            // if (boardFromRepo.Shapes == null)
-            // {
-            //     boardFromRepo.Shapes = new List<Shape>();
-            // }
-
-            // boardFromRepo.Shapes.Add(shapeToUpdate);
-            // var updateBoard = await _boardRepo.Update(userConnection.Board, boardFromRepo);
         }
     }
+
     public async Task ClearAll()
     {
 
@@ -140,8 +171,6 @@ public class BoardHub : Hub
             await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ClearAll, 1);
         }
     }
-
-    #endregion
 
     public async Task SendMouse(int x, int y, bool isMove)
     {
