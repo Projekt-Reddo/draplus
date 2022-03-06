@@ -15,7 +15,18 @@ const NoteItem: React.FC<NoteItemProps> = ({ note: { x, y, id, text } }) => {
 
     const contentEditable = React.useRef<HTMLDivElement>(null);
     const ref = React.useRef<HTMLDivElement>(null);
-    const isOutside = useOutsideAlerter(ref);
+
+    const [isOutside, setIsOutside] = React.useState(false);
+
+    const handleClickOutside = (isOutsideClick: boolean) => {
+        setIsOutside(isOutsideClick);
+
+        if (isOutsideClick) {
+            contentEditable.current?.blur();
+        }
+    };
+
+    useOutsideAlerter(ref, handleClickOutside);
 
     const handleChange = (e: any) => {
         dispatch({
