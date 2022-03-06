@@ -10,6 +10,7 @@ import { useNotification } from "utils/useNotification";
 import { useModal } from "utils/useModal";
 import Modal from "components/Modal";
 import ChangeTitleModal from "components/ChangeTitleModal";
+import "styles/InputChangeTitle.css";
 
 interface BoardCardProps {
     id: string;
@@ -273,9 +274,9 @@ const BoardCardOptions: React.FC<BoardCardOptionsProps> = ({
                 title="Changle Board Title"
                 message=""
                 modalBody={
-                    <div>
+                    <div className="w-[25rem] p-2 border-solid border-2 border-sky-500s">
                         <input
-                            className="w-100"
+                            className="input-change-title w-[24rem]"
                             value={boardName == null ? "" : boardName}
                             onChange={(e) => {
                                 setBoardName(e.target.value);
