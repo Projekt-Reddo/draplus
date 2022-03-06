@@ -1,4 +1,4 @@
-import { DISCONNECT_SIGNALR } from './../actions/index';
+import { DISCONNECT_SIGNALR } from "./../actions/index";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import {
     JOIN_ROOM,

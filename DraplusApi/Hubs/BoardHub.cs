@@ -40,15 +40,8 @@ public class BoardHub : Hub
         var shape = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
         await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveShape, shape.Shapes);
 
-        if (!_shapeList.ContainsKey(userConnection.Board))
-        {
-            _shapeList[userConnection.Board] = new List<ShapeReadDto>();
-        }
-
-        if (!_noteList.ContainsKey(userConnection.Board))
-        {
-            _noteList[userConnection.Board] = new List<NoteDto>();
-        }
+        NewShapeList(userConnection.Board);
+        NewNoteList(userConnection.Board);
     }
 
     public async Task LeaveRoom()
@@ -263,6 +256,24 @@ public class BoardHub : Hub
             }
 
             await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveShape, shape);
+        }
+    }
+
+    #endregion
+
+    #region Handle Dictionary
+
+    public void NewShapeList(string boardId) {
+        if (!_shapeList.ContainsKey(boardId))
+        {
+            _shapeList[boardId] = new List<ShapeReadDto>();
+        }
+    }
+
+    public void NewNoteList(string noteId) {
+        if (!_noteList.ContainsKey(noteId))
+        {
+            _noteList[noteId] = new List<NoteDto>();
         }
     }
 
