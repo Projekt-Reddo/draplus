@@ -66,7 +66,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
         });
 
         var a = document.createElement("a");
-        a.setAttribute("download", `${new Date().toLocaleString()}` + ".png");
+        a.setAttribute("download", `${Date.now()}` + ".png");
         a.setAttribute("href", imgURI);
         a.setAttribute("target", "_blank");
         a.setAttribute("preventDefault", "true");
@@ -119,7 +119,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
 
     // Handle active Button was selected
     const handleActiveButtonSelect = (buttonCode: number) => {
-        if (buttonCode === 5 || buttonCode == 6) {
+        if (buttonCode === 5 || buttonCode == 6 || buttonCode == 7) {
             return;
         }
         setIsSelect(buttonCode);
