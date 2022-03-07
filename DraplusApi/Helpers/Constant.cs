@@ -23,6 +23,7 @@ public static class Constant
         public const string ReceiveNewNote = "ReceiveNewNote";
         public const string ReceiveUpdateNote = "ReceiveUpdateNote";
         public const string ReceiveDeleteNote = "ReceiveDeleteNote";
+        public const string LoadNotes = "LoadNotes";
         public const string ClearAll = "ClearAll";
         public const string ReceiveUndo = "ReceiveUndo";
         public const string ReceiveRedo = "ReceiveRedo";
