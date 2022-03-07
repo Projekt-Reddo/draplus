@@ -10,6 +10,7 @@ import {
     GET_ONLINE_USERS,
     ONLINE_USERS,
     SEND_MOUSE,
+    INIT_NOTES,
 } from "store/actions";
 
 // Components
@@ -61,6 +62,11 @@ const Board: React.FC<BoardProps> = () => {
         if (board) {
             dispatch({
                 type: GET_ONLINE_USERS,
+                payload: board,
+            });
+
+            dispatch({
+                type: INIT_NOTES,
                 payload: board,
             });
         }
