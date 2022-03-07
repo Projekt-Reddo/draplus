@@ -27,6 +27,8 @@ export const RECEIVE_CLEAR = "receiveClear";
 export const UNDO = "undo";
 export const REDO = "redo";
 export const REMOVE_SHAPE = "shape/remove";
+export const LOAD_NOTES = "note/load";
+export const INIT_NOTES = "note/init";
 
 export { login };
 export { logout };

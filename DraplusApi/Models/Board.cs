@@ -15,5 +15,6 @@ namespace DraplusApi.Models
         [BsonIgnoreIfDefault]
         public string ChatRoomId { get; set; } = null!;
         public ICollection<Shape> Shapes { get; set; } = null!;
+        public ICollection<Note> Notes { get; set; } = null!;
     }
 }
