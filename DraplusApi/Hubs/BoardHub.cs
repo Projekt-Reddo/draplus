@@ -34,14 +34,16 @@ public class BoardHub : Hub
 
     public async Task JoinRoom(UserConnection userConnection)
     {
-        await Groups.AddToGroupAsync(Context.ConnectionId, userConnection.Board);
+        await LoadNotesFromDb(userConnection);
 
         _connections[Context.ConnectionId] = userConnection;
         var shape = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
         await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveShape, shape.Shapes);
 
         NewShapeList(userConnection.Board);
-        NewNoteList(userConnection.Board);
+
+        await Groups.AddToGroupAsync(Context.ConnectionId, userConnection.Board);
+        // await Clients.Caller.SendAsync(HubReturnMethod.LoadNotes, _noteList[userConnection.Board]);
     }
 
     public async Task LeaveRoom()
@@ -122,6 +124,17 @@ public class BoardHub : Hub
                 boardFromRepo.Shapes.Add(shapeToUpdate);
             }
 
+            var noteList = new List<Note>();
+
+            foreach (var note in _noteList[userConnection.Board])
+            {
+                var noteToUpdate = _mapper.Map<Note>(note);
+
+                noteList.Add(noteToUpdate);
+            }
+
+            boardFromRepo.Notes = noteList;
+
             var updateBoard = await _boardRepo.Update(userConnection.Board, boardFromRepo);
 
             _shapeList.Remove(userConnection.Board);
@@ -189,6 +202,11 @@ public class BoardHub : Hub
     #endregion
 
     #region Note
+
+    public async Task LoadNotes(string boardId)
+    {
+        await Clients.Caller.SendAsync(HubReturnMethod.LoadNotes, _noteList[boardId]);
+    }
 
     public async Task NewNote(NoteDto note)
     {
@@ -274,6 +292,31 @@ public class BoardHub : Hub
         if (!_noteList.ContainsKey(noteId))
         {
             _noteList[noteId] = new List<NoteDto>();
+        }
+    }
+
+    #endregion
+
+    #region Database CRUD
+
+    public async Task LoadNotesFromDb(UserConnection userConnection)
+    {
+        var connectionsOnABoard = _connections.Values.Where(x => x.Board == userConnection.Board);
+
+        if (connectionsOnABoard.Count() == 0) {
+            var boardFromRepo = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
+
+            if (boardFromRepo != null) {
+                var notesList = boardFromRepo.Notes;
+
+                if (notesList != null) {
+                    _noteList[userConnection.Board] = _mapper.Map<List<NoteDto>>(notesList);
+                } else {
+                    NewNoteList(userConnection.Board);
+                }
+            } else {
+                NewNoteList(userConnection.Board);
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 import {
     ADD_NOTE,
     DELETE_NOTE,
+    LOAD_NOTES,
     RECEIVE_NEW_NOTE,
     RECEIVE_REMOVE_NOTE,
     RECEIVE_UPDATE_NOTE,
@@ -62,6 +63,10 @@ const noteReducer = (state = note, action: ActionType) => {
                 }
                 return note;
             });
+        }
+
+        case LOAD_NOTES: {
+            return action.payload;
         }
 
         default:

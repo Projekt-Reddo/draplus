@@ -1,4 +1,4 @@
-import { DISCONNECT_SIGNALR } from "./../actions/index";
+import { DISCONNECT_SIGNALR, INIT_NOTES, LOAD_NOTES } from "./../actions/index";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import {
     JOIN_ROOM,
@@ -131,6 +131,13 @@ export const signalRMiddleware = (storeAPI: any) => {
                 });
             });
 
+            connection.board.on("LoadNotes", (notes: any) => {
+                storeAPI.dispatch({
+                    type: LOAD_NOTES,
+                    payload: notes,
+                });
+            });
+
             connection.board.on("ReceiveNewNote", (note: Note) => {
                 storeAPI.dispatch({
                     type: RECEIVE_NEW_NOTE,
@@ -208,6 +215,10 @@ export const signalRMiddleware = (storeAPI: any) => {
         //#endregion
 
         //#region Note
+
+        if (action.type === INIT_NOTES) {
+            connection.board.invoke("LoadNotes", action.payload);
+        }
 
         if (action.type === ADD_NOTE) {
             connection.board.invoke("NewNote", action.payload);

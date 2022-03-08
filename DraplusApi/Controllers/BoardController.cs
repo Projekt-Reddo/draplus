@@ -66,6 +66,16 @@ namespace DraplusApi.Controllers
         [HttpGet("{userId}")]
         public async Task<ActionResult<IEnumerable<BoardForListDto>>> GetUserBoards(string userId)
         {
+            // Validate input userId
+            var userFilter = Builders<User>.Filter.Eq("Id", userId);
+            var userFromRepo = await _userRepo.GetByCondition(userFilter);
+
+            if (userFromRepo == null)
+            {
+                return NotFound(new ResponseDto(404, "User not found"));
+            }
+
+            // Get all boards of user
             var filter = Builders<Board>.Filter.Eq("UserId", userId);
 
             var boardsFromRepo = await _boardRepo.GetAll(filter: filter);
@@ -104,7 +114,7 @@ namespace DraplusApi.Controllers
             var board = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", id));
             if (board == null)
             {
-                return BadRequest(new ResponseDto(404, "Board not found"));
+                return NotFound(new ResponseDto(400, "Board not found"));
             }
             board.Name = boardForChangeNameDto.Name;
             var rs = await _boardRepo.Update(id, board);
