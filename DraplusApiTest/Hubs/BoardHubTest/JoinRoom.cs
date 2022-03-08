@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DraplusApi.Dtos;
 using DraplusApi.Hubs;
@@ -24,9 +25,20 @@ namespace DraplusApiTest.Hubs.BoardHubTest
                 noteList: mockNoteList.Object);
             AssignToHubRequiredProperties(boardHub); // Resolve hub dependencies as IClientsProxy...
 
-            UserConnection userConnection = new UserConnection { Board = "board1" };
+            UserConnection userConnection = new UserConnection
+            {
+                Board = "board1",
+                User = new UserInfoInUserConnection
+                {
+                    Id = "1234"
+                }
+            };
 
             mockBoardRepo.Setup(board => board.GetByCondition(It.IsAny<FilterDefinition<Board>>())).ReturnsAsync(new Board { Id = "board1" });
+
+            mockConnections.SetupGet(x => x.Values).Returns(new List<UserConnection>(){
+                userConnection
+            });
 
             // Act
             await boardHub.JoinRoom(userConnection);
