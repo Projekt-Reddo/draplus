@@ -104,7 +104,7 @@ namespace DraplusApi.Controllers
             var board = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", id));
             if (board == null)
             {
-                return BadRequest(new ResponseDto(404, "Board not found"));
+                return NotFound(new ResponseDto(400, "Board not found"));
             }
             board.Name = boardForChangeNameDto.Name;
             var rs = await _boardRepo.Update(id, board);
