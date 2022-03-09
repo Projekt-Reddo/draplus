@@ -95,9 +95,17 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         }
     };
 
+    // Handle mouse wheel
+    const onScroll = (e: React.WheelEvent<HTMLDivElement>) => {
+        let scale = e.deltaY * 0.001;
+        // initLC.setTool(new LC.tools["Pan"](initLC)); // Enable Pan Tool (REMOVE THIS IN FUTURE)
+        initLC.zoom(scale);
+    };
+
     return (
         <div
             onMouseMove={getMousePosition}
+            onWheelCapture={onScroll}
             onClick={tool === OtherTool ? handleCreateNote : () => {}}
         >
             {/* Cursor */}
