@@ -1,4 +1,4 @@
-import { DISCONNECT_SIGNALR, INIT_NOTES, LOAD_NOTES } from "./../actions/index";
+import { DISCONNECT_SIGNALR, INIT_NOTES, INIT_SHAPES, LOAD_NOTES, LOAD_SHAPES } from "./../actions/index";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import {
     JOIN_ROOM,
@@ -66,6 +66,13 @@ export const signalRMiddleware = (storeAPI: any) => {
                 board: action.payload.board,
             });
 
+            connection.board.on("InitShapes", (shapes: any) => {
+                storeAPI.dispatch({
+                    type: INIT_SHAPES,
+                    payload: shapes,
+                });
+            });
+
             connection.chat.on(
                 "ReceiveMessage",
                 (user: any, message: string, timestamp: Date) => {
@@ -85,16 +92,6 @@ export const signalRMiddleware = (storeAPI: any) => {
                     type: RECEIVE_SHAPE,
                     payload: shape,
                 });
-            });
-
-            connection.board.on("ClearAll", (clear: any) => {
-                const state = storeAPI.getState();
-                state.initLC.clear();
-            });
-
-            connection.board.on("ClearAll", (clear: any) => {
-                const state = storeAPI.getState();
-                state.initLC.clear();
             });
 
             connection.board.on("ClearAll", (clear: any) => {
@@ -168,6 +165,10 @@ export const signalRMiddleware = (storeAPI: any) => {
 
             connection.chat.onclose(() => {});
             connection.board.onclose(() => {});
+        }
+
+        if (action.type === LOAD_SHAPES) {
+            connection.board.invoke("LoadInitShapes", action.payload);
         }
 
         if (action.type === LEAVE_ROOM) {
