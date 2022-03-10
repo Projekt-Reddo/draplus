@@ -14,6 +14,7 @@ import { ADD_NOTE, DRAW_SHAPE, INITLC, SEND_MOUSE } from "store/actions";
 import "literallycanvas/lib/css/literallycanvas.css";
 import "styles/CanvasBoard.css";
 import { OtherTool } from "utils/constant";
+import Loading from "./Loading";
 
 interface CanvasBoardProps {}
 
@@ -30,6 +31,7 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
 
     // Handle State
     const [localInitLC, setLocalInitLC] = React.useState<typeof LC>();
+    const [firstLoad, setFirstLoad] = React.useState<boolean>(true);
 
     // Get Change of Canvas
     // Send user's shape to other user
@@ -68,6 +70,8 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
             localInitLC.loadSnapshot({
                 shapes: [...shape, ...myShape.undoStack],
             });
+
+            if (firstLoad) setFirstLoad(false);
         }
     }, [shape, myShape]);
 
@@ -95,23 +99,39 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         }
     };
 
+    // Handle mouse wheel
+    const onScroll = (e: React.WheelEvent<HTMLDivElement>) => {
+        let scale = e.deltaY * 0.001;
+        initLC.zoom(scale);
+    };
+
     return (
-        <div
-            onMouseMove={getMousePosition}
-            onClick={tool === OtherTool ? handleCreateNote : () => {}}
-        >
-            {/* Cursor */}
-            <Cursor />
-            {/* Left Toolbar */}
-            <LeftToolBar />
-            {/* Canvas Board */}
-            <LC.LiterallyCanvasReactComponent
-                onInit={handleInit}
-                primaryColor="#fff"
-                backgroundColor="#232222"
-                toolbarPosition="hidden"
-            />
-        </div>
+        <>
+            {firstLoad && (
+                <div className="max-w-full min-h-screen bg-[color:var(--bg)]">
+                    <div className="w-full h-screen flex justify-center items-center">
+                        <Loading />
+                    </div>
+                </div>
+            )}
+            <div
+                onMouseMove={getMousePosition}
+                onWheelCapture={onScroll}
+                onClick={tool === OtherTool ? handleCreateNote : () => {}}
+            >
+                {/* Cursor */}
+                <Cursor />
+                {/* Left Toolbar */}
+                <LeftToolBar />
+                {/* Canvas Board */}
+                <LC.LiterallyCanvasReactComponent
+                    onInit={handleInit}
+                    primaryColor="#fff"
+                    backgroundColor="#232222"
+                    toolbarPosition="hidden"
+                />
+            </div>
+        </>
     );
 };
 

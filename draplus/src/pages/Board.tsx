@@ -11,6 +11,8 @@ import {
     ONLINE_USERS,
     SEND_MOUSE,
     INIT_NOTES,
+    LOAD_SHAPES,
+    CLEAR_SHAPE_WHEN_LEAVE_ROOM,
 } from "store/actions";
 
 // Components
@@ -43,6 +45,10 @@ const Board: React.FC<BoardProps> = () => {
                 payload: null,
             });
             dispatch({
+                type: CLEAR_SHAPE_WHEN_LEAVE_ROOM,
+                payload: null,
+            });
+            dispatch({
                 type: ONLINE_USERS,
                 payload: [],
             });
@@ -69,6 +75,14 @@ const Board: React.FC<BoardProps> = () => {
                 type: INIT_NOTES,
                 payload: board,
             });
+<<<<<<< HEAD
+=======
+
+            dispatch({
+                type: LOAD_SHAPES,
+                payload: board,
+            });
+>>>>>>> 7d22d8715a2466e3be1a213b6961063d73cb0028
         }
     }, [board]);
 

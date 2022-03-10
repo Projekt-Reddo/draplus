@@ -5,9 +5,9 @@ using DraplusApi.Models;
 using DraplusApi.Data;
 using MongoDB.Driver;
 using AutoMapper;
-
 using static Constant;
 using Newtonsoft.Json;
+using System.Collections.ObjectModel;
 
 namespace DraplusApi.Hubs;
 
@@ -32,20 +32,43 @@ public class BoardHub : Hub
 
     #region Join & Leave room
 
+    /// <summary>
+    /// Allow user to join a room
+    /// </summary>
+    /// <param name="userConnection"></param>
+    /// <returns></returns>
     public async Task JoinRoom(UserConnection userConnection)
     {
+        // Add user to connection list & group
+        _connections[Context.ConnectionId] = userConnection;
+
+        // Load old notes data & create temp note list for that user
         await LoadNotesFromDb(userConnection);
 
-        _connections[Context.ConnectionId] = userConnection;
-        var shape = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
-        await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveShape, shape.Shapes);
-
+        // Shape to store that user draw
         NewShapeList(userConnection.Board);
 
         await Groups.AddToGroupAsync(Context.ConnectionId, userConnection.Board);
-        // await Clients.Caller.SendAsync(HubReturnMethod.LoadNotes, _noteList[userConnection.Board]);
     }
 
+    public async Task LoadInitShapes(string boardId)
+    {
+        var boardFromRepo = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", boardId));
+
+        var shapesToReturn = _mapper.Map<ICollection<ShapeReadDto>>(boardFromRepo.Shapes);
+
+        if (_shapeList.ContainsKey(boardId))
+        {
+            shapesToReturn = shapesToReturn.Concat(_shapeList[boardId]).ToList();
+        }
+
+        await Clients.Caller.SendAsync("InitShapes", shapesToReturn);
+    }
+
+    /// <summary>
+    /// When user want to out that room
+    /// </summary>
+    /// <returns></returns>
     public async Task LeaveRoom()
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -67,6 +90,11 @@ public class BoardHub : Hub
         }
     }
 
+    /// <summary>
+    /// Handle out room when user disconnect
+    /// </summary>
+    /// <param name="exception"></param>
+    /// <returns></returns>
     public override Task OnDisconnectedAsync(Exception? exception)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -90,7 +118,7 @@ public class BoardHub : Hub
         return base.OnConnectedAsync();
     }
 
-    public async Task SaveShapes(UserConnection userConnection)
+    protected async Task SaveShapes(UserConnection userConnection)
     {
         var remainingConnections = _connections.Values.Where(x => x.Board == userConnection.Board);
 
@@ -144,6 +172,11 @@ public class BoardHub : Hub
 
     #endregion
 
+    /// <summary>
+    /// When user draw to board
+    /// </summary>
+    /// <param name="shape">What user draw (line, text, eraser)</param>
+    /// <returns></returns>
     public async Task DrawShape(ShapeReadDto shape)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -161,6 +194,10 @@ public class BoardHub : Hub
         }
     }
 
+    /// <summary>
+    /// Clear all data in board
+    /// </summary>
+    /// <returns></returns>
     public async Task ClearAll()
     {
 
@@ -178,6 +215,13 @@ public class BoardHub : Hub
         }
     }
 
+    /// <summary>
+    /// Current online users mouse position
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="isMove"></param>
+    /// <returns></returns>
     public async Task SendMouse(int x, int y, bool isMove)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -188,12 +232,17 @@ public class BoardHub : Hub
 
     #region Current online user
 
+    /// <summary>
+    /// Number of online people
+    /// </summary>
+    /// <param name="boardId"></param>
+    /// <returns></returns>
     public async Task SendOnlineUsers(string boardId)
     {
         await OnlineUsers(boardId);
     }
 
-    public Task OnlineUsers(string boardId)
+    protected Task OnlineUsers(string boardId)
     {
         var users = _connections.Values.Where(user => user.Board == boardId).Select(user => user.User);
         return Clients.Group(boardId).SendAsync(HubReturnMethod.OnlineUsers, users);
@@ -203,11 +252,24 @@ public class BoardHub : Hub
 
     #region Note
 
+    /// <summary>
+    /// Load old notes
+    /// </summary>
+    /// <param name="boardId"></param>
+    /// <returns></returns>
     public async Task LoadNotes(string boardId)
     {
-        await Clients.Caller.SendAsync(HubReturnMethod.LoadNotes, _noteList[boardId]);
+        if (_noteList.TryGetValue(boardId, out List<NoteDto>? notes))
+        {
+            await Clients.Caller.SendAsync(HubReturnMethod.LoadNotes, _noteList[boardId]);
+        }
     }
 
+    /// <summary>
+    /// When user create new note
+    /// </summary>
+    /// <param name="note"></param>
+    /// <returns></returns>
     public async Task NewNote(NoteDto note)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -223,6 +285,11 @@ public class BoardHub : Hub
         }
     }
 
+    /// <summary>
+    /// When user change something in a note
+    /// </summary>
+    /// <param name="note"></param>
+    /// <returns></returns>
     public async Task UpdateNote(NoteUpdateDto note)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -239,6 +306,11 @@ public class BoardHub : Hub
         }
     }
 
+    /// <summary>
+    /// When user delete a note
+    /// </summary>
+    /// <param name="noteId"></param>
+    /// <returns></returns>
     public async Task DeleteNote(string noteId)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -253,6 +325,11 @@ public class BoardHub : Hub
 
     #region Undo & Redo
 
+    /// <summary>
+    /// Undo method
+    /// </summary>
+    /// <param name="shapeId"></param>
+    /// <returns></returns>
     public async Task Undo(string shapeId)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -262,6 +339,11 @@ public class BoardHub : Hub
         }
     }
 
+    /// <summary>
+    /// Redo method
+    /// </summary>
+    /// <param name="shape"></param>
+    /// <returns></returns>
     public async Task Redo(ShapeReadDto shape)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -281,14 +363,16 @@ public class BoardHub : Hub
 
     #region Handle Dictionary
 
-    public void NewShapeList(string boardId) {
+    public void NewShapeList(string boardId)
+    {
         if (!_shapeList.ContainsKey(boardId))
         {
             _shapeList[boardId] = new List<ShapeReadDto>();
         }
     }
 
-    public void NewNoteList(string noteId) {
+    public void NewNoteList(string noteId)
+    {
         if (!_noteList.ContainsKey(noteId))
         {
             _noteList[noteId] = new List<NoteDto>();
@@ -299,25 +383,26 @@ public class BoardHub : Hub
 
     #region Database CRUD
 
-    public async Task LoadNotesFromDb(UserConnection userConnection)
+    protected async Task LoadNotesFromDb(UserConnection userConnection)
     {
         var connectionsOnABoard = _connections.Values.Where(x => x.Board == userConnection.Board);
 
-        if (connectionsOnABoard.Count() == 0) {
+        if (connectionsOnABoard.Count() == 0)
+        {
             var boardFromRepo = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
 
-            if (boardFromRepo != null) {
+            if (boardFromRepo != null)
+            {
                 var notesList = boardFromRepo.Notes;
 
-                if (notesList != null) {
+                if (notesList != null)
+                {
                     _noteList[userConnection.Board] = _mapper.Map<List<NoteDto>>(notesList);
-                } else {
-                    NewNoteList(userConnection.Board);
                 }
-            } else {
-                NewNoteList(userConnection.Board);
             }
         }
+
+        NewNoteList(userConnection.Board);
     }
 
     #endregion

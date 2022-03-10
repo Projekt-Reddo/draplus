@@ -19,10 +19,13 @@ namespace DraplusApiTest.Controllers.BoardControllerTest
             var boardController = new BoardController(mockBoardRepo.Object, mockUserRepo.Object, mockMapper.Object);
             string userId = "this is not a valid id";
 
+            mockUserRepo.Setup(x => x.GetByCondition(It.IsAny<FilterDefinition<User>>()))
+                .ReturnsAsync((User)null!);
+
             var filter = Builders<Board>.Filter.Eq("UserId", userId);
 
             mockBoardRepo.Setup(x => x.GetAll(filter, null, null))
-                .ReturnsAsync((IEnumerable<Board>) null!);
+                .ReturnsAsync((IEnumerable<Board>)null!);
 
             // Act
             var result = await boardController.GetUserBoards(userId);
@@ -37,6 +40,9 @@ namespace DraplusApiTest.Controllers.BoardControllerTest
             // Arrange
             var boardController = new BoardController(mockBoardRepo.Object, mockUserRepo.Object, mockMapper.Object);
             string userId = "6213a6454577874737d929a8";
+
+            mockUserRepo.Setup(x => x.GetByCondition(It.IsAny<FilterDefinition<User>>()))
+                .ReturnsAsync(new User { Id = userId });
 
             var filter = Builders<Board>.Filter.Eq("UserId", userId);
 
