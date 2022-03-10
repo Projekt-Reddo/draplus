@@ -75,14 +75,11 @@ const Board: React.FC<BoardProps> = () => {
                 type: INIT_NOTES,
                 payload: board,
             });
-<<<<<<< HEAD
-=======
 
             dispatch({
                 type: LOAD_SHAPES,
                 payload: board,
             });
->>>>>>> 7d22d8715a2466e3be1a213b6961063d73cb0028
         }
     }, [board]);
 
