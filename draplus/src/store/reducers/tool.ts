@@ -1,8 +1,8 @@
-import { OtherTool, Pencil, Text, Eraser } from "utils/constant";
+import { OtherTool, Pencil, Text, Eraser, Pan } from "utils/constant";
 
 const tool = Pencil;
 
-const tools = [Pencil, OtherTool, Text, Eraser];
+const tools = [Pencil, OtherTool, Text, Eraser, Pan];
 
 const toolReducer = (state = tool, action: ActionType) => {
     if (!tools.includes(action.type)) return state;
