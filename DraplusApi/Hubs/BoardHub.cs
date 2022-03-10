@@ -165,8 +165,8 @@ public class BoardHub : Hub
 
             var updateBoard = await _boardRepo.Update(userConnection.Board, boardFromRepo);
 
-            _shapeList.Remove(userConnection.Board);
-            _noteList.Remove(userConnection.Board);
+            // _shapeList.Remove(userConnection.Board);
+            // _noteList.Remove(userConnection.Board);
         }
     }
 

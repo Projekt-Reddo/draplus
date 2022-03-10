@@ -12,7 +12,7 @@ const shapeReducer = (state = shapes, action: ActionType) => {
     switch (action.type) {
         case DRAW_SHAPE:
             return {
-                ...state,
+                redoStack: [],
                 undoStack: [...state.undoStack, action.payload],
             };
 
