@@ -1,4 +1,10 @@
-import { DISCONNECT_SIGNALR, INIT_NOTES, INIT_SHAPES, LOAD_NOTES, LOAD_SHAPES } from "./../actions/index";
+import {
+    DISCONNECT_SIGNALR,
+    INIT_NOTES,
+    INIT_SHAPES,
+    LOAD_NOTES,
+    LOAD_SHAPES,
+} from "./../actions/index";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import {
     JOIN_ROOM,

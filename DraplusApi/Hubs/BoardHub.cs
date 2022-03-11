@@ -41,13 +41,14 @@ public class BoardHub : Hub
     {
         // Add user to connection list & group
         _connections[Context.ConnectionId] = userConnection;
-        await Groups.AddToGroupAsync(Context.ConnectionId, userConnection.Board);
 
         // Load old notes data & create temp note list for that user
         await LoadNotesFromDb(userConnection);
 
         // Shape to store that user draw
         NewShapeList(userConnection.Board);
+
+        await Groups.AddToGroupAsync(Context.ConnectionId, userConnection.Board);
     }
 
     public async Task LoadInitShapes(string boardId)
@@ -164,8 +165,8 @@ public class BoardHub : Hub
 
             var updateBoard = await _boardRepo.Update(userConnection.Board, boardFromRepo);
 
-            _shapeList.Remove(userConnection.Board);
-            _noteList.Remove(userConnection.Board);
+            // _shapeList.Remove(userConnection.Board);
+            // _noteList.Remove(userConnection.Board);
         }
     }
 
@@ -398,16 +399,10 @@ public class BoardHub : Hub
                 {
                     _noteList[userConnection.Board] = _mapper.Map<List<NoteDto>>(notesList);
                 }
-                else
-                {
-                    NewNoteList(userConnection.Board);
-                }
-            }
-            else
-            {
-                NewNoteList(userConnection.Board);
             }
         }
+
+        NewNoteList(userConnection.Board);
     }
 
     #endregion
