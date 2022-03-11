@@ -274,7 +274,7 @@ const BoardCardOptions: React.FC<BoardCardOptionsProps> = ({
                 title="Changle Board Title"
                 message=""
                 modalBody={
-                    <div className="w-[25rem] p-2 border-solid border-2 border-sky-500s">
+                    <div className="w-[25rem] rounded p-2 border-solid border-2 border-sky-500s">
                         <input
                             className="input-change-title w-[24rem]"
                             value={boardName == null ? "" : boardName}
