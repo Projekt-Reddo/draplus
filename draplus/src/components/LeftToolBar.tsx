@@ -21,14 +21,16 @@ import {
 //Store
 import { CLEAR_ALL, REDO, UNDO } from "store/actions";
 
-interface LeftToolBarProps {}
+interface LeftToolBarProps {
+    onClick: (e: React.MouseEvent<HTMLElement>) => void;
+}
 
 const doNothing = () => {};
 
 var watingClick: any = null;
 var lastClick = 0;
 
-const LeftToolBar: React.FC<LeftToolBarProps> = () => {
+const LeftToolBar: React.FC<LeftToolBarProps> = ({ onClick }) => {
     // Global State
     const dispatch = useDispatch();
     const initLC = useSelector((state: RootStateOrAny) => state.initLC);
@@ -174,7 +176,10 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
 
     return (
         <>
-            <div className="app-shadow leftToolBar absolute grid grid-cols-1 gap-5 overflow-y-hidden content-center h-[30rem] w-14 z-10">
+            <div
+                className="app-shadow leftToolBar absolute grid grid-cols-1 gap-5 overflow-y-hidden content-center h-[30rem] w-14 z-10"
+                onClick={onClick}
+            >
                 {/* Tools */}
                 {/* Brush, Eraser */}
                 {dToolbars.map((toolbar) => (
@@ -271,6 +276,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         : "brushOptionBoardHide"
                 }`}
                 ref={wrapperRef}
+                onClick={onClick}
             >
                 {/* Stroke Options */}
                 <div className="grid grid-cols-1 content-center gap-4">
@@ -318,6 +324,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         : "clearAllBoardHide"
                 }`}
                 ref={wrapperRef2}
+                onClick={onClick}
             >
                 <div className="text-center self-center w-full">
                     <Icon
@@ -336,6 +343,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         ? "app-shadow otherToolOption absolute grid grid-cols-2 content-center h-[7rem] w-[7rem] px-2 z-10"
                         : "otherToolOptionHide"
                 }`}
+                onClick={onClick}
             >
                 {oToolbars.map((toolbar) => (
                     <div

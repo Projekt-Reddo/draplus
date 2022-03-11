@@ -122,7 +122,11 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
                 {/* Cursor */}
                 <Cursor />
                 {/* Left Toolbar */}
-                <LeftToolBar />
+                <LeftToolBar
+                    onClick={(e: React.MouseEvent<HTMLElement>) => {
+                        e.stopPropagation();
+                    }}
+                />
                 {/* Canvas Board */}
                 <LC.LiterallyCanvasReactComponent
                     onInit={handleInit}
