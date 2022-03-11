@@ -6,6 +6,7 @@ using AutoMapper;
 using DraplusApi.Data;
 using DraplusApi.Dtos;
 using DraplusApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -14,6 +15,7 @@ namespace DraplusApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class BoardController : ControllerBase
     {
         private readonly IBoardRepo _boardRepo;

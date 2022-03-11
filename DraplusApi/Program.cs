@@ -12,6 +12,9 @@ using static Constant;
 using DraplusApi.Helpers;
 using DraplusApi.Hubs;
 using DraplusApi.Dtos;
+using System.Net;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -121,6 +124,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionHandler(e => e.Run(async context =>
+{
+    var exception = context.Features.Get<IExceptionHandlerPathFeature>().Error;
+    await context.Response.WriteAsJsonAsync(new ResponseDto(500, exception.Message));
+}));
+
 // cors has to be on top of all
 app.UseCors(opt => opt.WithOrigins(builder.Configuration.GetSection("FrontendUrl").Get<string[]>())
 .AllowAnyHeader()
@@ -128,6 +137,24 @@ app.UseCors(opt => opt.WithOrigins(builder.Configuration.GetSection("FrontendUrl
 .AllowCredentials());
 
 app.UseHttpsRedirection();
+
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == (int)HttpStatusCode.Unauthorized)
+    {
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync(JsonConvert.SerializeObject(new ResponseDto(401), new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
+    }
+
+    if (context.Response.StatusCode == (int)HttpStatusCode.Forbidden)
+    {
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync(JsonConvert.SerializeObject(new ResponseDto(403), new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
+    }
+
+});
 
 app.UseAuthentication();
 

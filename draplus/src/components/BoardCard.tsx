@@ -11,6 +11,7 @@ import { useModal } from "utils/useModal";
 import Modal from "components/Modal";
 import ChangeTitleModal from "components/ChangeTitleModal";
 import "styles/InputChangeTitle.css";
+import axios from "utils/axiosInstance";
 
 interface BoardCardProps {
     id: string;
@@ -125,29 +126,26 @@ const BoardCardOptions: React.FC<BoardCardOptionsProps> = ({
 
     // Delete board
     const deleteBoardMutation = useMutation(async () => {
-        var rs = await fetch(`${API}/api/board/${id}`, {
+        const { data } = await axios({
             method: "DELETE",
+            url: `${API}/api/board/${id}`,
         });
 
-        return rs.json();
+        return data;
     });
 
     // Change board title
     const changeBoardNameMutation = useMutation(async () => {
-        console.log(boardName);
-        var rs = await fetch(`${API}/api/board/${id}`, {
+        const { data } = await axios({
             method: "PUT",
-            headers: {
-                Accept: "application/json, text/plain",
-                "Content-Type": "application/json;charset=UTF-8",
-            },
-            // mode: "no-cors",
-            body: JSON.stringify({
+            url: `${API}/api/board/${id}`,
+            data: {
                 Id: id,
                 Name: boardName,
-            }),
+            },
         });
-        return rs.json();
+
+        return data;
     });
 
     // Show notification when deleted
