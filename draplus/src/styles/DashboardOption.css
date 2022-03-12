@@ -1,0 +1,24 @@
+.dashboard-item {
+    background: #2C2D31;
+    border: 1px solid #202B2E;
+    width: 15%;
+}
+
+.option-title{
+    font-style: normal;
+    font-weight: bold;
+    font-size: 2vw;
+    color: #FDFDFC;
+}
+.option-option{
+    font-style: normal;
+    font-size: 20px;
+    color: #FDFDFC;
+}
+
+.fav-icon{
+    width: 50px;
+    height: 50px;
+    margin-left: auto;
+    margin-right: auto;;
+}

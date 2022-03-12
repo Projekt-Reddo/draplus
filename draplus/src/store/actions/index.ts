@@ -22,6 +22,7 @@ export const RECEIVE_UPDATE_NOTE = "note/receiveUpdate";
 export const RECEIVE_REMOVE_NOTE = "note/receiveRemove";
 export const CLEAR_ALL = "clearAll";
 export const RECEIVE_CLEAR = "receiveClear";
+export const RECEIVE_BOARD = "receiveBoard";
 
 export { login };
 export { logout };
