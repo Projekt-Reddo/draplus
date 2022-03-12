@@ -12,6 +12,9 @@ using static Constant;
 using DraplusApi.Helpers;
 using DraplusApi.Hubs;
 using DraplusApi.Dtos;
+using System.Net;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +53,12 @@ builder.Services.AddCors();
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<IDictionary<string, UserConnection>>(opt => new Dictionary<string, UserConnection>());
 builder.Services.AddSingleton<IDictionary<string, UserConnectionChat>>(opt => new Dictionary<string, UserConnectionChat>());
+
+// Shape stack for each board
+builder.Services.AddSingleton<IDictionary<string, List<ShapeReadDto>>>(opt => new Dictionary<string, List<ShapeReadDto>>());
+
+// Note list for each board
+builder.Services.AddSingleton<IDictionary<string, List<NoteDto>>>(opt => new Dictionary<string, List<NoteDto>>());
 
 // Authentication
 ConfigurationManager configuration = builder.Configuration;
@@ -115,6 +124,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionHandler(e => e.Run(async context =>
+{
+    var exception = context.Features.Get<IExceptionHandlerPathFeature>().Error;
+    await context.Response.WriteAsJsonAsync(new ResponseDto(500, exception.Message));
+}));
+
 // cors has to be on top of all
 app.UseCors(opt => opt.WithOrigins(builder.Configuration.GetSection("FrontendUrl").Get<string[]>())
 .AllowAnyHeader()
@@ -122,6 +137,24 @@ app.UseCors(opt => opt.WithOrigins(builder.Configuration.GetSection("FrontendUrl
 .AllowCredentials());
 
 app.UseHttpsRedirection();
+
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == (int)HttpStatusCode.Unauthorized)
+    {
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync(JsonConvert.SerializeObject(new ResponseDto(401), new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
+    }
+
+    if (context.Response.StatusCode == (int)HttpStatusCode.Forbidden)
+    {
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync(JsonConvert.SerializeObject(new ResponseDto(403), new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
+    }
+
+});
 
 app.UseAuthentication();
 

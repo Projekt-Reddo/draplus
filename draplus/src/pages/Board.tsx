@@ -9,6 +9,10 @@ import {
     LEAVE_ROOM,
     GET_ONLINE_USERS,
     ONLINE_USERS,
+    SEND_MOUSE,
+    INIT_NOTES,
+    LOAD_SHAPES,
+    CLEAR_SHAPE_WHEN_LEAVE_ROOM,
 } from "store/actions";
 
 // Components
@@ -31,19 +35,9 @@ const Board: React.FC<BoardProps> = () => {
     // Global State
     const user = useSelector((state: any) => state.user);
     const board = useSelector((state: any) => state.board);
+    const connection = useSelector((state: any) => state.connection);
 
     React.useEffect(() => {
-        // Join Board
-        if (params.boardId && user.user) {
-            dispatch({
-                type: JOIN_ROOM,
-                payload: {
-                    user: user.user,
-                    board: params.boardId,
-                },
-            });
-        }
-
         // User Leave Room
         return () => {
             dispatch({
@@ -51,8 +45,20 @@ const Board: React.FC<BoardProps> = () => {
                 payload: null,
             });
             dispatch({
+                type: CLEAR_SHAPE_WHEN_LEAVE_ROOM,
+                payload: null,
+            });
+            dispatch({
                 type: ONLINE_USERS,
                 payload: [],
+            });
+            dispatch({
+                type: SEND_MOUSE,
+                payload: {
+                    x: 0,
+                    y: 0,
+                    isMove: false,
+                },
             });
         };
     }, []);
@@ -64,8 +70,32 @@ const Board: React.FC<BoardProps> = () => {
                 type: GET_ONLINE_USERS,
                 payload: board,
             });
+
+            dispatch({
+                type: INIT_NOTES,
+                payload: board,
+            });
+
+            dispatch({
+                type: LOAD_SHAPES,
+                payload: board,
+            });
         }
     }, [board]);
+
+    // Join Room
+    React.useEffect(() => {
+        // Join Board
+        if (params.boardId && user.isAuthenticated && connection.board) {
+            dispatch({
+                type: JOIN_ROOM,
+                payload: {
+                    user: user.user,
+                    board: params.boardId,
+                },
+            });
+        }
+    }, [connection]);
 
     return (
         <>

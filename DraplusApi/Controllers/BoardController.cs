@@ -6,6 +6,7 @@ using AutoMapper;
 using DraplusApi.Data;
 using DraplusApi.Dtos;
 using DraplusApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -14,6 +15,7 @@ namespace DraplusApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class BoardController : ControllerBase
     {
         private readonly IBoardRepo _boardRepo;
@@ -46,7 +48,7 @@ namespace DraplusApi.Controllers
 
             if (user == null)
             {
-                return BadRequest(new ResponseDto(404, "User not found"));
+                return NotFound(new ResponseDto(404, "User not found"));
             }
 
             // Create new chat room & board
@@ -66,6 +68,16 @@ namespace DraplusApi.Controllers
         [HttpGet("{userId}")]
         public async Task<ActionResult<IEnumerable<BoardForListDto>>> GetUserBoards(string userId)
         {
+            // Validate input userId
+            var userFilter = Builders<User>.Filter.Eq("Id", userId);
+            var userFromRepo = await _userRepo.GetByCondition(userFilter);
+
+            if (userFromRepo == null)
+            {
+                return NotFound(new ResponseDto(404, "User not found"));
+            }
+
+            // Get all boards of user
             var filter = Builders<Board>.Filter.Eq("UserId", userId);
 
             var boardsFromRepo = await _boardRepo.GetAll(filter: filter);
@@ -93,14 +105,28 @@ namespace DraplusApi.Controllers
             return Ok(new ResponseDto(200, "Board deleted"));
         }
 
-        [HttpGet("board/{id}")]
-        public async Task<ActionResult<BoardReadDto>> GetBoard(string id)
+        /// <summary>
+        /// Update an board name by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>200 / 404</returns>
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ResponseDto>> UpdateBoardName(string id, [FromBody] BoardForChangeNameDto boardForChangeNameDto)
         {
-            
-            var board = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id",id));
-            var boardread = _mapper.Map<BoardReadDto>(board);
-            return Ok(boardread);
+            var board = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", id));
+            if (board == null)
+            {
+                return NotFound(new ResponseDto(400, "Board not found"));
+            }
+            board.Name = boardForChangeNameDto.Name;
+            var rs = await _boardRepo.Update(id, board);
+
+            if (rs == false)
+            {
+                return BadRequest(new ResponseDto(404, "Change board name failed"));
+            }
+
+            return Ok(new ResponseDto(200, "Board Name Updated"));
         }
-        
     }
 }

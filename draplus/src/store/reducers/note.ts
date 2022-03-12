@@ -1,6 +1,7 @@
 import {
     ADD_NOTE,
     DELETE_NOTE,
+    LOAD_NOTES,
     RECEIVE_NEW_NOTE,
     RECEIVE_REMOVE_NOTE,
     RECEIVE_UPDATE_NOTE,
@@ -29,8 +30,9 @@ const noteReducer = (state = note, action: ActionType) => {
             ];
         }
 
-        case DELETE_NOTE:
+        case DELETE_NOTE: {
             return state.filter((note) => note.id !== action.payload);
+        }
 
         case RECEIVE_REMOVE_NOTE:
             return state.filter((note) => note.id !== action.payload);
@@ -61,6 +63,10 @@ const noteReducer = (state = note, action: ActionType) => {
                 }
                 return note;
             });
+        }
+
+        case LOAD_NOTES: {
+            return action.payload;
         }
 
         default:

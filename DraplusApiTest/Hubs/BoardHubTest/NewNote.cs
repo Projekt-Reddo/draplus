@@ -11,10 +11,10 @@ using static Constant;
 
 namespace DraplusApiTest.Hubs.BoardHubTest
 {
-    public class DrawShape : TestableBoardHub
+    public class NewNote : TestableBoardHub
     {
         [Test]
-        public async Task DrawShape_LinePathData_Success()
+        public async Task NewNote_Success()
         {
             // Arrange
             var boardHub = new BoardHub(
@@ -29,15 +29,15 @@ namespace DraplusApiTest.Hubs.BoardHubTest
             UserConnection userConnection = new UserConnection { Board = "board1" };
             mockConnections.Setup(connections => connections.TryGetValue(It.IsAny<string>(), out userConnection!)).Returns(true); // ! after userConnection is for null forgiving
 
-            mockShapeList.Setup(list => list[It.IsAny<string>()]).Returns(new List<ShapeReadDto>()); // ! after shape is for null forgiving
+            mockNoteList.Setup(list => list[It.IsAny<string>()]).Returns(new List<NoteDto>()); // ! after note is for null forgiving
 
-            var shape = new ShapeReadDto { Data = new List<string> { "1", "2", "3", "4" } };
+            var note = new NoteDto { Id = "1", X = 99, Y = 99, Text = "New Art" };
 
             // Act
-            await boardHub.DrawShape(shape);
+            await boardHub.NewNote(note);
 
             // Assert
-            ClientsOthersInGroupMock.Verify(x => x.SendCoreAsync(HubReturnMethod.ReceiveShape, new object[] { shape }, It.IsAny<CancellationToken>()), Times.Once);
+            ClientsOthersInGroupMock.Verify(x => x.SendCoreAsync(HubReturnMethod.ReceiveNewNote, new object[] { note }, It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

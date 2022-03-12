@@ -8,27 +8,37 @@ import Icon from "components/Icon";
 
 //Style
 import "styles/LeftToolBar.css";
-import { OtherTool, Pencil } from "utils/constant";
+import {
+    OtherTool,
+    Pencil,
+    Text,
+    Eraser,
+    Pan,
+    ColorCode,
+    StrokeWidth,
+} from "utils/constant";
 
 //Store
-import { CLEAR_ALL, DRAW_SHAPE } from "store/actions";
+import { CLEAR_ALL, REDO, UNDO } from "store/actions";
 
-interface LeftToolBarProps {}
+interface LeftToolBarProps {
+    onClick: (e: React.MouseEvent<HTMLElement>) => void;
+}
 
 const doNothing = () => {};
 
 var watingClick: any = null;
 var lastClick = 0;
 
-const LeftToolBar: React.FC<LeftToolBarProps> = () => {
+const LeftToolBar: React.FC<LeftToolBarProps> = ({ onClick }) => {
     // Global State
-    const initLC = useSelector((state: RootStateOrAny) => state.initLC);
     const dispatch = useDispatch();
-    const clear = useSelector((state: RootStateOrAny) => state.clear);
+    const initLC = useSelector((state: RootStateOrAny) => state.initLC);
 
     // Handle State
     const [showBrushOption, setShowBrushOption] = React.useState(false);
     const [clearAllOption, setClearrAllOption] = React.useState(false);
+    const [showOtherToolOption, setShowOtherToolOption] = React.useState(false);
     const [isSelect, setIsSelect] = React.useState(1);
     const [colorSelect, setColorSelect] = React.useState("#fff");
     const [strokeWidthSelect, setStrokeWidthSelect] = React.useState(5);
@@ -38,7 +48,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     useOutsideAlerter(wrapperRef, setShowBrushOption);
 
     const wrapperRef2 = React.useRef(null);
-    useOutsideAlerter2(wrapperRef2, setClearrAllOption);
+    useOutsideAlerter(wrapperRef2, setClearrAllOption);
 
     // Funtions Handle Draw Canvas
     // Select Tool
@@ -49,10 +59,10 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
             type: toolName,
         });
 
-        if (toolName === "Pencil") {
+        if (toolName === Pencil) {
             initLC.tool.strokeWidth = strokeWidthSelect;
         }
-        if (toolName === "Eraser") {
+        if (toolName === Eraser) {
             initLC.tool.strokeWidth = 30;
         }
     };
@@ -68,16 +78,6 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
         initLC.setColor("primary", colorCode);
     };
 
-    // Undo canvas
-    const handleUndo = () => {
-        initLC.undo();
-    };
-
-    // Redo canvas
-    const handleRedo = () => {
-        initLC.redo();
-    };
-
     // Clear canvas
     const handleClear = (lc: any) => {
         initLC.clear();
@@ -87,127 +87,145 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
         });
     };
 
-    React.useEffect(() => {
-        //handleClear(initLC);
-    }, [clear]);
+    // Undo canvas
+    const handleUndo = () => {
+        dispatch({
+            type: UNDO,
+        });
+    };
+
+    // Redo canvas
+    const handleRedo = () => {
+        dispatch({
+            type: REDO,
+        });
+    };
+
+    const triggerDownload = (imgURI: string) => {
+        var evt = new MouseEvent("click", {
+            view: window,
+            bubbles: false,
+            cancelable: true,
+        });
+
+        var a = document.createElement("a");
+        a.setAttribute("download", `${Date.now()}` + ".png");
+        a.setAttribute("href", imgURI);
+        a.setAttribute("target", "_blank");
+        a.setAttribute("preventDefault", "true");
+        a.dispatchEvent(evt);
+    };
+
+    // Export Image
+    const handleExportImage = () => {
+        const image = initLC.getImage().toDataURL();
+        triggerDownload(image);
+    };
 
     // Handle active Button was selected
     const handleActiveButtonSelect = (buttonCode: number) => {
-        if (buttonCode === 5 || buttonCode == 6) {
+        if (buttonCode === 6) {
             return;
         }
         setIsSelect(buttonCode);
     };
     
 
-    // Const Variable
+    // Toolbar Const Variable
+    const dToolbars = [
+        {
+            id: 1,
+            iconName: "pen",
+            doubleClickFunc: setShowBrushOption,
+            showState: showBrushOption,
+            toolName: Pencil,
+        },
+        {
+            id: 2,
+            iconName: "eraser",
+            doubleClickFunc: setClearrAllOption,
+            showState: clearAllOption,
+            toolName: Eraser,
+        },
+    ];
+
     const toolbars = [
-        // {
-        //     id: 2,
-        //     iconName: "eraser",
-        //     toolbarFunc: doNothing,
-        //     toolName: "Eraser",
-        // },
-        { id: 3, iconName: "font", toolbarFunc: doNothing, toolName: "Text" },
+        { id: 3, iconName: "font", toolbarFunc: doNothing, toolName: Text },
         {
             id: 4,
             iconName: "sticky-note",
             toolbarFunc: doNothing,
             toolName: OtherTool,
         },
-        { id: 5, iconName: "undo", toolbarFunc: handleUndo, toolName: "" },
-        { id: 6, iconName: "redo", toolbarFunc: handleRedo, toolName: "" },
+        {
+            id: 5,
+            iconName: "up-down-left-right",
+            toolbarFunc: doNothing,
+            toolName: Pan,
+        },
     ];
 
-    const colors = [
-        "#E61225",
-        "#AB238A",
-        "#D30079",
-        "#F6620D",
-        "#5A2C90",
-        "#C19E67",
-        "#FFC015",
-        "#0168BF",
-        "#B6B7B6",
-        "#03A557",
-        "#33CDFF",
-        "#fff",
-    ];
-
-    const strokes = [
-        { width: 9, size: "eyeXL" },
-        { width: 5, size: "eyeL" },
-        { width: 3, size: "eyeM" },
-        { width: 2, size: "eyeS" },
+    const oToolbars = [
+        { id: 6, iconName: "undo", toolbarFunc: handleUndo },
+        { id: 7, iconName: "redo", toolbarFunc: handleRedo },
+        {
+            id: 8,
+            iconName: "share-square",
+            toolbarFunc: handleExportImage,
+        },
     ];
 
     return (
         <>
-            <div className="app-shadow leftToolBar absolute grid grid-cols-1 gap-5 overflow-y-hidden content-center h-[33rem] w-14 z-10">
+            <div
+                className="app-shadow leftToolBar absolute grid grid-cols-1 gap-5 overflow-y-hidden content-center h-[30rem] w-14 z-10"
+                onClick={onClick}
+            >
                 {/* Tools */}
-                {/* Brush */}
-                <div
-                    className="icon flex"
-                    style={{ color: colorSelect }}
-                    onClick={(e) => {
-                        if (
-                            lastClick &&
-                            e.timeStamp - lastClick < 250 &&
-                            watingClick
-                        ) {
-                            lastClick = 0;
-                            clearTimeout(watingClick);
-                            setShowBrushOption(!showBrushOption);
-                            watingClick = null;
-                        } else {
-                            lastClick = e.timeStamp;
-                            watingClick = setTimeout(() => {
-                                watingClick = null;
-                                handleActiveButtonSelect(1);
-                                handleSelectTool(Pencil);
-                            }, 251);
-                        }
-                    }}
-                >
+                {/* Brush, Eraser */}
+                {dToolbars.map((toolbar) => (
                     <div
-                        className={` ${isSelect === 1 ? "whiteLine" : "line"}`}
-                    />
-                    <div className="text-center self-center w-full">
-                        <Icon icon="pen" style={{ fontSize: "1.5rem" }} />
-                    </div>
-                </div>
-                {/* Eraser */}
-                <div
-                    className="icon flex"
-                    onClick={(e) => {
-                        if (
-                            lastClick &&
-                            e.timeStamp - lastClick < 250 &&
-                            watingClick
-                        ) {
-                            lastClick = 0;
-                            clearTimeout(watingClick);
-                            // handle show clear all button
-                            setClearrAllOption(!clearAllOption);
-                            watingClick = null;
-                        } else {
-                            lastClick = e.timeStamp;
-                            watingClick = setTimeout(() => {
-                                watingClick = null;
-                                handleActiveButtonSelect(2);
-                                handleSelectTool("Eraser");
-                            }, 251);
+                        key={toolbar.id}
+                        className="icon flex"
+                        style={
+                            toolbar.iconName === "pen"
+                                ? { color: colorSelect }
+                                : {}
                         }
-                    }}
-                >
-                    <div
-                        className={` ${isSelect === 2 ? "whiteLine" : "line"}`}
-                    />
-                    <div className="text-center self-center w-full">
-                        <Icon icon="eraser" style={{ fontSize: "1.5rem" }} />
+                        onClick={(e) => {
+                            if (
+                                lastClick &&
+                                e.timeStamp - lastClick < 250 &&
+                                watingClick
+                            ) {
+                                lastClick = 0;
+                                clearTimeout(watingClick);
+                                toolbar.doubleClickFunc(!toolbar.showState);
+                                watingClick = null;
+                            } else {
+                                lastClick = e.timeStamp;
+                                watingClick = setTimeout(() => {
+                                    watingClick = null;
+                                    handleActiveButtonSelect(toolbar.id);
+                                    handleSelectTool(toolbar.toolName);
+                                }, 251);
+                            }
+                        }}
+                    >
+                        <div
+                            className={` ${
+                                isSelect === toolbar.id ? "whiteLine" : "line"
+                            }`}
+                        />
+                        <div className="text-center self-center w-full">
+                            <Icon
+                                icon={toolbar.iconName}
+                                style={{ fontSize: "1.5rem" }}
+                            />
+                        </div>
                     </div>
-                </div>
-                {/* Eraser, Text, Note, Undo, Redo */}
+                ))}
+                {/* Text, Note, Pan */}
                 {toolbars.map((toolbar) => (
                     <div
                         key={toolbar.id}
@@ -238,6 +256,18 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         </div>
                     </div>
                 ))}
+                {/* More Option */}
+                <div
+                    className="icon flex"
+                    onClick={() => setShowOtherToolOption(!showOtherToolOption)}
+                >
+                    <div className="text-center self-center w-full">
+                        <Icon
+                            icon="ellipsis-h"
+                            style={{ fontSize: "1.5rem" }}
+                        />
+                    </div>
+                </div>
             </div>
             {/* Brush Option Board */}
             <div
@@ -247,29 +277,37 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         : "brushOptionBoardHide"
                 }`}
                 ref={wrapperRef}
-            >   
+                onClick={onClick}
+            >
                 {/* Stroke Options */}
                 <div className="grid grid-cols-1 content-center gap-4">
-                    {strokes.map((stroke) => (
+                    {StrokeWidth.map((stroke) => (
                         <div
                             key={stroke.width}
                             className={stroke.size}
-                            onClick={() =>
-                                handleSelectToolStrokeWidth(stroke.width)
+                            style={
+                                strokeWidthSelect === stroke.width
+                                    ? { opacity: 1 }
+                                    : {}
                             }
+                            onClick={() => {
+                                handleSelectToolStrokeWidth(stroke.width);
+                            }}
                         />
                     ))}
                 </div>
-                {/* Vertiacal White Line */}
+                {/* Vertical White Line */}
                 <div className="py-4 mx-4">
                     <div className="verticalLine" />
                 </div>
                 {/* Color Options */}
                 <div className="grid grid-cols-3 content-center gap-4">
-                    {colors.map((color) => (
+                    {ColorCode.map((color) => (
                         <div
                             key={color}
-                            style={{ backgroundColor: color }}
+                            style={{
+                                backgroundColor: color,
+                            }}
                             className="dot"
                             onClick={() => {
                                 handleSelectToolColor(color);
@@ -287,6 +325,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         : "clearAllBoardHide"
                 }`}
                 ref={wrapperRef2}
+                onClick={onClick}
             >
                 <div className="text-center self-center w-full">
                     <Icon
@@ -298,6 +337,30 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                     />
                 </div>
             </div>
+            {/* Undo, Redo, Export */}
+            <div
+                className={` ${
+                    showOtherToolOption
+                        ? "app-shadow otherToolOption absolute grid grid-cols-2 content-center h-[7rem] w-[7rem] px-2 z-10"
+                        : "otherToolOptionHide"
+                }`}
+                onClick={onClick}
+            >
+                {oToolbars.map((toolbar) => (
+                    <div
+                        key={toolbar.id}
+                        className="icon flex"
+                        onClick={toolbar.toolbarFunc}
+                    >
+                        <div className="text-center self-center w-full">
+                            <Icon
+                                icon={toolbar.iconName}
+                                style={{ fontSize: "1.5rem" }}
+                            />
+                        </div>
+                    </div>
+                ))}
+            </div>
         </>
     );
 };
@@ -305,34 +368,14 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
 export default LeftToolBar;
 
 // Handle click outside
-export function useOutsideAlerter(ref: any, setShowBrushOption: any) {
+export function useOutsideAlerter(ref: any, setShowOptionBoard: any) {
     React.useEffect(() => {
         /**
          * Set listData to null
          */
         function handleClickOutside(event: any) {
             if (ref.current && !ref.current.contains(event.target)) {
-                setShowBrushOption(false);
-            }
-        }
-
-        // Bind the event listener
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            // Unbind the event listener on clean up
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [ref]); 
-}
-// Handle click outside
-export function useOutsideAlerter2(ref: any, setClearrAllOption: any) {
-    React.useEffect(() => {
-        /**
-         * Set listData to null
-         */
-        function handleClickOutside(event: any) {
-            if (ref.current && !ref.current.contains(event.target)) {
-                setClearrAllOption(false);
+                setShowOptionBoard(false);
             }
         }
 

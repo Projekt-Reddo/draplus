@@ -23,6 +23,16 @@ public class ChatHub : Hub
         _connections[Context.ConnectionId] = userConnection;
     }
 
+    public async Task LeaveRoom()
+    {
+        if (_connections.TryGetValue(Context.ConnectionId, out UserConnectionChat? userConnection))
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, userConnection.Board);
+
+            _connections.Remove(Context.ConnectionId);
+        }
+    }
+
     public override Task OnDisconnectedAsync(Exception? exception)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnectionChat? userConnection))

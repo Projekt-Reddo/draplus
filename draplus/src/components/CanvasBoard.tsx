@@ -14,6 +14,7 @@ import { ADD_NOTE, DRAW_SHAPE, INITLC, SEND_MOUSE } from "store/actions";
 import "literallycanvas/lib/css/literallycanvas.css";
 import "styles/CanvasBoard.css";
 import { OtherTool } from "utils/constant";
+import Loading from "./Loading";
 
 interface CanvasBoardProps {}
 
@@ -23,20 +24,20 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
     // Redux state
     const dispatch = useDispatch();
     const shape = useSelector((state: RootStateOrAny) => state.shape);
+    const myShape = useSelector((state: RootStateOrAny) => state.myShape);
     const onlineUsers = useSelector((state: any) => state.onlineUsers);
     const tool = useSelector((state: RootStateOrAny) => state.tool);
     const initLC = useSelector((state: RootStateOrAny) => state.initLC);
 
     // Handle State
     const [localInitLC, setLocalInitLC] = React.useState<typeof LC>();
-    const [myShape, setMyShape] = React.useState<object[]>([]);
+    const [firstLoad, setFirstLoad] = React.useState<boolean>(true);
 
     // Get Change of Canvas
     // Send user's shape to other user
     // Set user's shape to myShape state
     const handleDrawingChange = (lc: any, shape: any) => {
         const lcShapeContainer = lc.getSnapshot(["shapes"]);
-        setMyShape(lcShapeContainer.shapes);
         dispatch({
             type: DRAW_SHAPE,
             payload:
@@ -49,7 +50,6 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         setLocalInitLC(lc);
         dispatch({ type: INITLC, payload: lc });
         lc.on("shapeSave", (shape: any) => handleDrawingChange(lc, shape));
-        lc.on("undo", () => console.log(lc));
     };
 
     const handleCreateNote = (e: React.MouseEvent<HTMLElement>) => {
@@ -68,38 +68,49 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
     React.useEffect(() => {
         if (localInitLC && shape !== []) {
             localInitLC.loadSnapshot({
-                shapes: shape.concat(myShape),
+                shapes: [...shape, ...myShape.undoStack],
             });
+
+            if (firstLoad) setFirstLoad(false);
         }
-    }, [shape]);
+    }, [shape, myShape]);
 
     
 
     const getMousePosition = (e: any) => {
-        dispatch({
-            type: SEND_MOUSE,
-            payload: {
-                x: e.pageX,
-                y: e.pageY,
-                isMove: true,
-            },
-        });
-        clearTimeout(timer);
-        timer = setTimeout(() => {
+        if (onlineUsers.length > 1) {
             dispatch({
                 type: SEND_MOUSE,
                 payload: {
                     x: e.pageX,
                     y: e.pageY,
-                    isMove: false,
+                    isMove: true,
                 },
             });
-        }, 300);
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                dispatch({
+                    type: SEND_MOUSE,
+                    payload: {
+                        x: e.pageX,
+                        y: e.pageY,
+                        isMove: false,
+                    },
+                });
+            }, 300);
+        }
+    };
+
+    // Handle mouse wheel
+    const onScroll = (e: React.WheelEvent<HTMLDivElement>) => {
+        let scale = e.deltaY * 0.001;
+        initLC.zoom(scale);
     };
 
     
 
     return (
+<<<<<<< HEAD
         <div
             onMouseMove={getMousePosition}
             onClick={tool === OtherTool ? handleCreateNote : () => {}}
@@ -116,6 +127,38 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
                 toolbarPosition="hidden"
             />
         </div>
+=======
+        <>
+            {firstLoad && (
+                <div className="max-w-full min-h-screen bg-[color:var(--bg)]">
+                    <div className="w-full h-screen flex justify-center items-center">
+                        <Loading />
+                    </div>
+                </div>
+            )}
+            <div
+                onMouseMove={getMousePosition}
+                onWheelCapture={onScroll}
+                onClick={tool === OtherTool ? handleCreateNote : () => {}}
+            >
+                {/* Cursor */}
+                <Cursor />
+                {/* Left Toolbar */}
+                <LeftToolBar
+                    onClick={(e: React.MouseEvent<HTMLElement>) => {
+                        e.stopPropagation();
+                    }}
+                />
+                {/* Canvas Board */}
+                <LC.LiterallyCanvasReactComponent
+                    onInit={handleInit}
+                    primaryColor="#fff"
+                    backgroundColor="#232222"
+                    toolbarPosition="hidden"
+                />
+            </div>
+        </>
+>>>>>>> e63fcad99c52fd0774d70bfde319b07f72a7fe41
     );
 };
 

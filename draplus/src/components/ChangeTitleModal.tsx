@@ -7,24 +7,26 @@ import {
     DocumentIcon,
 } from "@heroicons/react/outline";
 
-interface ModalProps {
+interface ChangeTitleModalProps {
     type: "info" | "error" | "warning";
     open: boolean;
     setOpen: (open: boolean) => void;
     title: string;
     message: string;
+    modalBody?: any;
     onConfirm: () => void;
     confirmTitle?: string;
     onCancel?: () => void;
     cancelTitle?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({
+const ChangeTitleModal: React.FC<ChangeTitleModalProps> = ({
     type = "info",
     open = false,
     setOpen,
     title,
     message,
+    modalBody,
     onConfirm = () => {},
     confirmTitle = "Accept",
     onCancel = () => {},
@@ -87,6 +89,7 @@ const Modal: React.FC<ModalProps> = ({
                                             {title}
                                         </Dialog.Title>
                                         <div className="mt-2">
+                                            {modalBody}
                                             <p className="text-sm text-gray-500">
                                                 {message}
                                             </p>
@@ -126,7 +129,7 @@ const Modal: React.FC<ModalProps> = ({
     );
 };
 
-export default Modal;
+export default ChangeTitleModal;
 
 const styleOptions = {
     info: {

@@ -9,6 +9,9 @@ import { useMutation } from "react-query";
 import { useNotification } from "utils/useNotification";
 import { useModal } from "utils/useModal";
 import Modal from "components/Modal";
+import ChangeTitleModal from "components/ChangeTitleModal";
+import "styles/InputChangeTitle.css";
+import axios from "utils/axiosInstance";
 
 interface BoardCardProps {
     id: string;
@@ -63,7 +66,11 @@ const BoardCard: React.FC<BoardCardProps> = ({
                         </p>
                     </div>
                     <div className="w-1/5">
-                        <BoardCardOptions id={id} refetch={refetch} />
+                        <BoardCardOptions
+                            id={id}
+                            refetch={refetch}
+                            boardName_={name}
+                        />
                     </div>
                 </div>
             </div>
@@ -76,6 +83,7 @@ export default BoardCard;
 interface BoardCardOptionsProps {
     id: string;
     refetch?: () => void;
+    boardName_?: string;
 }
 
 interface Option {
@@ -84,35 +92,60 @@ interface Option {
     onClick?: () => void;
 }
 
-const BoardCardOptions: React.FC<BoardCardOptionsProps> = ({ id, refetch }) => {
+const BoardCardOptions: React.FC<BoardCardOptionsProps> = ({
+    id,
+    refetch,
+    boardName_,
+}) => {
     const Options: Option[] = [
         {
             icon: "trash",
             label: "Delete",
             onClick: () => {
-                setOpen(true);
+                setOpenDelete(true);
             },
         },
         {
-            icon: "share-square",
-            label: "Export",
+            icon: "pen",
+            label: "Title",
+            onClick: () => {
+                setOpenBoardName(true);
+            },
         },
     ];
+    // State manage board title
+    const [boardName, setBoardName] = React.useState(boardName_);
 
     // State manage Modal confirm
-    const { open, setOpen } = useModal();
-
+    const { open: openDelete, setOpen: setOpenDelete } = useModal();
+    const { open: openBoardName, setOpen: setOpenBoardName } = useModal();
+    // const
     // State manage Notification component
     const { toggle, setToggle, notifyMessage, setNotifyMessage } =
         useNotification();
 
     // Delete board
     const deleteBoardMutation = useMutation(async () => {
-        var rs = await fetch(`${API}/api/board/${id}`, {
+        const { data } = await axios({
             method: "DELETE",
+            url: `${API}/api/board/${id}`,
         });
 
-        return rs.json();
+        return data;
+    });
+
+    // Change board title
+    const changeBoardNameMutation = useMutation(async () => {
+        const { data } = await axios({
+            method: "PUT",
+            url: `${API}/api/board/${id}`,
+            data: {
+                Id: id,
+                Name: boardName,
+            },
+        });
+
+        return data;
     });
 
     // Show notification when deleted
@@ -146,7 +179,31 @@ const BoardCardOptions: React.FC<BoardCardOptionsProps> = ({ id, refetch }) => {
 
             setToggle(true);
         }
-    }, [deleteBoardMutation.isSuccess, deleteBoardMutation.isError]);
+        if (changeBoardNameMutation.isSuccess) {
+            if (changeBoardNameMutation.data.status === 200) {
+                setNotifyMessage({
+                    icon: "circle-check",
+                    iconColor: "text-emerald-400",
+                    title: "Change Board Name successfully",
+                });
+
+                if (refetch) refetch();
+            } else {
+                setNotifyMessage({
+                    icon: "circle-exclamation",
+                    iconColor: "text-red-400",
+                    title: "Change Board Name failed",
+                });
+            }
+
+            setToggle(true);
+        }
+    }, [
+        deleteBoardMutation.isSuccess,
+        deleteBoardMutation.isError,
+        changeBoardNameMutation.isSuccess,
+        changeBoardNameMutation.isError,
+    ]);
 
     return (
         <>
@@ -198,13 +255,36 @@ const BoardCardOptions: React.FC<BoardCardOptionsProps> = ({ id, refetch }) => {
 
             <Modal
                 type="error"
-                open={open}
-                setOpen={setOpen}
+                open={openDelete}
+                setOpen={setOpenDelete}
                 title="Delete board"
                 message="Are you sure you want to delete this board? Board data will be permanently removed. This action cannot be undone."
                 confirmTitle="Delete"
                 onConfirm={() => {
                     deleteBoardMutation.mutate();
+                }}
+            />
+
+            <ChangeTitleModal
+                type="info"
+                open={openBoardName}
+                setOpen={setOpenBoardName}
+                title="Changle Board Title"
+                message=""
+                modalBody={
+                    <div className="w-[25rem] rounded p-2 border-solid border-2 border-sky-500s">
+                        <input
+                            className="input-change-title w-[24rem]"
+                            value={boardName == null ? "" : boardName}
+                            onChange={(e) => {
+                                setBoardName(e.target.value);
+                            }}
+                        ></input>
+                    </div>
+                }
+                confirmTitle="Rename Board"
+                onConfirm={() => {
+                    changeBoardNameMutation.mutate();
                 }}
             />
 
