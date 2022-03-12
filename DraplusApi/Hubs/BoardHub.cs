@@ -209,9 +209,8 @@ public class BoardHub : Hub
             {
                 board.Shapes = new List<Shape>();
                 await _boardRepo.Update(temp, board);
-                await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ClearAll);
+                await Clients.Group(userConnection.Board).SendAsync(HubReturnMethod.ClearAll);
             }
-            
         }
     }
 
