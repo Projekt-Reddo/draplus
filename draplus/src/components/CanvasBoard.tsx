@@ -75,8 +75,6 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         }
     }, [shape, myShape]);
 
-    
-
     const getMousePosition = (e: any) => {
         if (onlineUsers.length > 1) {
             dispatch({
@@ -106,8 +104,6 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         let scale = e.deltaY * 0.001;
         initLC.zoom(scale);
     };
-
-    
 
     return (
         <>

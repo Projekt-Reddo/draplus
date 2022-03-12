@@ -5,7 +5,7 @@ const shapes: object[] = [];
 const shapeReducer = (state = shapes, action: ActionType) => {
     switch (action.type) {
         case INIT_SHAPES:
-            return [ ...state, ...action.payload ];
+            return action.payload;
             
         case RECEIVE_SHAPE:
             return [...state, action.payload];

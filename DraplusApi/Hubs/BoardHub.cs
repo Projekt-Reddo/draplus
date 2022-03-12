@@ -106,7 +106,7 @@ public class BoardHub : Hub
             Groups.RemoveFromGroupAsync(Context.ConnectionId, userConnection.Board);
             _connections.Remove(Context.ConnectionId);
 
-            // Save data when no one in room
+            // // Save data when no one in room
             SaveShapes(userConnection);
         }
 
@@ -165,8 +165,8 @@ public class BoardHub : Hub
 
             var updateBoard = await _boardRepo.Update(userConnection.Board, boardFromRepo);
 
-            // _shapeList.Remove(userConnection.Board);
-            // _noteList.Remove(userConnection.Board);
+            _shapeList.Remove(userConnection.Board);
+            _noteList.Remove(userConnection.Board);
         }
     }
 
