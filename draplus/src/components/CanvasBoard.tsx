@@ -110,24 +110,6 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
     
 
     return (
-<<<<<<< HEAD
-        <div
-            onMouseMove={getMousePosition}
-            onClick={tool === OtherTool ? handleCreateNote : () => {}}
-        >
-            {/* Cursor */}
-            <Cursor />
-            {/* Left Toolbar */}
-            <LeftToolBar  />
-            {/* Canvas Board */}
-            <LC.LiterallyCanvasReactComponent
-                onInit={handleInit}
-                primaryColor="#fff"
-                backgroundColor="#232222"
-                toolbarPosition="hidden"
-            />
-        </div>
-=======
         <>
             {firstLoad && (
                 <div className="max-w-full min-h-screen bg-[color:var(--bg)]">
@@ -158,7 +140,6 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
                 />
             </div>
         </>
->>>>>>> e63fcad99c52fd0774d70bfde319b07f72a7fe41
     );
 };
 

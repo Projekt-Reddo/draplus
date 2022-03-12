@@ -26,14 +26,10 @@ import {
     RECEIVE_REMOVE_NOTE,
     CLEAR_ALL,
     RECEIVE_CLEAR,
-<<<<<<< HEAD
-    RECEIVE_BOARD,
-=======
     REMOVE_SHAPE,
     UNDO,
     REDO,
     CONNECT_SIGNALR,
->>>>>>> e63fcad99c52fd0774d70bfde319b07f72a7fe41
 } from "store/actions";
 import { API } from "utils/constant";
 
