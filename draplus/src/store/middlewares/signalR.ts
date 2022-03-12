@@ -32,6 +32,7 @@ import {
     CONNECT_SIGNALR,
 } from "store/actions";
 import { API } from "utils/constant";
+import { Console } from "console";
 
 export const signalRMiddleware = (storeAPI: any) => {
     return (next: any) => async (action: any) => {
@@ -108,7 +109,12 @@ export const signalRMiddleware = (storeAPI: any) => {
             
             connection.board.on("ClearAll", () => {
                 const state = storeAPI.getState();
+                console.log(state.shape);
                 state.initLC.clear();
+                state.shape = [];
+                state.myShape.undoStack = [];
+                state.myShape.redoStack = [];
+                console.log(state.shape);
             })
             
 

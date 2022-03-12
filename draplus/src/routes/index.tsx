@@ -57,7 +57,9 @@ const BaseRoutes: React.FC = () => {
             <Route path="/" element={<UserRoute />}>
                 <Route path="/help" element={<HelpPage />} />
             </Route>
-
+            <Route path="/" element={<UserRoute />}>
+                <Route path="/admin" element={<Admin />} />
+            </Route>
             <Route path="*" element={<ErrorPage />} />
         </Routes>
     );
