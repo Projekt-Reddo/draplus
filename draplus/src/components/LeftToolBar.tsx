@@ -21,14 +21,16 @@ import {
 //Store
 import { CLEAR_ALL, REDO, UNDO } from "store/actions";
 
-interface LeftToolBarProps {}
+interface LeftToolBarProps {
+    onClick: (e: React.MouseEvent<HTMLElement>) => void;
+}
 
 const doNothing = () => {};
 
 var watingClick: any = null;
 var lastClick = 0;
 
-const LeftToolBar: React.FC<LeftToolBarProps> = () => {
+const LeftToolBar: React.FC<LeftToolBarProps> = ({ onClick }) => {
     // Global State
     const dispatch = useDispatch();
     const initLC = useSelector((state: RootStateOrAny) => state.initLC);
@@ -36,6 +38,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
     // Handle State
     const [showBrushOption, setShowBrushOption] = React.useState(false);
     const [clearAllOption, setClearrAllOption] = React.useState(false);
+    const [showOtherToolOption, setShowOtherToolOption] = React.useState(false);
     const [isSelect, setIsSelect] = React.useState(1);
     const [colorSelect, setColorSelect] = React.useState("#fff");
     const [strokeWidthSelect, setStrokeWidthSelect] = React.useState(5);
@@ -121,11 +124,12 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
 
     // Handle active Button was selected
     const handleActiveButtonSelect = (buttonCode: number) => {
-        if (buttonCode === 6 || buttonCode == 7 || buttonCode == 8) {
+        if (buttonCode === 6) {
             return;
         }
         setIsSelect(buttonCode);
     };
+    
 
     // Toolbar Const Variable
     const dToolbars = [
@@ -159,19 +163,24 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
             toolbarFunc: doNothing,
             toolName: Pan,
         },
-        { id: 6, iconName: "undo", toolbarFunc: handleUndo, toolName: "" },
-        { id: 7, iconName: "redo", toolbarFunc: handleRedo, toolName: "" },
+    ];
+
+    const oToolbars = [
+        { id: 6, iconName: "undo", toolbarFunc: handleUndo },
+        { id: 7, iconName: "redo", toolbarFunc: handleRedo },
         {
             id: 8,
             iconName: "share-square",
             toolbarFunc: handleExportImage,
-            toolName: "",
         },
     ];
 
     return (
         <>
-            <div className="app-shadow leftToolBar absolute grid grid-cols-1 gap-5 overflow-y-hidden content-center h-[38rem] w-14 z-10">
+            <div
+                className="app-shadow leftToolBar absolute grid grid-cols-1 gap-5 overflow-y-hidden content-center h-[30rem] w-14 z-10"
+                onClick={onClick}
+            >
                 {/* Tools */}
                 {/* Brush, Eraser */}
                 {dToolbars.map((toolbar) => (
@@ -216,7 +225,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         </div>
                     </div>
                 ))}
-                {/* Text, Note, Pan, Undo, Redo, Export */}
+                {/* Text, Note, Pan */}
                 {toolbars.map((toolbar) => (
                     <div
                         key={toolbar.id}
@@ -247,6 +256,18 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         </div>
                     </div>
                 ))}
+                {/* More Option */}
+                <div
+                    className="icon flex"
+                    onClick={() => setShowOtherToolOption(!showOtherToolOption)}
+                >
+                    <div className="text-center self-center w-full">
+                        <Icon
+                            icon="ellipsis-h"
+                            style={{ fontSize: "1.5rem" }}
+                        />
+                    </div>
+                </div>
             </div>
             {/* Brush Option Board */}
             <div
@@ -256,6 +277,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         : "brushOptionBoardHide"
                 }`}
                 ref={wrapperRef}
+                onClick={onClick}
             >
                 {/* Stroke Options */}
                 <div className="grid grid-cols-1 content-center gap-4">
@@ -303,6 +325,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         : "clearAllBoardHide"
                 }`}
                 ref={wrapperRef2}
+                onClick={onClick}
             >
                 <div className="text-center self-center w-full">
                     <Icon
@@ -313,6 +336,30 @@ const LeftToolBar: React.FC<LeftToolBarProps> = () => {
                         }}
                     />
                 </div>
+            </div>
+            {/* Undo, Redo, Export */}
+            <div
+                className={` ${
+                    showOtherToolOption
+                        ? "app-shadow otherToolOption absolute grid grid-cols-2 content-center h-[7rem] w-[7rem] px-2 z-10"
+                        : "otherToolOptionHide"
+                }`}
+                onClick={onClick}
+            >
+                {oToolbars.map((toolbar) => (
+                    <div
+                        key={toolbar.id}
+                        className="icon flex"
+                        onClick={toolbar.toolbarFunc}
+                    >
+                        <div className="text-center self-center w-full">
+                            <Icon
+                                icon={toolbar.iconName}
+                                style={{ fontSize: "1.5rem" }}
+                            />
+                        </div>
+                    </div>
+                ))}
             </div>
         </>
     );

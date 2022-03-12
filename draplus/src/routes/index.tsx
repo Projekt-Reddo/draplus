@@ -7,6 +7,7 @@ import Login from "pages/Login";
 import Board from "pages/Board";
 import BoardList from "pages/BoardList";
 import ErrorPage from "pages/ErrorPage";
+import Admin from "pages/Admin";
 
 import { useEffect } from "react";
 import { init } from "utils/loginHandlers";

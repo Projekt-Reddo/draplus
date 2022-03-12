@@ -6,6 +6,7 @@ import {
     LOAD_SHAPES,
 } from "./../actions/index";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import { stat } from "fs";
 import {
     JOIN_ROOM,
     LEAVE_ROOM,
@@ -99,11 +100,18 @@ export const signalRMiddleware = (storeAPI: any) => {
                     payload: shape,
                 });
             });
+            connection.board.on("ReceiveBoard", (shape: any) =>{
+                const state = storeAPI.getState();
+                state.initLC.loadSnapshot(shape);
 
-            connection.board.on("ClearAll", (clear: any) => {
+            })
+            
+            connection.board.on("ClearAll", () => {
                 const state = storeAPI.getState();
                 state.initLC.clear();
-            });
+            })
+            
+
 
             connection.board.on(
                 "ReceiveMouse",
