@@ -179,12 +179,7 @@ const BoardCardOptions: React.FC<BoardCardOptionsProps> = ({
 
             setToggle(true);
         }
-    }, [
-        deleteBoardMutation.isSuccess,
-        deleteBoardMutation.isError,
-        changeBoardNameMutation.isSuccess,
-        changeBoardNameMutation.isError,
-    ]);
+    }, [deleteBoardMutation.isSuccess, deleteBoardMutation.isError]);
 
     // Show notification when changed
     React.useEffect(() => {
