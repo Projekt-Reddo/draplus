@@ -109,12 +109,10 @@ export const signalRMiddleware = (storeAPI: any) => {
             
             connection.board.on("ClearAll", () => {
                 const state = storeAPI.getState();
-                console.log(state.shape);
                 state.initLC.clear();
                 state.shape = [];
                 state.myShape.undoStack = [];
                 state.myShape.redoStack = [];
-                console.log(state.shape);
             })
             
 
