@@ -205,13 +205,12 @@ public class BoardHub : Hub
         {
             var temp = userConnection.Board;
             var board = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
-            if (userConnection.User.ToString() != board.UserId)
+            if (userConnection.User.ToString() == board.UserId)
             {
-                await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ClearAll, 0);
+                board.Shapes = new List<Shape>();
+                await _boardRepo.Update(temp, board);
+                await Clients.Group(userConnection.Board).SendAsync(HubReturnMethod.ClearAll);
             }
-            board.Shapes = new List<Shape>();
-            await _boardRepo.Update(temp, board);
-            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ClearAll, 1);
         }
     }
 

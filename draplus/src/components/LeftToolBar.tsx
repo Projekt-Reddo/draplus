@@ -129,6 +129,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({ onClick }) => {
         }
         setIsSelect(buttonCode);
     };
+    
 
     // Toolbar Const Variable
     const dToolbars = [
