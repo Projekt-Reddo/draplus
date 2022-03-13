@@ -1,5 +1,4 @@
-import { DISCONNECT_SIGNALR } from "./../actions/index";
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import { HubConnectionBuilder } from "@microsoft/signalr";
 import {
     JOIN_ROOM,
     LEAVE_ROOM,
@@ -18,11 +17,15 @@ import {
     DELETE_NOTE,
     RECEIVE_REMOVE_NOTE,
     CLEAR_ALL,
-    RECEIVE_CLEAR,
     REMOVE_SHAPE,
     UNDO,
     REDO,
     CONNECT_SIGNALR,
+    DISCONNECT_SIGNALR,
+    INIT_NOTES,
+    INIT_SHAPES,
+    LOAD_NOTES,
+    LOAD_SHAPES,
 } from "store/actions";
 import { API } from "utils/constant";
 
@@ -66,6 +69,13 @@ export const signalRMiddleware = (storeAPI: any) => {
                 board: action.payload.board,
             });
 
+            connection.board.on("InitShapes", (shapes: any) => {
+                storeAPI.dispatch({
+                    type: INIT_SHAPES,
+                    payload: shapes,
+                });
+            });
+
             connection.chat.on(
                 "ReceiveMessage",
                 (user: any, message: string, timestamp: Date) => {
@@ -86,21 +96,21 @@ export const signalRMiddleware = (storeAPI: any) => {
                     payload: shape,
                 });
             });
+            connection.board.on("ReceiveBoard", (shape: any) =>{
+                const state = storeAPI.getState();
+                state.initLC.loadSnapshot(shape);
 
-            connection.board.on("ClearAll", (clear: any) => {
+            })
+            
+            connection.board.on("ClearAll", () => {
                 const state = storeAPI.getState();
                 state.initLC.clear();
-            });
+                state.shape = [];
+                state.myShape.undoStack = [];
+                state.myShape.redoStack = [];
+            })
+            
 
-            connection.board.on("ClearAll", (clear: any) => {
-                const state = storeAPI.getState();
-                state.initLC.clear();
-            });
-
-            connection.board.on("ClearAll", (clear: any) => {
-                const state = storeAPI.getState();
-                state.initLC.clear();
-            });
 
             connection.board.on(
                 "ReceiveMouse",
@@ -128,6 +138,13 @@ export const signalRMiddleware = (storeAPI: any) => {
                 storeAPI.dispatch({
                     type: ONLINE_USERS,
                     payload: users,
+                });
+            });
+
+            connection.board.on("LoadNotes", (notes: any) => {
+                storeAPI.dispatch({
+                    type: LOAD_NOTES,
+                    payload: notes,
                 });
             });
 
@@ -161,6 +178,10 @@ export const signalRMiddleware = (storeAPI: any) => {
 
             connection.chat.onclose(() => {});
             connection.board.onclose(() => {});
+        }
+
+        if (action.type === LOAD_SHAPES) {
+            connection.board.invoke("LoadInitShapes", action.payload);
         }
 
         if (action.type === LEAVE_ROOM) {
@@ -208,6 +229,10 @@ export const signalRMiddleware = (storeAPI: any) => {
         //#endregion
 
         //#region Note
+
+        if (action.type === INIT_NOTES) {
+            connection.board.invoke("LoadNotes", action.payload);
+        }
 
         if (action.type === ADD_NOTE) {
             connection.board.invoke("NewNote", action.payload);

@@ -11,6 +11,7 @@ import { useModal } from "utils/useModal";
 import Modal from "components/Modal";
 import ChangeTitleModal from "components/ChangeTitleModal";
 import "styles/InputChangeTitle.css";
+import axios from "utils/axiosInstance";
 
 interface BoardCardProps {
     id: string;
@@ -125,29 +126,26 @@ const BoardCardOptions: React.FC<BoardCardOptionsProps> = ({
 
     // Delete board
     const deleteBoardMutation = useMutation(async () => {
-        var rs = await fetch(`${API}/api/board/${id}`, {
+        const { data } = await axios({
             method: "DELETE",
+            url: `${API}/api/board/${id}`,
         });
 
-        return rs.json();
+        return data;
     });
 
     // Change board title
     const changeBoardNameMutation = useMutation(async () => {
-        console.log(boardName);
-        var rs = await fetch(`${API}/api/board/${id}`, {
+        const { data } = await axios({
             method: "PUT",
-            headers: {
-                Accept: "application/json, text/plain",
-                "Content-Type": "application/json;charset=UTF-8",
-            },
-            // mode: "no-cors",
-            body: JSON.stringify({
+            url: `${API}/api/board/${id}`,
+            data: {
                 Id: id,
                 Name: boardName,
-            }),
+            },
         });
-        return rs.json();
+
+        return data;
     });
 
     // Show notification when deleted
@@ -181,6 +179,10 @@ const BoardCardOptions: React.FC<BoardCardOptionsProps> = ({
 
             setToggle(true);
         }
+    }, [deleteBoardMutation.isSuccess, deleteBoardMutation.isError]);
+
+    // Show notification when changed
+    React.useEffect(() => {
         if (changeBoardNameMutation.isSuccess) {
             if (changeBoardNameMutation.data.status === 200) {
                 setNotifyMessage({
@@ -200,12 +202,7 @@ const BoardCardOptions: React.FC<BoardCardOptionsProps> = ({
 
             setToggle(true);
         }
-    }, [
-        deleteBoardMutation.isSuccess,
-        deleteBoardMutation.isError,
-        changeBoardNameMutation.isSuccess,
-        changeBoardNameMutation.isError,
-    ]);
+    }, [changeBoardNameMutation.isSuccess, changeBoardNameMutation.isError]);
 
     return (
         <>
@@ -274,7 +271,7 @@ const BoardCardOptions: React.FC<BoardCardOptionsProps> = ({
                 title="Changle Board Title"
                 message=""
                 modalBody={
-                    <div className="w-[25rem] p-2 border-solid border-2 border-sky-500s">
+                    <div className="w-[25rem] rounded p-2 border-solid border-2 border-sky-500s">
                         <input
                             className="input-change-title w-[24rem]"
                             value={boardName == null ? "" : boardName}

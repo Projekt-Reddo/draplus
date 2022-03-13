@@ -1,0 +1,72 @@
+.dashboard {
+    background-color: #171615;
+    border: 1px solid #515759;    
+    color: #FDFDFC;
+    width: 100%;
+    padding-left: 17%;
+    height: 86.7vh;
+}
+
+.dashboard-title{
+    margin-top: 1rem;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 36px;
+    /* identical to box height */
+    color: #FDFDFC;
+}
+.dashboard-sub{
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 18px;
+    /* identical to box height */
+    color: #FDFDFC;
+}
+.dashboard-info{
+    width: 255px;
+    height: 191px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+}
+.dashboard-chart{
+    width: 537px;
+    height: 304px;
+
+    background: #2C2D31;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+}
+.icon-contain{
+    background: rgba(243, 242, 243, 0.51);
+    border-radius: 8px;
+    width: 45px;
+    height: 45px;
+    margin-top: 8px;
+    margin-left: 20px;
+}
+
+.info-contain{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 72px;
+    /* identical to box height */
+    color: #FDFDFC;
+}
+
+.info-detail{
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 24px;
+    /* identical to box height */
+    color: #FDFDFC;
+}
+
+.icon-icon{
+    align-items: center;
+}
+
+

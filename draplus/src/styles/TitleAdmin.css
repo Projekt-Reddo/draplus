@@ -1,0 +1,31 @@
+.title-item {
+    background-color: #171615;
+}
+
+.title-font{
+    position: absolute;
+    left: 17%;
+    top: 3%;
+
+    /* font-family: Poppins; */
+    font-style: normal;
+    font-weight: bold;
+    font-size: 28px;
+    line-height: 42px;
+    /* identical to box height */
+    color: #FDFDFC;
+}
+.title-sub{
+    position: absolute;
+
+    left: 17%;
+    top: 8%;
+
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 24px;
+    /* identical to box height */
+    color: #808082;
+}

@@ -1,11 +1,9 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using DraplusApi.Dtos;
 using DraplusApi.Models;
 using DraplusApi.Data;
 using MongoDB.Driver;
 using AutoMapper;
-
 using static Constant;
 using Newtonsoft.Json;
 
@@ -32,18 +30,43 @@ public class BoardHub : Hub
 
     #region Join & Leave room
 
+    /// <summary>
+    /// Allow user to join a room
+    /// </summary>
+    /// <param name="userConnection"></param>
+    /// <returns></returns>
     public async Task JoinRoom(UserConnection userConnection)
     {
-        await Groups.AddToGroupAsync(Context.ConnectionId, userConnection.Board);
-
+        // Add user to connection list & group
         _connections[Context.ConnectionId] = userConnection;
-        var shape = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
-        await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ReceiveShape, shape.Shapes);
 
+        // Load old notes data & create temp note list for that user
+        await LoadNotesFromDb(userConnection);
+
+        // Shape to store that user draw
         NewShapeList(userConnection.Board);
-        NewNoteList(userConnection.Board);
+
+        await Groups.AddToGroupAsync(Context.ConnectionId, userConnection.Board);
     }
 
+    public async Task LoadInitShapes(string boardId)
+    {
+        var boardFromRepo = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", boardId));
+
+        var shapesToReturn = _mapper.Map<ICollection<ShapeReadDto>>(boardFromRepo.Shapes);
+
+        if (_shapeList.ContainsKey(boardId))
+        {
+            shapesToReturn = shapesToReturn.Concat(_shapeList[boardId]).ToList();
+        }
+
+        await Clients.Caller.SendAsync("InitShapes", shapesToReturn);
+    }
+
+    /// <summary>
+    /// When user want to out that room
+    /// </summary>
+    /// <returns></returns>
     public async Task LeaveRoom()
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -65,6 +88,11 @@ public class BoardHub : Hub
         }
     }
 
+    /// <summary>
+    /// Handle out room when user disconnect
+    /// </summary>
+    /// <param name="exception"></param>
+    /// <returns></returns>
     public override Task OnDisconnectedAsync(Exception? exception)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -76,7 +104,7 @@ public class BoardHub : Hub
             Groups.RemoveFromGroupAsync(Context.ConnectionId, userConnection.Board);
             _connections.Remove(Context.ConnectionId);
 
-            // Save data when no one in room
+            // // Save data when no one in room
             SaveShapes(userConnection);
         }
 
@@ -88,7 +116,7 @@ public class BoardHub : Hub
         return base.OnConnectedAsync();
     }
 
-    public async Task SaveShapes(UserConnection userConnection)
+    protected async Task SaveShapes(UserConnection userConnection)
     {
         var remainingConnections = _connections.Values.Where(x => x.Board == userConnection.Board);
 
@@ -122,6 +150,17 @@ public class BoardHub : Hub
                 boardFromRepo.Shapes.Add(shapeToUpdate);
             }
 
+            var noteList = new List<Note>();
+
+            foreach (var note in _noteList[userConnection.Board])
+            {
+                var noteToUpdate = _mapper.Map<Note>(note);
+
+                noteList.Add(noteToUpdate);
+            }
+
+            boardFromRepo.Notes = noteList;
+
             var updateBoard = await _boardRepo.Update(userConnection.Board, boardFromRepo);
 
             _shapeList.Remove(userConnection.Board);
@@ -131,6 +170,11 @@ public class BoardHub : Hub
 
     #endregion
 
+    /// <summary>
+    /// When user draw to board
+    /// </summary>
+    /// <param name="shape">What user draw (line, text, eraser)</param>
+    /// <returns></returns>
     public async Task DrawShape(ShapeReadDto shape)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -148,23 +192,33 @@ public class BoardHub : Hub
         }
     }
 
+    /// <summary>
+    /// Clear all data in board
+    /// </summary>
+    /// <returns></returns>
     public async Task ClearAll()
     {
 
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
-            var temp = userConnection.Board;
             var board = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
-            if (userConnection.User.ToString() != board.UserId)
+            if (userConnection.User.Id.ToString() == board.UserId)
             {
-                await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ClearAll, 0);
+                board.Shapes = new List<Shape>();
+                await _boardRepo.Update(userConnection.Board, board);
+                _shapeList[userConnection.Board].Clear();
+                await Clients.Group(userConnection.Board).SendAsync(HubReturnMethod.ClearAll);
             }
-            board.Shapes = new List<Shape>();
-            await _boardRepo.Update(temp, board);
-            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ClearAll, 1);
         }
     }
 
+    /// <summary>
+    /// Current online users mouse position
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="isMove"></param>
+    /// <returns></returns>
     public async Task SendMouse(int x, int y, bool isMove)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -175,12 +229,17 @@ public class BoardHub : Hub
 
     #region Current online user
 
+    /// <summary>
+    /// Number of online people
+    /// </summary>
+    /// <param name="boardId"></param>
+    /// <returns></returns>
     public async Task SendOnlineUsers(string boardId)
     {
         await OnlineUsers(boardId);
     }
 
-    public Task OnlineUsers(string boardId)
+    protected Task OnlineUsers(string boardId)
     {
         var users = _connections.Values.Where(user => user.Board == boardId).Select(user => user.User);
         return Clients.Group(boardId).SendAsync(HubReturnMethod.OnlineUsers, users);
@@ -190,6 +249,24 @@ public class BoardHub : Hub
 
     #region Note
 
+    /// <summary>
+    /// Load old notes
+    /// </summary>
+    /// <param name="boardId"></param>
+    /// <returns></returns>
+    public async Task LoadNotes(string boardId)
+    {
+        if (_noteList.TryGetValue(boardId, out List<NoteDto>? notes))
+        {
+            await Clients.Caller.SendAsync(HubReturnMethod.LoadNotes, _noteList[boardId]);
+        }
+    }
+
+    /// <summary>
+    /// When user create new note
+    /// </summary>
+    /// <param name="note"></param>
+    /// <returns></returns>
     public async Task NewNote(NoteDto note)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -205,6 +282,11 @@ public class BoardHub : Hub
         }
     }
 
+    /// <summary>
+    /// When user change something in a note
+    /// </summary>
+    /// <param name="note"></param>
+    /// <returns></returns>
     public async Task UpdateNote(NoteUpdateDto note)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -221,6 +303,11 @@ public class BoardHub : Hub
         }
     }
 
+    /// <summary>
+    /// When user delete a note
+    /// </summary>
+    /// <param name="noteId"></param>
+    /// <returns></returns>
     public async Task DeleteNote(string noteId)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -235,6 +322,11 @@ public class BoardHub : Hub
 
     #region Undo & Redo
 
+    /// <summary>
+    /// Undo method
+    /// </summary>
+    /// <param name="shapeId"></param>
+    /// <returns></returns>
     public async Task Undo(string shapeId)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -244,6 +336,11 @@ public class BoardHub : Hub
         }
     }
 
+    /// <summary>
+    /// Redo method
+    /// </summary>
+    /// <param name="shape"></param>
+    /// <returns></returns>
     public async Task Redo(ShapeReadDto shape)
     {
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
@@ -263,18 +360,46 @@ public class BoardHub : Hub
 
     #region Handle Dictionary
 
-    public void NewShapeList(string boardId) {
+    public void NewShapeList(string boardId)
+    {
         if (!_shapeList.ContainsKey(boardId))
         {
             _shapeList[boardId] = new List<ShapeReadDto>();
         }
     }
 
-    public void NewNoteList(string noteId) {
+    public void NewNoteList(string noteId)
+    {
         if (!_noteList.ContainsKey(noteId))
         {
             _noteList[noteId] = new List<NoteDto>();
         }
+    }
+
+    #endregion
+
+    #region Database CRUD
+
+    protected async Task LoadNotesFromDb(UserConnection userConnection)
+    {
+        var connectionsOnABoard = _connections.Values.Where(x => x.Board == userConnection.Board);
+
+        if (connectionsOnABoard.Count() == 0)
+        {
+            var boardFromRepo = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
+
+            if (boardFromRepo != null)
+            {
+                var notesList = boardFromRepo.Notes;
+
+                if (notesList != null)
+                {
+                    _noteList[userConnection.Board] = _mapper.Map<List<NoteDto>>(notesList);
+                }
+            }
+        }
+
+        NewNoteList(userConnection.Board);
     }
 
     #endregion

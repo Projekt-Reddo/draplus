@@ -1,4 +1,4 @@
-import { DRAW_SHAPE, REDO, UNDO } from "store/actions";
+import { CLEAR_SHAPE_WHEN_LEAVE_ROOM, DRAW_SHAPE, REDO, UNDO } from "store/actions";
 
 const shapes: {
     undoStack: object[];
@@ -12,7 +12,7 @@ const shapeReducer = (state = shapes, action: ActionType) => {
     switch (action.type) {
         case DRAW_SHAPE:
             return {
-                ...state,
+                redoStack: [],
                 undoStack: [...state.undoStack, action.payload],
             };
 
@@ -39,6 +39,13 @@ const shapeReducer = (state = shapes, action: ActionType) => {
             return {
                 ...state,
                 undoStack: [...state.undoStack, lastRedoShape],
+            };
+        }
+
+        case CLEAR_SHAPE_WHEN_LEAVE_ROOM: {
+            return {
+                undoStack: [],
+                redoStack: [],
             };
         }
 
