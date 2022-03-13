@@ -126,7 +126,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseExceptionHandler(e => e.Run(async context =>
 {
-    var exception = context.Features.Get<IExceptionHandlerPathFeature>().Error;
+    var exception = context.Features.Get<IExceptionHandlerPathFeature>()!.Error;
     await context.Response.WriteAsJsonAsync(new ResponseDto(500, exception.Message));
 }));
 

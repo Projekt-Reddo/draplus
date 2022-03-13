@@ -1,12 +1,4 @@
-import {
-    DISCONNECT_SIGNALR,
-    INIT_NOTES,
-    INIT_SHAPES,
-    LOAD_NOTES,
-    LOAD_SHAPES,
-} from "./../actions/index";
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-import { stat } from "fs";
+import { HubConnectionBuilder } from "@microsoft/signalr";
 import {
     JOIN_ROOM,
     LEAVE_ROOM,
@@ -25,14 +17,17 @@ import {
     DELETE_NOTE,
     RECEIVE_REMOVE_NOTE,
     CLEAR_ALL,
-    RECEIVE_CLEAR,
     REMOVE_SHAPE,
     UNDO,
     REDO,
     CONNECT_SIGNALR,
+    DISCONNECT_SIGNALR,
+    INIT_NOTES,
+    INIT_SHAPES,
+    LOAD_NOTES,
+    LOAD_SHAPES,
 } from "store/actions";
 import { API } from "utils/constant";
-import { Console } from "console";
 
 export const signalRMiddleware = (storeAPI: any) => {
     return (next: any) => async (action: any) => {
