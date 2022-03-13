@@ -75,6 +75,8 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         }
     }, [shape, myShape]);
 
+    
+
     const getMousePosition = (e: any) => {
         if (onlineUsers.length > 1) {
             dispatch({
@@ -105,6 +107,8 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
         initLC.zoom(scale);
     };
 
+    
+
     return (
         <>
             {firstLoad && (
@@ -122,7 +126,11 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
                 {/* Cursor */}
                 <Cursor />
                 {/* Left Toolbar */}
-                <LeftToolBar />
+                <LeftToolBar
+                    onClick={(e: React.MouseEvent<HTMLElement>) => {
+                        e.stopPropagation();
+                    }}
+                />
                 {/* Canvas Board */}
                 <LC.LiterallyCanvasReactComponent
                     onInit={handleInit}

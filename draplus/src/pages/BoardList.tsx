@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import Notification from "components/Notification";
 import { useNotification } from "utils/useNotification";
 import Avatar from "components/Avatar";
+import axios from "utils/axiosInstance";
 
 interface BoardListProps {}
 
@@ -26,11 +27,13 @@ const BoardList: React.FC<BoardListProps> = () => {
     const userFromStore = useSelector((state: any) => state.user);
 
     // Get boards from api
-    const { isLoading, isError, data, error, refetch } = useQuery(
+    const { isLoading, isError, data, refetch } = useQuery(
         "boards",
         async () => {
-            var rs = await fetch(`${API}/api/board/${userFromStore.user.id}`);
-            return rs.json();
+            const { data } = await axios.get(
+                `${API}/api/board/${userFromStore.user.id}`
+            );
+            return data;
         },
         {
             enabled: false,
@@ -93,15 +96,13 @@ const CreateBoard: React.FC<CreateBoardProps> = ({ refetch }) => {
 
     // Create new board
     const createBoardMutation = useMutation(async (newBoard: object) => {
-        var rs = await fetch(`${API}/api/board`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newBoard),
+        const { data } = await axios({
+            method: "post",
+            url: `${API}/api/board`,
+            data: newBoard,
         });
 
-        return rs.json();
+        return data;
     });
 
     // Show notification when created

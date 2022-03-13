@@ -1,11 +1,4 @@
-import {
-    DISCONNECT_SIGNALR,
-    INIT_NOTES,
-    INIT_SHAPES,
-    LOAD_NOTES,
-    LOAD_SHAPES,
-} from "./../actions/index";
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import { HubConnectionBuilder } from "@microsoft/signalr";
 import {
     JOIN_ROOM,
     LEAVE_ROOM,
@@ -24,11 +17,15 @@ import {
     DELETE_NOTE,
     RECEIVE_REMOVE_NOTE,
     CLEAR_ALL,
-    RECEIVE_CLEAR,
     REMOVE_SHAPE,
     UNDO,
     REDO,
     CONNECT_SIGNALR,
+    DISCONNECT_SIGNALR,
+    INIT_NOTES,
+    INIT_SHAPES,
+    LOAD_NOTES,
+    LOAD_SHAPES,
 } from "store/actions";
 import { API } from "utils/constant";
 
@@ -99,11 +96,21 @@ export const signalRMiddleware = (storeAPI: any) => {
                     payload: shape,
                 });
             });
+            connection.board.on("ReceiveBoard", (shape: any) =>{
+                const state = storeAPI.getState();
+                state.initLC.loadSnapshot(shape);
 
-            connection.board.on("ClearAll", (clear: any) => {
+            })
+            
+            connection.board.on("ClearAll", () => {
                 const state = storeAPI.getState();
                 state.initLC.clear();
-            });
+                state.shape = [];
+                state.myShape.undoStack = [];
+                state.myShape.redoStack = [];
+            })
+            
+
 
             connection.board.on(
                 "ReceiveMouse",

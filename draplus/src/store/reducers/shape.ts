@@ -1,11 +1,11 @@
-import { RECEIVE_SHAPE, REMOVE_SHAPE, INIT_SHAPES, CLEAR_SHAPE_WHEN_LEAVE_ROOM } from "store/actions";
+import { RECEIVE_SHAPE, REMOVE_SHAPE, INIT_SHAPES, CLEAR_SHAPE_WHEN_LEAVE_ROOM, CLEAR_ALL } from "store/actions";
 
 const shapes: object[] = [];
 
 const shapeReducer = (state = shapes, action: ActionType) => {
     switch (action.type) {
         case INIT_SHAPES:
-            return [ ...state, ...action.payload ];
+            return action.payload;
             
         case RECEIVE_SHAPE:
             return [...state, action.payload];
