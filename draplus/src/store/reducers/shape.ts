@@ -1,4 +1,4 @@
-import { RECEIVE_SHAPE, REMOVE_SHAPE, INIT_SHAPES, CLEAR_SHAPE_WHEN_LEAVE_ROOM } from "store/actions";
+import { RECEIVE_SHAPE, REMOVE_SHAPE, INIT_SHAPES, CLEAR_SHAPE_WHEN_LEAVE_ROOM, CLEAR_ALL } from "store/actions";
 
 const shapes: object[] = [];
 

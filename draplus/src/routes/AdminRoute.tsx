@@ -7,7 +7,7 @@ interface AdminRouteProps {}
 const AdminRoute: React.FC<AdminRouteProps> = () =>
 {
     const user = useSelector((state: RootStateOrAny) => state.user);
-    if (!user.isAuthenticated) {
+    if (user.isAuthenticated && user.user.isAdmin) {
         return <Navigate to="/admin" />;
     }
     return <Outlet/>;
