@@ -7,7 +7,7 @@ namespace DraplusApi.Data
 {
     public interface IRepository<TEntity> : IDisposable where TEntity : class
     {
-        Task<IEnumerable<TEntity>> GetAll(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? sort = null!, BsonDocument? lookup = null!);
+        Task<IEnumerable<TEntity>> GetAll(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!, BsonDocument? sort = null!, BsonDocument? lookup = null!, int? limit = null!, int? skip = null!);
         Task<TEntity> GetByCondition(FilterDefinition<TEntity> filter = default(FilterDefinition<TEntity>)!);
         Task<TEntity> Add(TEntity entity);
         Task<bool> Update(string id, TEntity entity);
@@ -54,11 +54,21 @@ namespace DraplusApi.Data
         /// <param name="sort">Bson document for sort</param>
         /// <param name="lookup">Bson document for join collection</param>
         /// <returns>List of documents</returns>
-        public virtual async Task<IEnumerable<TEntity>> GetAll(FilterDefinition<TEntity> filter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!)
+        public virtual async Task<IEnumerable<TEntity>> GetAll(FilterDefinition<TEntity> filter = null!, BsonDocument? sort = null!, BsonDocument? lookup = null!, int? limit = null!, int? skip = null!)
         {
             RegisterMissingClass();
 
             var query = _collection.Aggregate().Match(filter is null ? Builders<TEntity>.Filter.Empty : filter);
+
+            if (skip is not null)
+            {
+                query = query.Skip(skip.Value);
+            }
+
+            if (limit is not null)
+            {
+                query = query.Limit(limit.Value);
+            }
 
             if (lookup is not null)
             {
@@ -120,7 +130,7 @@ namespace DraplusApi.Data
             {
                 BsonClassMap.RegisterClassMap<TextData>();
             }
-            
+
         }
     }
 }
