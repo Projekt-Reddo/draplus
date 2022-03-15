@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using DraplusApi.Dtos;
 using DraplusApi.Models;
@@ -7,7 +6,6 @@ using MongoDB.Driver;
 using AutoMapper;
 using static Constant;
 using Newtonsoft.Json;
-using System.Collections.ObjectModel;
 
 namespace DraplusApi.Hubs;
 

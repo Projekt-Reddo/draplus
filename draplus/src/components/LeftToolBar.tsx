@@ -81,8 +81,6 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({ onClick }) => {
 
     // Clear canvas
     const handleClear = (lc: any) => {
-        // initLC.clear();
-        
         dispatch({
             type: CLEAR_ALL,
         });

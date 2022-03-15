@@ -4,6 +4,7 @@ import Avatar from "components/Avatar";
 import Setting from "components/Setting";
 import "styles/TitleAdmin.css";
 import { RootStateOrAny, useSelector } from "react-redux";
+import { Menu, Transition } from "@headlessui/react";
 
 
 interface TitleAdminProps {}
@@ -14,12 +15,12 @@ const TitleAdmin: React.FC<TitleAdminProps> = () => {
 
     return(
         <>
-        <div className=" inset-x-8 top-0 right-0 h-[6.6rem] title-item">
-            <text className=" title-font">Welcome back {user.user.name} </text>
-            <text className="title-sub">Below is admin view</text>
-            <Avatar/>
-            <Setting/>
-        </div>
+            <div className="origin-top w-full title-item ">
+                <text className="title-font">Welcome back {user.user.name} </text>
+                <text className="title-sub">Below is admin view</text>
+                <Avatar/>
+                <Setting/>
+            </div>
         </>
     )
 }

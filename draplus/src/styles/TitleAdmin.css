@@ -3,7 +3,6 @@
 }
 
 .title-font{
-    position: absolute;
     left: 17%;
     top: 3%;
 
@@ -16,7 +15,6 @@
     color: #FDFDFC;
 }
 .title-sub{
-    position: absolute;
 
     left: 17%;
     top: 8%;

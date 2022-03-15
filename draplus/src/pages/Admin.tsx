@@ -9,12 +9,15 @@ interface AdminProps {}
 const Admin: React.FC<AdminProps> = () => {
     return(
         <>
-        <TitleAdmin/>
-        <div className="flex flex-row">
-            <DashboardOption/>
-            <Dashboard/>
+        <div className="w-full h-screen bg-[color:#171615]">
+            <div className="flex">
+                <DashboardOption/>
+                <div className="grid w-full">
+                    <TitleAdmin/>                    
+                    <Dashboard/>
+                </div>
+            </div>
         </div>
-            
         </>
     )
 }

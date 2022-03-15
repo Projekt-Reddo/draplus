@@ -16,7 +16,7 @@ namespace DraplusApiTest.Controllers.BoardControllerTest
         {
             // Arrange
             var boardController = new BoardController(mockBoardRepo.Object, mockUserRepo.Object, mockMapper.Object);
-            string boardId = null;
+            string boardId = null!;
 
             // Act
             var result = await boardController.DeleteBoard(boardId);
@@ -25,7 +25,6 @@ namespace DraplusApiTest.Controllers.BoardControllerTest
             Assert.IsInstanceOf(typeof(ActionResult<ResponseDto>), result);
             Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result);
         }
-        
         [Test]
         public async Task DeleteBoard_IdIsValid_ReturnsOk()
         {
@@ -34,7 +33,7 @@ namespace DraplusApiTest.Controllers.BoardControllerTest
             string boardId = "6213a6454577874737d929a8";
 
             // Act
-            mockBoardRepo.Setup(x => x.Delete("6213a6454577874737d929a8")).ReturnsAsync(true); 
+            mockBoardRepo.Setup(x => x.Delete("6213a6454577874737d929a8")).ReturnsAsync(true);
             var result = await boardController.DeleteBoard(boardId);
 
             // Assert
