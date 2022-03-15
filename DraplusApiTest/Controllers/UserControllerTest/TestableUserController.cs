@@ -11,6 +11,7 @@ namespace DraplusApiTest.Controllers.UserControllerTest
     {
         public Mock<IBoardRepo> mockBoardRepo { get; set; } = null!;
         public Mock<IUserRepo> mockUserRepo { get; set; } = null!;
+        public Mock<ISignInRepo> mockSignInRepo { get; set; } = null!;
         public Mock<IMapper> mockMapper { get; set; } = null!;
         public Mock<IJwtGenerator> mockJwtGenerator { get; set; } = null!;
         public Mock<GoogleJsonWebSignature> mockGoogleJson { get; set; } = null!;
@@ -22,9 +23,10 @@ namespace DraplusApiTest.Controllers.UserControllerTest
             // Mock controller dependencies
             mockBoardRepo = new Mock<IBoardRepo>();
             mockUserRepo = new Mock<IUserRepo>();
+            mockSignInRepo = new Mock<ISignInRepo>();
             mockMapper = new Mock<IMapper>();
             mockJwtGenerator = new Mock<IJwtGenerator>();
             mockGoogleJson = new Mock<GoogleJsonWebSignature>();
-        }   
+        }
     }
 }

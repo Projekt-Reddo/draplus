@@ -19,7 +19,7 @@ namespace DraplusApiTest.Controllers.UserControllerTest
         public async Task GoogleLogin_IdIsNull_ReturnsBadRequest()
         {
             // Arrange
-            var authController = new AuthController(mockUserRepo.Object, mockBoardRepo.Object, mockMapper.Object, mockJwtGenerator.Object);
+            var authController = new AuthController(mockUserRepo.Object, mockBoardRepo.Object, mockMapper.Object, mockJwtGenerator.Object, mockSignInRepo.Object);
             var userView = new UserView
             {
                 tokenId = "6213a6454577874737d929a8"
@@ -36,12 +36,12 @@ namespace DraplusApiTest.Controllers.UserControllerTest
             };
             Claim[] claims = new Claim[]
             {
-                
+
             };
             string tokenn = "ajwogp[waglpawgkp";
             //mockGoogleJson.Setup(x => x.ValidateAsync(userView.tokenId, new GoogleJsonWebSignature.ValidationSettings())).ReturnsAsync(payLoadTest);
             mockUserRepo.Setup(x => x.Authenticate(payLoadTest)).ReturnsAsync((usetTest, true));
-            mockBoardRepo.Setup(x=>x.Add(It.IsAny<Board>())).ReturnsAsync(new Board());
+            mockBoardRepo.Setup(x => x.Add(It.IsAny<Board>())).ReturnsAsync(new Board());
             mockJwtGenerator.Setup(x => x.GenerateClaims(usetTest)).Returns(claims);
             mockJwtGenerator.Setup(x => x.GenerateJwtToken(claims)).Returns(tokenn);
 
