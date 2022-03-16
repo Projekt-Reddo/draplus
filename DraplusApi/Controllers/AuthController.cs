@@ -15,13 +15,15 @@ namespace DraplusApi.Controllers
     {
         private readonly IUserRepo _userRepo;
         private readonly IBoardRepo _boardRepo;
+        private readonly ISignInRepo _signInRepo;
         private readonly IMapper _mapper;
         private readonly IJwtGenerator _jwtGenerator;
 
-        public AuthController(IUserRepo userRepo, IBoardRepo boardRepo, IMapper mapper, IJwtGenerator jwtGenerator)
+        public AuthController(IUserRepo userRepo, IBoardRepo boardRepo, IMapper mapper, IJwtGenerator jwtGenerator, ISignInRepo signInRepo)
         {
             _userRepo = userRepo;
             _boardRepo = boardRepo;
+            _signInRepo = signInRepo;
             _mapper = mapper;
             _jwtGenerator = jwtGenerator;
         }
@@ -48,6 +50,25 @@ namespace DraplusApi.Controllers
                 var userToReturn = _mapper.Map<AuthDto>(user);
                 userToReturn.AccessToken = token;
 
+                DateTime currentDay = new DateTime(
+                                    DateTime.Now.Year,
+                                    DateTime.Now.Month,
+                                    DateTime.Now.Day);
+                var filter = Builders<SignIn>.Filter.Eq("At", currentDay);
+                var sigin = await _signInRepo.GetByCondition(filter);
+                if (sigin == null)
+                {
+                    await _signInRepo.Add(new SignIn()
+                    {
+                        At = currentDay,
+                        Times = 1
+                    });
+                }
+                else
+                {
+                    sigin.Times += 1;
+                    await _signInRepo.Update(sigin.Id, sigin);
+                }
                 return Ok(
                     userToReturn
                 );

@@ -24,7 +24,7 @@ namespace DraplusApiTest.Controllers.BoardControllerTest
 
             var filter = Builders<Board>.Filter.Eq("UserId", userId);
 
-            mockBoardRepo.Setup(x => x.GetAll(filter, null, null))
+            mockBoardRepo.Setup(x => x.GetAll(filter, null, null, null, null))
                 .ReturnsAsync((IEnumerable<Board>)null!);
 
             // Act
@@ -46,7 +46,7 @@ namespace DraplusApiTest.Controllers.BoardControllerTest
 
             var filter = Builders<Board>.Filter.Eq("UserId", userId);
 
-            mockBoardRepo.Setup(x => x.GetAll(filter, null, null))
+            mockBoardRepo.Setup(x => x.GetAll(filter, null, null, null, null))
                 .ReturnsAsync(new List<Board>());
 
             // Act

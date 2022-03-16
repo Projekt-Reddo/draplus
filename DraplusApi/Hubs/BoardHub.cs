@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using DraplusApi.Dtos;
 using DraplusApi.Models;
@@ -7,7 +6,6 @@ using MongoDB.Driver;
 using AutoMapper;
 using static Constant;
 using Newtonsoft.Json;
-using System.Collections.ObjectModel;
 
 namespace DraplusApi.Hubs;
 
@@ -106,7 +104,7 @@ public class BoardHub : Hub
             Groups.RemoveFromGroupAsync(Context.ConnectionId, userConnection.Board);
             _connections.Remove(Context.ConnectionId);
 
-            // Save data when no one in room
+            // // Save data when no one in room
             SaveShapes(userConnection);
         }
 
@@ -165,8 +163,8 @@ public class BoardHub : Hub
 
             var updateBoard = await _boardRepo.Update(userConnection.Board, boardFromRepo);
 
-            // _shapeList.Remove(userConnection.Board);
-            // _noteList.Remove(userConnection.Board);
+            _shapeList.Remove(userConnection.Board);
+            _noteList.Remove(userConnection.Board);
         }
     }
 
@@ -203,15 +201,14 @@ public class BoardHub : Hub
 
         if (_connections.TryGetValue(Context.ConnectionId, out UserConnection? userConnection))
         {
-            var temp = userConnection.Board;
             var board = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", userConnection.Board));
-            if (userConnection.User.ToString() != board.UserId)
+            if (userConnection.User.Id.ToString() == board.UserId)
             {
-                await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ClearAll, 0);
+                board.Shapes = new List<Shape>();
+                await _boardRepo.Update(userConnection.Board, board);
+                _shapeList[userConnection.Board].Clear();
+                await Clients.Group(userConnection.Board).SendAsync(HubReturnMethod.ClearAll);
             }
-            board.Shapes = new List<Shape>();
-            await _boardRepo.Update(temp, board);
-            await Clients.OthersInGroup(userConnection.Board).SendAsync(HubReturnMethod.ClearAll, 1);
         }
     }
 

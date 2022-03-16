@@ -34,6 +34,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({ onClick }) => {
     // Global State
     const dispatch = useDispatch();
     const initLC = useSelector((state: RootStateOrAny) => state.initLC);
+    const shape = useSelector((state: RootStateOrAny) => state.shape);
 
     // Handle State
     const [showBrushOption, setShowBrushOption] = React.useState(false);
@@ -80,8 +81,8 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({ onClick }) => {
 
     // Clear canvas
     const handleClear = (lc: any) => {
-        initLC.clear();
-        const lcShapeContainer = lc.getSnapshot(["shapes"]);
+        // initLC.clear();
+        
         dispatch({
             type: CLEAR_ALL,
         });
@@ -129,6 +130,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({ onClick }) => {
         }
         setIsSelect(buttonCode);
     };
+    
 
     // Toolbar Const Variable
     const dToolbars = [
