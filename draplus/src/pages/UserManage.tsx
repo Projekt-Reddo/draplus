@@ -68,7 +68,7 @@ const UserManage: React.FC<UserManageProps> = () => {
                             columns={TableColumns}
                             data={data?.payload.map((user: any) => ({
                                 fullname: (
-                                    <div className="flex pl-4">
+                                    <div className="flex pl-4 mx-2">
                                         <div
                                             style={{
                                                 backgroundImage: `url(${user.avatar})`,
@@ -78,6 +78,7 @@ const UserManage: React.FC<UserManageProps> = () => {
                                                 width: "50px",
                                                 borderRadius: "50%",
                                                 border: "2px solid white",
+                                                minWidth: "50px",
                                             }}
                                         />
                                         <div className="self-center ml-2">
@@ -85,10 +86,16 @@ const UserManage: React.FC<UserManageProps> = () => {
                                         </div>
                                     </div>
                                 ),
-                                email: user.email,
-                                issuer: user.issuer,
-                                created: moment(user.createdAt).format(
-                                    "YYYY MMM Do"
+                                email: <div className="mx-2">{user.email}</div>,
+                                issuer: (
+                                    <div className="mx-2">{user.issuer}</div>
+                                ),
+                                created: (
+                                    <div className="mx-2">
+                                        {moment(user.createdAt).format(
+                                            "YYYY MMM Do"
+                                        )}
+                                    </div>
                                 ),
                                 action: user.isBanned ? (
                                     <div className="iconBan">

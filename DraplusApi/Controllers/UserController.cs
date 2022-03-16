@@ -7,6 +7,7 @@ using DraplusApi.Data;
 using DraplusApi.Dtos;
 using DraplusApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace DraplusApi.Controllers
@@ -32,7 +33,7 @@ namespace DraplusApi.Controllers
         public async Task<ActionResult<PaginationResponse<IEnumerable<UserManageListDto>>>> GetAllUserManage([FromQuery] PaginationParameterDto pagination)
         {
             // Filter User Account
-            var userFilter = Builders<User>.Filter.Eq("IsAdmin", false);
+            var userFilter = Builders<User>.Filter.Eq("IsAdmin", false) | Builders<User>.Filter.Eq("IsAdmin", BsonNull.Value);
 
             var skipPage = (pagination.PageNumber - 1) * pagination.PageSize;
 
