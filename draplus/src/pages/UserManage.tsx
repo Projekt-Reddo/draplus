@@ -12,11 +12,11 @@ import DashboardOption from "components/DashboardOption";
 import TitleAdmin from "components/TitleAdmin";
 import Table from "components/Table";
 import Loading from "components/Loading";
-import Icon from "components/Icon";
 import Pagination from "components/Pagination";
 
 // Styles
 import "styles/UserManage.css";
+import ButtonBanUser from "components/ButtonBanUser";
 
 interface UserManageProps {}
 
@@ -90,18 +90,7 @@ const UserManage: React.FC<UserManageProps> = () => {
                                 created: moment(user.createdAt).format(
                                     "YYYY MMM Do"
                                 ),
-                                action: user.isBanned ? (
-                                    <div className="iconBan">
-                                        <Icon icon="ban" className="mt-[9px]" />
-                                    </div>
-                                ) : (
-                                    <div className="iconLock">
-                                        <Icon
-                                            icon="lock-open"
-                                            className="mt-[9px]"
-                                        />
-                                    </div>
-                                ),
+                                action: <ButtonBanUser user={user} />,
                             }))}
                             style={{ width: "100%" }}
                             className="flex justify-center items-center"
