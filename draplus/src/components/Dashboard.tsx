@@ -19,13 +19,13 @@ const Dashboard: React.FC<DashboardProps> = () => {
         <>
           <div className="dashboard">
               <div className="mx-[2rem]">
-                <div className="dashboard-title">
+                <div className="dashboard-title ">
                         Dashboard
                     </div>
                     <div className="dashboard-sub">
                             Admin {'>'} Dashboard
                     </div>
-                    <Details/>
+                      <Details/>
                     <div className="grid grid-flow-row lg:grid-cols-2 gap-4 mt-[2rem] ">
                         <DashboardBar/>
                         <DashboardLine/>
@@ -51,11 +51,11 @@ const Details : React.FC<DashboardDetailProps> = () => {
       "totalBoard": 0
     }
   )
-  const { isLoading,  data, refetch } = useQuery(
+  const { isFetching,  data, refetch } = useQuery(
     "dashboard", 
     async () => {
         const {data} = await axios.get(
-          `https://localhost:7287/api/AdminControllers`
+          `https://localhost:7287/dashboard/Detail`
         );
         setSample(data);
         return data;
@@ -70,42 +70,44 @@ const Details : React.FC<DashboardDetailProps> = () => {
     },[]);
   return ( 
     <>
-      {isLoading || !data ? (
+    <div className="mt-[2rem]">
+    {isFetching || !data ? (
         <div className="w-full h-screen flex justify-center items-center">
         <Loading />
       </div>
       ) : (
-          <div className="grid grid-flow-row sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-[2rem] ">
-            <div className=" dashboard-info grid grid-cols-1" style={{background: "#28A5F9"}}>
-                <div className="icon-contain ">
-                    <Icon icon="user" className="m-3"/>
+          <div className="grid grid-flow-row sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 ">
+              <div className=" dashboard-info flex flex-col" style={{background: "#28A5F9"}}>
+                  <div className="icon-contain  ">
+                    <Icon icon="user" className="m-[0.9rem]"/>
                   </div>
-                  <text className=" info-contain">{sample.newAccount}</text>
-                  <text className=" info-detail">New Account</text>
-                </div>
-                  <div className=" dashboard-info grid grid-cols-1" style={{background: "#EF6F9E"}}>
+                  <text className="justify-start text-6xl ml-5 pt-2 mt-[2rem] ">{sample.newAccount}</text>
+                  <text className=" justify-start  ml-5 font-bold pt-2 mb-5">New Account</text>
+              </div>
+                  <div className=" dashboard-info flex flex-col" style={{background: "#EF6F9E"}}>
                   <div className="icon-contain">
-                      <Icon icon="chalkboard" className="m-3"/>
+                      <Icon icon="chalkboard" className="m-[0.9rem]"/>
                   </div>
-                    <text className=" info-contain">{sample.newBoard}</text>
-                    <text className=" info-detail">New Board</text>
+                    <text className=" justify-start text-6xl ml-5 pt-2 mt-[2rem]">{sample.newBoard}</text>
+                    <text className=" justify-start  ml-5 font-bold pt-2 mb-5">New Board</text>
                   </div>
-                    <div className=" dashboard-info grid grid-cols-1" style={{background: "#FAC66D"}}>
+                    <div className=" dashboard-info flex flex-col" style={{background: "#FAC66D"}}>
                       <div className="icon-contain">
-                          <Icon icon="users" className="m-3"/>
+                          <Icon icon="users" className="m-[0.9rem]"/>
                       </div>
-                        <text className=" info-contain">{sample.totalAccount}</text>
-                        <text className=" info-detail">Total Accounts</text>
+                        <text className="justify-start text-6xl ml-5 pt-2 mt-[2rem]">{sample.totalAccount}</text>
+                        <text className=" justify-start  ml-5 font-bold pt-2 mb-5">Total Accounts</text>
                       </div>
-                      <div className=" dashboard-info grid grid-cols-1" style={{background: "#705DBC"}}>
+                      <div className=" dashboard-info flex flex-col" style={{background: "#705DBC"}}>
                         <div className="icon-contain">
-                            <Icon icon="clipboard" className="m-3"/>
+                            <Icon icon="clipboard" className="m-[0.9rem]"/>
                         </div>
-                        <text className=" info-contain">{sample.totalBoard}</text>
-                        <text className=" info-detail">Total Boards</text>
+                        <text className=" justify-start text-6xl ml-5 pt-2 mt-[2rem]">{sample.totalBoard}</text>
+                        <text className=" justify-start  ml-5 font-bold pt-2 mb-5">Total Boards</text>
               </div>
           </div>
       )}
+    </div>
     </>
    );
 }
@@ -118,7 +120,7 @@ const DashboardBar : React.FunctionComponent<DashboardBarProps> = () => {
     "dashboardbar",
     async () => {
         const {data} = await axios.get(
-          `https://localhost:7287/barchart/${selectedOption}`
+          `${API}/dashboard/bar/${selectedOption}`
         );
         setSample(data);
         return data;
@@ -157,7 +159,7 @@ const DashboardBar : React.FunctionComponent<DashboardBarProps> = () => {
     ) : (
       <div className="dashboard-chart ">
         <div className="flex">
-          <text className="justify-start ml-3 font-bold pt-2" >Logged In</text>
+          <text className="justify-start text-chart ml-3 font-bold pt-2" >Logged In</text>
           <div className="justify-end select-time ">
             <select onChange={selectChange} >
               <option hidden selected disabled>
@@ -175,7 +177,7 @@ const DashboardBar : React.FunctionComponent<DashboardBarProps> = () => {
               'login'
           ]}
           indexBy="country"
-          margin={{ top: 40, right: 50, bottom: 60, left: 60 }}
+          margin={{ top: 40, right: 50, bottom: 70, left: 60 }}
           padding={0.4}
           valueScale={{ type: 'linear' }}
           indexScale={{ type: 'band', round: true }}
@@ -251,7 +253,7 @@ const DashboardLine : React.FunctionComponent<DashboardLineProps> = () => {
     "dashboardline", 
     async () => {
         const {data} = await axios.get(
-          `https://localhost:7287/linechart/${selectedLine}`
+          `${API}/dashboard/line/${selectedLine}`
         );
         setSample(data);
         return data;
@@ -291,7 +293,7 @@ const DashboardLine : React.FunctionComponent<DashboardLineProps> = () => {
           </div>
       <ResponsiveLine
           data={sample}
-          margin={{ top: 40, right: 50, bottom: 60, left: 60 }}
+          margin={{ top: 40, right: 50, bottom: 70, left: 60 }}
           xScale={{ type: 'point' }}
           yScale={{
               type: 'linear',
