@@ -25,7 +25,6 @@ namespace DraplusApiTest.Controllers.BoardControllerTest
             Assert.IsInstanceOf(typeof(ActionResult<ResponseDto>), result);
             Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result);
         }
-
         [Test]
         public async Task DeleteBoard_IdIsValid_ReturnsOk()
         {
