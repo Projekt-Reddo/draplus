@@ -1,31 +1,14 @@
-.title-item {
+.titleAdmin {
     background-color: #171615;
+    padding-top: 1rem;
+    padding-left: 15rem;
+    border-bottom: #515759 solid 1px;
 }
 
-.title-font{
-    position: absolute;
-    left: 17%;
-    top: 3%;
-
-    /* font-family: Poppins; */
-    font-style: normal;
-    font-weight: bold;
-    font-size: 28px;
-    line-height: 42px;
-    /* identical to box height */
-    color: #FDFDFC;
-}
-.title-sub{
-    position: absolute;
-
-    left: 17%;
-    top: 8%;
-
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: 300;
-    font-size: 16px;
-    line-height: 24px;
-    /* identical to box height */
-    color: #808082;
+@media screen and (max-width: 768px) {
+    .titleAdmin {
+        text-align: center;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
 }
