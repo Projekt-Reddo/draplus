@@ -48,7 +48,7 @@ const ButtonBanUser: React.FC<ButtonBanUserProps> = ({ user, refetch }) => {
                 </div>
 
                 <Modal
-                    type="error"
+                    type="info"
                     open={open}
                     setOpen={setOpen}
                     title="Unban user"
