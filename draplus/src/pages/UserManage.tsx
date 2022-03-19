@@ -97,7 +97,12 @@ const UserManage: React.FC<UserManageProps> = () => {
                                         )}
                                     </div>
                                 ),
-                                action: <ButtonBanUser user={user} />,
+                                action: (
+                                    <ButtonBanUser
+                                        user={user}
+                                        refetch={refetch}
+                                    />
+                                ),
                             }))}
                             style={{ width: "100%" }}
                             className="flex justify-center items-center"
