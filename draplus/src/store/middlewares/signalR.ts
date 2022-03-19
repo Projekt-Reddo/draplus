@@ -28,6 +28,7 @@ import {
     LOAD_SHAPES,
 } from "store/actions";
 import { API } from "utils/constant";
+import { Console } from "console";
 
 export const signalRMiddleware = (storeAPI: any) => {
     return (next: any) => async (action: any) => {
