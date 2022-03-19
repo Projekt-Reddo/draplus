@@ -205,7 +205,7 @@ namespace DraplusApi.Controllers
 
             return returnDashBoard;
         }
-        [HttpGet]
+        [HttpGet("/dashboard/Detail")]
         public async Task<ActionResult<AdminDto>> GetDashboardDetails()
         {
             var userList = await _userRepo.GetAll();
@@ -231,7 +231,7 @@ namespace DraplusApi.Controllers
             return Ok(returnValue);
         }
 
-        [HttpGet("/barchart/{kindOfTime}")]
+        [HttpGet("/dashboard/bar/{kindOfTime}")]
         public async Task<ActionResult<IEnumerable<BarChartDto>>> GetDashboardBarChart(string kindOfTime)
         {
             List<BarChartDto> barChartReturn = new List<BarChartDto>();
@@ -322,7 +322,7 @@ namespace DraplusApi.Controllers
             return barChartReturn;
         }
 
-        [HttpGet("/linechart/{kindOfTime}")]
+        [HttpGet("/dashboard/line/{kindOfTime}")]
         public async Task<ActionResult<IEnumerable<LineChartDto>>> GetDashBoardLineChar(string kindOfTime)
         {
             LineChartDto returnLineChar = new LineChartDto();

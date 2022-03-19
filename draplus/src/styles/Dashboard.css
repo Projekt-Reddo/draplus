@@ -3,7 +3,7 @@
     border: 1px solid #515759;    
     color: #FDFDFC;
     padding-left: 15rem;
-    height: calc(100vh - 9rem);
+    height: calc(100vh - 7rem);
     overflow-y: scroll
 }
 
@@ -37,7 +37,6 @@
 .dashboard-info{
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
-    height: calc(44vh - 10rem);
 }
 
 .dashboard-chart{
@@ -63,8 +62,8 @@
 .icon-contain{
     background: rgba(243, 242, 243, 0.51);
     border-radius: 8px;
-    width: 45px;
-    height: 45px;
+    width: 3rem;
+    height: 3rem;
     margin-top: 8px;
     margin-left: 20px;
 }
@@ -72,17 +71,15 @@
 .info-contain{
     font-style: normal;
     font-weight: 500;
-    font-size: 48px;
-    line-height: 72px;
+    font-size: 2rem;
     /* identical to box height */
     color: #FDFDFC;
-    margin-left: 20px;
 }
 
 .info-detail{
     font-style: normal;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 2rem;
     line-height: 24px;
     /* identical to box height */
     color: #FDFDFC;
@@ -110,4 +107,11 @@ text{
     margin-left: auto; 
     margin-right: 10px;
     margin-top: 10px;
+}
+
+.text-chart{
+    font-size: 1.2rem;
+}
+.detail-contant {
+    height: calc(45vh - 9rem);
 }
