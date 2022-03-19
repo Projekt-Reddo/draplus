@@ -19,6 +19,7 @@ import UserRoute from "./UserRoute";
 import HelpPage from "pages/HelpPage";
 import UserManage from "pages/UserManage";
 import AdminRoute from "./AdminRoute";
+import BannedPage from "pages/BannedPage";
 
 const BaseRoutes: React.FC = () => {
     const dispatch = useDispatch();
