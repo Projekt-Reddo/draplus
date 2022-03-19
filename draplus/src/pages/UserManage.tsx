@@ -12,11 +12,11 @@ import DashboardOption from "components/DashboardOption";
 import TitleAdmin from "components/TitleAdmin";
 import Table from "components/Table";
 import Loading from "components/Loading";
+import Icon from "components/Icon";
 import Pagination from "components/Pagination";
 
 // Styles
 import "styles/UserManage.css";
-import ButtonBanUser from "components/ButtonBanUser";
 
 interface UserManageProps {}
 
@@ -27,7 +27,7 @@ const UserManage: React.FC<UserManageProps> = () => {
     const [searchName, setSearchName] = React.useState("");
 
     // Get users from api
-    const { isLoading, isError, data, refetch } = useQuery(
+    const { isFetching, isError, data, refetch } = useQuery(
         "users",
         async () => {
             const { data } = await axios.get(
@@ -54,7 +54,7 @@ const UserManage: React.FC<UserManageProps> = () => {
                     <div>Admin {`>`} User</div>
                 </div>
                 {/* Table */}
-                {isLoading || !data ? (
+                {isFetching || !data ? (
                     <div className="w-full h-[calc(100vh-18rem)] flex justify-center items-center">
                         <Loading />
                     </div>
@@ -97,11 +97,17 @@ const UserManage: React.FC<UserManageProps> = () => {
                                         )}
                                     </div>
                                 ),
-                                action: (
-                                    <ButtonBanUser
-                                        user={user}
-                                        refetch={refetch}
-                                    />
+                                action: user.isBanned ? (
+                                    <div className="iconBan">
+                                        <Icon icon="ban" className="mt-[9px]" />
+                                    </div>
+                                ) : (
+                                    <div className="iconLock">
+                                        <Icon
+                                            icon="lock-open"
+                                            className="mt-[9px]"
+                                        />
+                                    </div>
                                 ),
                             }))}
                             style={{ width: "100%" }}

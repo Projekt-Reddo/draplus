@@ -1,7 +1,7 @@
 .userManage {
     background-color: #171615;
     padding-left: 15rem;
-    height: calc(100vh - 9rem);
+    height: calc(100vh - 7rem);
     overflow-y: scroll;
 }
 
