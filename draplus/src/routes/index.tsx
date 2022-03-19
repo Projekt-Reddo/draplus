@@ -19,6 +19,7 @@ import UserRoute from "./UserRoute";
 import HelpPage from "pages/HelpPage";
 import UserManage from "pages/UserManage";
 import AdminRoute from "./AdminRoute";
+import BannedPage from "pages/BannedPage";
 
 const BaseRoutes: React.FC = () => {
     const dispatch = useDispatch();
@@ -50,6 +51,9 @@ const BaseRoutes: React.FC = () => {
             <Route path="/" element={<AuthRoute />}>
                 <Route path="/" element={<Login />} />
             </Route>
+            {/* <Route path="/" element={<UserRoute />}> */}
+            <Route path="/banned" element={<BannedPage />} />
+            {/* </Route> */}
             <Route path="/" element={<UserRoute />}>
                 <Route path="/board/:boardId" element={<Board />} />
             </Route>

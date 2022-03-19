@@ -61,7 +61,11 @@ const Login: React.FC<LoginProps> = () => {
                 }
                 r.json().then((user: any) => {
                     dispatch(login(user));
-                    navigate(`/board`);
+                    if (user.isBanned) {
+                        navigate("/banned");
+                    } else {
+                        navigate(`/board`);
+                    }
                 });
             },
             onError: (e: any) => {
