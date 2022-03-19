@@ -104,7 +104,6 @@ th:last-child {
 .sticky-col th:first-child,
 td:first-child {
     left: -1px;
-    position: sticky;
     z-index: 2;
     background-color: #171615 !important;
 }
@@ -112,7 +111,6 @@ td:first-child {
 .sticky-col th:last-child,
 td:last-child {
     right: -1px;
-    position: sticky;
     z-index: 2;
     background-color: #171615 !important;
 }
