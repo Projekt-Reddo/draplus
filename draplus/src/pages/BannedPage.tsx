@@ -1,10 +1,15 @@
-import Icon from "components/Icon";
 import * as React from "react";
+import { Navigate, useLocation } from "react-router-dom";
 
 interface BannedPageProps {}
 
 const BannedPage: React.FC<BannedPageProps> = () => {
-    console.log("BannedPage");
+    const location: any = useLocation();
+
+    if (!location.state?.isBanned) {
+        return <Navigate to="/" />;
+    }
+
     return (
         <div
             className="h-screen w-screen flex items-center justify-center "

@@ -60,10 +60,14 @@ const Login: React.FC<LoginProps> = () => {
                     return;
                 }
                 r.json().then((user: any) => {
-                    dispatch(login(user));
                     if (user.isBanned) {
-                        navigate("/banned");
+                        navigate("/banned", {
+                            state: {
+                                isBanned: true,
+                            },
+                        });
                     } else {
+                        dispatch(login(user));
                         navigate(`/board`);
                     }
                 });
