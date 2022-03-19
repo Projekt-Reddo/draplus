@@ -50,6 +50,9 @@ const BaseRoutes: React.FC = () => {
             <Route path="/" element={<AuthRoute />}>
                 <Route path="/" element={<Login />} />
             </Route>
+            {/* <Route path="/" element={<UserRoute />}> */}
+            <Route path="/banned" element={<BannedPage />} />
+            {/* </Route> */}
             <Route path="/" element={<UserRoute />}>
                 <Route path="/board/:boardId" element={<Board />} />
             </Route>
@@ -61,6 +64,9 @@ const BaseRoutes: React.FC = () => {
             </Route>
             <Route path="/" element={<AdminRoute />}>
                 <Route path="/admin/dashboard" element={<Admin />} />
+            </Route>
+            <Route path="/" element={<AdminRoute />}>
+                <Route path="/admin/user" element={<UserManage />} />
             </Route>
             <Route path="/" element={<AdminRoute />}>
                 <Route path="/admin/user" element={<UserManage />} />

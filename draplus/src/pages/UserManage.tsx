@@ -27,7 +27,7 @@ const UserManage: React.FC<UserManageProps> = () => {
     const [searchName, setSearchName] = React.useState("");
 
     // Get users from api
-    const { isLoading, isError, data, refetch } = useQuery(
+    const { isFetching, isError, data, refetch } = useQuery(
         "users",
         async () => {
             const { data } = await axios.get(
@@ -54,7 +54,7 @@ const UserManage: React.FC<UserManageProps> = () => {
                     <div>Admin {`>`} User</div>
                 </div>
                 {/* Table */}
-                {isLoading || !data ? (
+                {isFetching || !data ? (
                     <div className="w-full h-[calc(100vh-18rem)] flex justify-center items-center">
                         <Loading />
                     </div>

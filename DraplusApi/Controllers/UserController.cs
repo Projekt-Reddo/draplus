@@ -47,5 +47,24 @@ namespace DraplusApi.Controllers
             return Ok(new PaginationResponse<IEnumerable<UserManageListDto>>(totalUser, users));
         }
 
+        /// <summary>
+        /// Get Users with pagination 
+        /// </summary>
+        /// <returns>List of user and total User</returns>
+        [HttpPut("ban/{userId}")]
+        public async Task<ActionResult> BanUser(string userId) {
+            var userFilter = Builders<User>.Filter.Eq("Id", userId);
+            var user = await _userRepo.GetByCondition(userFilter);
+
+            if (user == null) {
+                return NotFound(new ResponseDto(404, "User not found"));
+            }
+
+            user.IsBanned = !user.IsBanned;
+
+            await _userRepo.Update(userId, user);
+
+            return Ok();
+        }
     }
 }
