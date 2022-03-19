@@ -1,24 +1,75 @@
+// Libs
 import * as React from "react";
-import "styles/DashboardOption.css"
-import Icon from "./Icon"
+import { useNavigate, useLocation } from "react-router-dom";
+
+// Combonent
+import Icon from "components/Icon";
+
+// Styles
+import "styles/DashboardOption.css";
 
 interface DashboardOptionProps {}
 
+const TapItems = [
+    {
+        id: 1,
+        icon: "tachometer-alt",
+        name: "Dashboard",
+        path: "/admin/dashboard",
+    },
+    {
+        id: 2,
+        icon: "user-cog",
+        name: "User",
+        path: "/admin/user",
+    },
+];
+
 const DashboardOption: React.FC<DashboardOptionProps> = () => {
-    
+    const navigate = useNavigate();
+    const location = useLocation();
 
-
-    return(
+    return (
         <>
-        <div className=" inset-y-0 left-0 max-w-full min-h-screen dashboard-item invisible lg:visible ">
-            <div className="fixed ml-[3rem]">
-                <img src="/favicon.ico" className="fav-icon mt-[2rem]"></img>
-                <div className="option-title flex justify-center items-center " >Draplus</div>
-                <div className="option-option flex  items-center mt-[4rem]"><Icon icon="tachometer" className="m-3"/>Dasboard</div>
-                <div className="option-option flex  items-center mt-[1rem]"><Icon icon="user-cog" className="m-3"/>User</div>   
+            <div className="dashboard-item h-screen fixed text-white">
+                {/* Logo */}
+                <div className="text-center mt-4">
+                    <div
+                        style={{
+                            backgroundImage: `url(/favicon.ico)`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                            height: "50px",
+                            width: "50px",
+                            margin: "0 auto",
+                        }}
+                    />
+                    <div className="text-4xl">
+                        <b>Draplus</b>
+                    </div>
+                </div>
+                {/* Navigate Tab */}
+                <div className="mt-16">
+                    {TapItems.map((tap) => (
+                        <div
+                            key={tap.id}
+                            className={
+                                location.pathname === tap.path
+                                    ? "tapSelectActive rounded-[8px] h-12 text-2xl items-center pt-1 mb-4"
+                                    : "tapSelect rounded-[8px] h-12 text-2xl items-center pt-1 mb-4"
+                            }
+                            onClick={(e) => {
+                                e.preventDefault();
+                                navigate(tap.path);
+                            }}
+                        >
+                            <Icon icon={tap.icon} className="mx-4" />
+                            {tap.name}
+                        </div>
+                    ))}
+                </div>
             </div>
-        </div>
         </>
-    )
-}
+    );
+};
 export default DashboardOption;

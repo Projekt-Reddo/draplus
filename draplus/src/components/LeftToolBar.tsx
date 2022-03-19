@@ -334,6 +334,7 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({ onClick }) => {
                             handleClear(initLC);
                         }}
                     />
+                    <text className="ml-2">Clear Canvas</text>
                 </div>
             </div>
             {/* Undo, Redo, Export */}

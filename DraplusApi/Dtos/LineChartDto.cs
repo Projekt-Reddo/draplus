@@ -7,12 +7,13 @@ namespace DraplusApi.Dtos
 {
     public class LineChartDto
     {
-        public string LineName { get; set; } = null!;
-        public IEnumerable<LineData> Datas { get; set; } = null!;
+        public string Id { get; set; } = null!;
+        public string Color { get; set; }
+        public IEnumerable<LineData> Data { get; set; } = null!;
     }
     public class LineData
     {
-        public string Postion { get; set; } = null!;
-        public int Value { get; set; }
+        public string x { get; set; } = null!;
+        public int y { get; set; }
     }
 }

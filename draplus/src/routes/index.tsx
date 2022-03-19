@@ -17,6 +17,8 @@ import Loading from "components/Loading";
 import AuthRoute from "./AuthRoute";
 import UserRoute from "./UserRoute";
 import HelpPage from "pages/HelpPage";
+import UserManage from "pages/UserManage";
+import AdminRoute from "./AdminRoute";
 
 const BaseRoutes: React.FC = () => {
     const dispatch = useDispatch();
@@ -57,8 +59,11 @@ const BaseRoutes: React.FC = () => {
             <Route path="/" element={<UserRoute />}>
                 <Route path="/help" element={<HelpPage />} />
             </Route>
-            <Route path="/" element={<UserRoute />}>
-                <Route path="/admin" element={<Admin />} />
+            <Route path="/" element={<AdminRoute />}>
+                <Route path="/admin/dashboard" element={<Admin />} />
+            </Route>
+            <Route path="/" element={<AdminRoute />}>
+                <Route path="/admin/user" element={<UserManage />} />
             </Route>
             <Route path="*" element={<ErrorPage />} />
         </Routes>

@@ -8,6 +8,7 @@ namespace DraplusApi.Dtos
     public class BarChartDto
     {
         public string Country { get; set; } = null!;
-        public float Value { set; get; }
+        public float Login { set; get; }
+        public string LoginColor { set; get; } = null!;
     }
 }
