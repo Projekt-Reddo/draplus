@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using DraplusApi.Filters;
 
 namespace DraplusApi.Controllers
 {
@@ -93,6 +94,7 @@ namespace DraplusApi.Controllers
         /// <param name="id"></param>
         /// <returns>200 / 404</returns>
         [HttpDelete("{id}")]
+        [AuthResourceAttribute(ResourceType = Constant.AuthResourceType.Board)]
         public async Task<ActionResult<ResponseDto>> DeleteBoard(string id)
         {
             var rs = await _boardRepo.Delete(id);
@@ -111,6 +113,7 @@ namespace DraplusApi.Controllers
         /// <param name="id"></param>
         /// <returns>200 / 404</returns>
         [HttpPut("{id}")]
+        [AuthResourceAttribute(ResourceType = Constant.AuthResourceType.Board)]
         public async Task<ActionResult<ResponseDto>> UpdateBoardName(string id, [FromBody] BoardForChangeNameDto boardForChangeNameDto)
         {
             var board = await _boardRepo.GetByCondition(Builders<Board>.Filter.Eq("Id", id));

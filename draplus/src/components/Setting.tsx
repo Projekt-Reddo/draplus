@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Icon from "components/Icon";
 import { matchRoutes, useLocation } from "react-router-dom";
 import Notification from "components/Notification";
+import { RootStateOrAny, useSelector } from "react-redux";
 
 interface SettingProps {}
 
@@ -25,6 +26,11 @@ const SettingItems: SettingItem[] = [
         icon: "layer-group",
         name: "My boards",
         path: "/board",
+    },
+    {
+        icon: "bars-progress",
+        name: "Admin",
+        path: "/admin",
     },
     {
         icon: "question-circle",
@@ -47,9 +53,13 @@ const Setting: React.FC<SettingProps> = () => {
     // State manage Notification component
     const [toggle, setToggle] = React.useState(false);
 
+    // Show Share only in board page
     const routes = [{ path: "/board/:id" }];
 
     const match = matchRoutes(routes, location.pathname);
+
+    // Show Admin only admin user
+    const user = useSelector((state: RootStateOrAny) => state.user);
 
     return (
         <>
@@ -73,6 +83,17 @@ const Setting: React.FC<SettingProps> = () => {
                         {SettingItems.map(
                             (item: SettingItem, index: number) => {
                                 if (!match && item.name === "Share") {
+                                    return (
+                                        <React.Fragment
+                                            key={index}
+                                        ></React.Fragment>
+                                    );
+                                }
+
+                                if (
+                                    !user.user.isAdmin &&
+                                    item.name === "Admin"
+                                ) {
                                     return (
                                         <React.Fragment
                                             key={index}

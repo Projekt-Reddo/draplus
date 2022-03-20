@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using DraplusApi.Models;
+using static Constant;
 
 namespace DraplusApi.Helpers
 {
@@ -31,6 +32,16 @@ namespace DraplusApi.Helpers
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id),
                 };
+
+            if (user.IsAdmin == true)
+            {
+                claims = new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id),
+                    new Claim(ClaimTypes.Role, SystemAuthority.ADMIN)
+                };
+            }
+
             return claims;
         }
 

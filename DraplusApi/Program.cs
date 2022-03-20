@@ -45,6 +45,7 @@ builder.Services.AddSingleton<IMongoContext, MongoContext>();
 // Project Services
 builder.Services.AddScoped<IBoardRepo, BoardRepo>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
+builder.Services.AddScoped<ISignInRepo, SignInRepo>();
 
 // alows CORS
 builder.Services.AddCors();
@@ -77,6 +78,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSecret"]))
         };
     });
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddSingleton<IJwtGenerator>(new JwtGenerator(configuration["JwtSecret"]));
 

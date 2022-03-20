@@ -128,17 +128,16 @@ public class BoardHub : Hub
             {
                 var jsonData = Convert.ToString(shape.Data);
 
-                try
-                {
-                    var data = JsonConvert.DeserializeObject<LinePathData>(jsonData);
-                    shape.Data = data;
-                }
-                catch
+                if (shape.ClassName == "Text")
                 {
                     var data = JsonConvert.DeserializeObject<TextData>(jsonData);
                     shape.Data = data;
                 }
-
+                else
+                {
+                    var data = JsonConvert.DeserializeObject<LinePathData>(jsonData);
+                    shape.Data = data;
+                }
 
                 var shapeToUpdate = _mapper.Map<Shape>(shape);
 

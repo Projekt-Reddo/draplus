@@ -28,4 +28,16 @@ public static class Constant
         public const string ReceiveUndo = "ReceiveUndo";
         public const string ReceiveRedo = "ReceiveRedo";
     }
+
+    public enum AuthResourceType
+    {
+        Board,
+        User
+    }
+
+    public static class SystemAuthority
+    {
+        public const string ADMIN = "Admin";
+        public const string USER = "User";
+    }
 }
