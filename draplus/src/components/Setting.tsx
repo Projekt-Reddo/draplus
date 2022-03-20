@@ -94,11 +94,6 @@ const Setting: React.FC<SettingProps> = () => {
                                     !user.user.isAdmin &&
                                     item.name === "Admin"
                                 ) {
-                                    console.log(
-                                        "🚀 ~ file: Setting.tsx ~ line 63 ~ user",
-                                        user.user.isAdmin
-                                    );
-
                                     return (
                                         <React.Fragment
                                             key={index}

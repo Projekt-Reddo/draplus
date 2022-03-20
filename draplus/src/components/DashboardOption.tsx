@@ -15,7 +15,7 @@ const TapItems = [
         id: 1,
         icon: "tachometer-alt",
         name: "Dashboard",
-        path: "/admin/dashboard",
+        path: "/admin",
     },
     {
         id: 2,

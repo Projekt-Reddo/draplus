@@ -34,4 +34,10 @@ public static class Constant
         Board,
         User
     }
+
+    public static class SystemAuthority
+    {
+        public const string ADMIN = "Admin";
+        public const string USER = "User";
+    }
 }

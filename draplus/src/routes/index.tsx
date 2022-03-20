@@ -64,7 +64,7 @@ const BaseRoutes: React.FC = () => {
                 <Route path="/help" element={<HelpPage />} />
             </Route>
             <Route path="/" element={<AdminRoute />}>
-                <Route path="/admin/dashboard" element={<Admin />} />
+                <Route path="/admin" element={<Admin />} />
             </Route>
             <Route path="/" element={<AdminRoute />}>
                 <Route path="/admin/user" element={<UserManage />} />
