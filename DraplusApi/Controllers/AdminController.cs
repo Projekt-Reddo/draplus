@@ -15,7 +15,6 @@ namespace DraplusApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = SystemAuthority.ADMIN)]
     public class AdminController : ControllerBase
     {
         private readonly IUserRepo _userRepo;
@@ -32,12 +31,13 @@ namespace DraplusApi.Controllers
         }
 
         /// <summary>
-        /// 
+        /// All info
         /// </summary>
         /// <param name="barTime"></param>
         /// <param name="lineTime"></param>
         /// <returns></returns>
-        [HttpGet("/{barTime}/{lineTime}")]
+        [HttpGet("{barTime}/{lineTime}")]
+        [Authorize(Roles = SystemAuthority.ADMIN)]
         public async Task<ActionResult<DashboardDTO>> AdminDashBoardDetails(string barTime, string lineTime)
         {
             var returnDashBoard = new DashboardDTO();
@@ -222,10 +222,11 @@ namespace DraplusApi.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Basic info
         /// </summary>
         /// <returns></returns>
-        [HttpGet("/dashboard/Detail")]
+        [HttpGet("dashboard/Detail")]
+        [Authorize(Roles = SystemAuthority.ADMIN)]
         public async Task<ActionResult<AdminDto>> GetDashboardDetails()
         {
             var userList = await _userRepo.GetAll();
@@ -252,11 +253,12 @@ namespace DraplusApi.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Login report
         /// </summary>
         /// <param name="kindOfTime"></param>
         /// <returns></returns>
-        [HttpGet("/dashboard/bar/{kindOfTime}")]
+        [HttpGet("dashboard/bar/{kindOfTime}")]
+        [Authorize(Roles = SystemAuthority.ADMIN)]
         public async Task<ActionResult<IEnumerable<BarChartDto>>> GetDashboardBarChart(string kindOfTime)
         {
             List<BarChartDto> barChartReturn = new List<BarChartDto>();
@@ -351,11 +353,12 @@ namespace DraplusApi.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Number of Board report
         /// </summary>
         /// <param name="kindOfTime"></param>
         /// <returns></returns>
-        [HttpGet("/dashboard/line/{kindOfTime}")]
+        [HttpGet("dashboard/line/{kindOfTime}")]
+        [Authorize(Roles = SystemAuthority.ADMIN)]
         public async Task<ActionResult<IEnumerable<LineChartDto>>> GetDashBoardLineChar(string kindOfTime)
         {
             LineChartDto returnLineChar = new LineChartDto();

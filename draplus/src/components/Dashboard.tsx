@@ -15,8 +15,10 @@ const Dashboard: React.FC<DashboardProps> = () => {
         <>
             <div className="dashboard">
                 <div className="mx-[2rem]">
-                    <div className="dashboard-title ">Dashboard</div>
-                    <div className="dashboard-sub">Admin {">"} Dashboard</div>
+                    <div className="mt-4">
+                        <div className="text-3xl">Dashboard</div>
+                        <div>Admin {`>`} Dashboard</div>
+                    </div>
                     <Details />
                     <div className="grid grid-flow-row lg:grid-cols-2 gap-4 mt-[2rem] ">
                         <DashboardBar />
@@ -39,11 +41,12 @@ const Details: React.FC<DashboardDetailProps> = () => {
         totalAccount: 0,
         totalBoard: 0,
     });
+
     const { isFetching, data, refetch } = useQuery(
         "dashboard",
         async () => {
             const { data } = await axios.get(
-                `https://localhost:7287/dashboard/Detail`
+                `${API}/api/admin/dashboard/detail`
             );
             setSample(data);
             return data;
@@ -52,9 +55,11 @@ const Details: React.FC<DashboardDetailProps> = () => {
             enabled: false,
         }
     );
+
     React.useEffect(() => {
         refetch();
     }, []);
+
     return (
         <>
             <div className="mt-[2rem]">
@@ -68,15 +73,15 @@ const Details: React.FC<DashboardDetailProps> = () => {
                             className=" dashboard-info flex flex-col"
                             style={{ background: "#28A5F9" }}
                         >
-                            <div className="icon-contain  ">
+                            <div className="icon-contain">
                                 <Icon icon="user" className="m-[0.9rem]" />
                             </div>
-                            <text className="justify-start text-6xl ml-5 pt-2 mt-[2rem] ">
+                            <p className="justify-start text-6xl ml-5 pt-2 mt-[2rem] ">
                                 {sample.newAccount}
-                            </text>
-                            <text className=" justify-start  ml-5 font-bold pt-2 mb-5">
+                            </p>
+                            <p className=" justify-start  ml-5 font-bold pt-2 mb-5">
                                 New Account
-                            </text>
+                            </p>
                         </div>
                         <div
                             className=" dashboard-info flex flex-col"
@@ -88,12 +93,12 @@ const Details: React.FC<DashboardDetailProps> = () => {
                                     className="m-[0.9rem]"
                                 />
                             </div>
-                            <text className=" justify-start text-6xl ml-5 pt-2 mt-[2rem]">
+                            <p className=" justify-start text-6xl ml-5 pt-2 mt-[2rem]">
                                 {sample.newBoard}
-                            </text>
-                            <text className=" justify-start  ml-5 font-bold pt-2 mb-5">
+                            </p>
+                            <p className=" justify-start  ml-5 font-bold pt-2 mb-5">
                                 New Board
-                            </text>
+                            </p>
                         </div>
                         <div
                             className=" dashboard-info flex flex-col"
@@ -102,12 +107,12 @@ const Details: React.FC<DashboardDetailProps> = () => {
                             <div className="icon-contain">
                                 <Icon icon="users" className="m-[0.9rem]" />
                             </div>
-                            <text className="justify-start text-6xl ml-5 pt-2 mt-[2rem]">
+                            <p className="justify-start text-6xl ml-5 pt-2 mt-[2rem]">
                                 {sample.totalAccount}
-                            </text>
-                            <text className=" justify-start  ml-5 font-bold pt-2 mb-5">
+                            </p>
+                            <p className=" justify-start  ml-5 font-bold pt-2 mb-5">
                                 Total Accounts
-                            </text>
+                            </p>
                         </div>
                         <div
                             className=" dashboard-info flex flex-col"
@@ -116,12 +121,12 @@ const Details: React.FC<DashboardDetailProps> = () => {
                             <div className="icon-contain">
                                 <Icon icon="clipboard" className="m-[0.9rem]" />
                             </div>
-                            <text className=" justify-start text-6xl ml-5 pt-2 mt-[2rem]">
+                            <p className=" justify-start text-6xl ml-5 pt-2 mt-[2rem]">
                                 {sample.totalBoard}
-                            </text>
-                            <text className=" justify-start  ml-5 font-bold pt-2 mb-5">
+                            </p>
+                            <p className=" justify-start  ml-5 font-bold pt-2 mb-5">
                                 Total Boards
-                            </text>
+                            </p>
                         </div>
                     </div>
                 )}
@@ -137,7 +142,7 @@ const DashboardBar: React.FunctionComponent<DashboardBarProps> = () => {
         "dashboardbar",
         async () => {
             const { data } = await axios.get(
-                `${API}/dashboard/bar/${selectedOption}`
+                `${API}/api/admin/dashboard/bar/${selectedOption}`
             );
             setSample(data);
             return data;
@@ -146,6 +151,7 @@ const DashboardBar: React.FunctionComponent<DashboardBarProps> = () => {
             enabled: false,
         }
     );
+
     const [sample, setSample] = React.useState([
         {
             country: "string",
@@ -158,7 +164,9 @@ const DashboardBar: React.FunctionComponent<DashboardBarProps> = () => {
         const value = event.target.value;
         setSelectedOption(value);
     };
+
     const [selectedOption, setSelectedOption] = React.useState("Day");
+
     React.useEffect(() => {
         refetch();
     }, [selectedOption]);
@@ -173,14 +181,14 @@ const DashboardBar: React.FunctionComponent<DashboardBarProps> = () => {
                 ) : (
                     <div className="dashboard-chart ">
                         <div className="flex">
-                            <text className="justify-start text-chart ml-3 font-bold pt-2">
+                            <p className="justify-start text-chart ml-7 font-bold pt-2">
                                 Logged In
-                            </text>
+                            </p>
                             <div className="justify-end select-time ">
-                                <select onChange={selectChange}>
-                                    <option hidden selected disabled>
-                                        {selectedOption}
-                                    </option>
+                                <select
+                                    onChange={selectChange}
+                                    value={selectedOption}
+                                >
                                     <option value="Day">Day</option>
                                     <option value="Month">Month</option>
                                     <option value="Year">Year</option>
@@ -271,7 +279,7 @@ const DashboardLine: React.FunctionComponent<DashboardLineProps> = () => {
         "dashboardline",
         async () => {
             const { data } = await axios.get(
-                `${API}/dashboard/line/${selectedLine}`
+                `${API}/api/admin/dashboard/line/${selectedLine}`
             );
             setSample(data);
             return data;
@@ -280,14 +288,17 @@ const DashboardLine: React.FunctionComponent<DashboardLineProps> = () => {
             enabled: false,
         }
     );
+
     const [selectedLine, setselectedLine] = React.useState("Day");
     const selectLine = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
         setselectedLine(value);
     };
+
     React.useEffect(() => {
         refetch();
     }, [selectedLine]);
+
     return (
         <>
             <div className="dashboard-chart ">
@@ -298,11 +309,14 @@ const DashboardLine: React.FunctionComponent<DashboardLineProps> = () => {
                 ) : (
                     <div className="dashboard-chart ">
                         <div className="flex">
+                            <p className="justify-start text-chart ml-7 font-bold pt-2">
+                                Board
+                            </p>
                             <div className="justify-end select-time mr-1">
-                                <select onChange={selectLine}>
-                                    <option hidden selected disabled>
-                                        {selectedLine}
-                                    </option>
+                                <select
+                                    onChange={selectLine}
+                                    value={selectedLine}
+                                >
                                     <option value="Day">Day</option>
                                     <option value="Month">Month</option>
                                     <option value="Year">Year</option>

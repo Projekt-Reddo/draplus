@@ -55,8 +55,8 @@ const DashboardOption: React.FC<DashboardOptionProps> = () => {
                             key={tap.id}
                             className={
                                 location.pathname === tap.path
-                                    ? "tapSelectActive rounded-[8px] h-12 text-2xl items-center pt-1 mb-4"
-                                    : "tapSelect rounded-[8px] h-12 text-2xl items-center pt-1 mb-4"
+                                    ? "tapSelectActive rounded-[8px] h-12 text-xl items-center pt-1 mb-1"
+                                    : "tapSelect rounded-[8px] h-12 text-xl items-center pt-1 mb-1"
                             }
                             onClick={(e) => {
                                 e.preventDefault();
