@@ -7,23 +7,46 @@ import axios from "utils/axiosInstance";
 import { API } from "utils/constant";
 import { useQuery } from "react-query";
 import Loading from "components/Loading";
+import { PDFExport } from "@progress/kendo-react-pdf";
+import "styles/KendoPDF.css";
 
 interface DashboardProps {}
 
 const Dashboard: React.FC<DashboardProps> = () => {
+    const pdfExportComponent = React.useRef<PDFExport>(null);
+
+    const handleExportPdf = () => {
+        pdfExportComponent.current!.save();
+    };
+
     return (
         <>
             <div className="dashboard">
                 <div className="mx-[2rem]">
-                    <div className="mt-4">
-                        <div className="text-3xl">Dashboard</div>
-                        <div>Admin {`>`} Dashboard</div>
+                    <div className="flex flex-row justify-between items-center">
+                        <div className="mt-4">
+                            <div className="text-3xl">Dashboard</div>
+                            <div>Admin {`>`} Dashboard</div>
+                        </div>
+                        <button
+                            className="bg-cyan-500 hover:bg-cyan-700 text-white font-bold h-fit py-2 px-4 mt-2 rounded"
+                            onClick={handleExportPdf}
+                        >
+                            <Icon icon="file-export" className="mr-2" />
+                            Export
+                        </button>
                     </div>
-                    <Details />
-                    <div className="grid grid-flow-row lg:grid-cols-2 gap-4 mt-[2rem] ">
-                        <DashboardBar />
-                        <DashboardLine />
-                    </div>
+                    <PDFExport
+                        ref={pdfExportComponent}
+                        fileName={`Report`}
+                        creator="Draplus"
+                    >
+                        <Details />
+                        <div className="grid grid-flow-row lg:grid-cols-2 gap-4 mt-[2rem] ">
+                            <DashboardBar />
+                            <DashboardLine />
+                        </div>
+                    </PDFExport>
                 </div>
             </div>
         </>

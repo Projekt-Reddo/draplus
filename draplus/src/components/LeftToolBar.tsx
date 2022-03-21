@@ -128,7 +128,6 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({ onClick }) => {
         }
         setIsSelect(buttonCode);
     };
-    
 
     // Toolbar Const Variable
     const dToolbars = [
@@ -320,21 +319,22 @@ const LeftToolBar: React.FC<LeftToolBarProps> = ({ onClick }) => {
             <div
                 className={` ${
                     clearAllOption
-                        ? "app-shadow clearAllBoard absolute justify-center flex h-44 w-52 z-10"
+                        ? "app-shadow clearAllBoard absolute justify-center flex z-10"
                         : "clearAllBoardHide"
                 }`}
                 ref={wrapperRef2}
                 onClick={onClick}
             >
-                <div className="text-center self-center w-full">
+                <div className="flex justify-center items-center px-3">
                     <Icon
                         icon="trash"
-                        style={{ fontSize: "1.5rem" }}
+                        size="xl"
+                        className="mr-2"
                         onClick={() => {
                             handleClear(initLC);
                         }}
                     />
-                    <text className="ml-2">Clear Canvas</text>
+                    <p>Clear Canvas</p>
                 </div>
             </div>
             {/* Undo, Redo, Export */}

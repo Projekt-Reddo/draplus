@@ -40,7 +40,7 @@ const SettingItems: SettingItem[] = [
     {
         icon: "info-circle",
         name: "About",
-        path: "/about",
+        path: "https://github.com/Projekt-Reddo/draplus",
     },
 ];
 
@@ -126,6 +126,15 @@ const Setting: React.FC<SettingProps> = () => {
                                                                   // Show notification
                                                                   setToggle(
                                                                       true
+                                                                  );
+                                                              }
+                                                            : item.name ===
+                                                              "About"
+                                                            ? (e) => {
+                                                                  e.preventDefault();
+                                                                  window.open(
+                                                                      `${item.path}`,
+                                                                      "_blank"
                                                                   );
                                                               }
                                                             : (e) => {

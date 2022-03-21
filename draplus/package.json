@@ -11,6 +11,7 @@
         "@microsoft/signalr": "^6.0.1",
         "@nivo/bar": "^0.79.1",
         "@nivo/line": "^0.79.1",
+        "@progress/kendo-react-pdf": "^5.1.0",
         "@testing-library/jest-dom": "^5.16.2",
         "@testing-library/react": "^12.1.2",
         "@testing-library/user-event": "^13.5.0",
