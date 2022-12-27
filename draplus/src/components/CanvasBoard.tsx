@@ -66,7 +66,7 @@ const CanvasBoard: React.FC<CanvasBoardProps> = () => {
 
     // Load Shape of the other User
     React.useEffect(() => {
-        if (localInitLC && shape !== []) {
+        if (localInitLC) {
             localInitLC.loadSnapshot({
                 shapes: [...shape, ...myShape.undoStack],
             });

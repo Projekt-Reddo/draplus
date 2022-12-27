@@ -20,19 +20,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-#region PostgrestDb config
+// #region PostgrestDb config
 
-string userId = Environment.GetEnvironmentVariable(DbConfig.UserId) ?? builder.Configuration[DbConfig.UserId];
-string password = Environment.GetEnvironmentVariable(DbConfig.Password) ?? builder.Configuration[DbConfig.Password];
+// string userId = Environment.GetEnvironmentVariable(DbConfig.UserId) ?? builder.Configuration[DbConfig.UserId];
+// string password = Environment.GetEnvironmentVariable(DbConfig.Password) ?? builder.Configuration[DbConfig.Password];
 
-var dbBuilder = new NpgsqlConnectionStringBuilder();
-dbBuilder.ConnectionString = builder.Configuration.GetConnectionString("PostgreSql");
-dbBuilder.Username = userId;
-dbBuilder.Password = password;
+// var dbBuilder = new NpgsqlConnectionStringBuilder();
+// dbBuilder.ConnectionString = builder.Configuration.GetConnectionString("PostgreSql");
+// dbBuilder.Username = userId;
+// dbBuilder.Password = password;
 
-builder.Services.AddDbContext<DataContext>(opt => opt.UseNpgsql(dbBuilder.ConnectionString));
+// builder.Services.AddDbContext<DataContext>(opt => opt.UseNpgsql(dbBuilder.ConnectionString));
 
-#endregion
+// #endregion
 
 #region MongoDB config
 
